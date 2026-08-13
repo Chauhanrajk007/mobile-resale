@@ -20,11 +20,11 @@ export default function Nav() {
     { href: "/", label: "Home", icon: "M3 10.5V21a1 1 0 0 0 1 1h5v-6h6v6h5a1 1 0 0 0 1-1V10.5M21 8.5l-9-6.5-9 6.5" },
   ];
 
+  const links = user?.role === "admin" ? [] : techLinks.filter((l) => !(l.href === "/technician" && pathname === "/technician"));
+
   const adminLinks = [
     { href: "/admin", label: "Overview", icon: "M4 6h16M4 12h16M4 18h16" }, // Just a basic layout for now
   ];
-
-  const links = user?.role === "admin" ? [] : techLinks;
 
   return (
     <>

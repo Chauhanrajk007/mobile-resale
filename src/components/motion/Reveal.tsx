@@ -19,7 +19,7 @@ export function Reveal({
   style?: React.CSSProperties;
 }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: false, margin: "-80px" });
 
   return (
     <motion.div
@@ -49,7 +49,7 @@ export function WordReveal({
   style?: React.CSSProperties;
 }) {
   const ref = useRef<HTMLHeadingElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: false, margin: "-80px" });
   const words = text.split(" ");
 
   const Tag = as as "h2";

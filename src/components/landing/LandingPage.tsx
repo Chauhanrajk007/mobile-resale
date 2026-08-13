@@ -80,11 +80,13 @@ export default function LandingPage() {
   const [models, setModels] = useState<string[]>([]);
   const [modelsLoading, setModelsLoading] = useState(false);
   const [modelsSource, setModelsSource] = useState<"db" | "builtin">("builtin");
+  const [customModel, setCustomModel] = useState(false);
 
   useEffect(() => {
     if (!phone.brand) return;
     setModelsLoading(true);
     setModelsSource("builtin");
+    setCustomModel(false);
     fetch(`/api/phones?brand=${encodeURIComponent(phone.brand)}`)
       .then((r) => r.json())
       .then((d) => {
@@ -389,17 +391,38 @@ export default function LandingPage() {
                     {modelsSource === "builtin" && (
                       <p style={{ fontSize: "0.72rem", color: "var(--text2)", marginBottom: "0.5rem" }}>Popular models</p>
                     )}
-                    <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", maxHeight: 150, overflowY: "auto", paddingRight: "0.25rem" }}>
-                      {models.map((m) => (
-                        <motion.button
-                          key={m} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                          onClick={() => setPhone({ ...phone, model: m })}
-                          style={pillStyle(phone.model === m)}
-                        >
-                          {m}
-                        </motion.button>
-                      ))}
-                    </div>
+                    {customModel ? (
+                      <input
+                        autoFocus
+                        placeholder="Type your model (e.g. iPhone 15 Pro Max)"
+                        value={phone.model}
+                        onChange={(e) => setPhone({ ...phone, model: e.target.value })}
+                        style={inputStyle}
+                      />
+                    ) : (
+                      <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", maxHeight: 150, overflowY: "auto", paddingRight: "0.25rem" }}>
+                        {models.map((m) => (
+                          <motion.button
+                            key={m} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                            onClick={() => setPhone({ ...phone, model: m })}
+                            style={pillStyle(phone.model === m)}
+                          >
+                            {m}
+                          </motion.button>
+                        ))}
+                      </div>
+                    )}
+                    <button
+                      onClick={() => { setCustomModel(v => !v); if (!customModel) setPhone({ ...phone, model: "" }); }}
+                      style={{
+                        background: "transparent", border: "none", color: "var(--primary)",
+                        fontWeight: 600, fontSize: "0.8rem", cursor: "pointer",
+                        padding: "0.35rem 0", textDecoration: "underline", textUnderlineOffset: 3,
+                        marginTop: "0.5rem",
+                      }}
+                    >
+                      {customModel ? "← Choose from list instead" : "My model isn't listed — enter it manually"}
+                    </button>
                   </div>
                 ) : (
                   <input

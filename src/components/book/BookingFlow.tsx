@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BRANDS, TIME_SLOTS, PHONE_CONDITIONS } from "@/lib/constants";
+import { BRANDS, TIME_SLOTS, PHONE_CONDITIONS, DEFAULT_MODELS } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
 import Link from "next/link";
 
@@ -12,7 +12,8 @@ export default function BookingFlow() {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [bookingNo, setBookingNo] = useState("");
-  const [models, setModels] = useState<any[]>([]);
+  const [models, setModels] = useState<string[]>([]);
+  const [customModel, setCustomModel] = useState(false);
   const [minDate, setMinDate] = useState("");
   const [data, setData] = useState({
     phone: { brand: "", model: "", condition: "" },
@@ -54,8 +55,14 @@ export default function BookingFlow() {
 
   useEffect(() => {
     if (!data.phone.brand) return;
+    setCustomModel(false);
     fetch(`/api/phones?brand=${encodeURIComponent(data.phone.brand)}`)
-      .then(r => r.json()).then(d => setModels(d.phones || [])).catch(() => {});
+      .then(r => r.json())
+      .then(d => {
+        const dbModels = Array.isArray(d?.phones) ? d.phones.filter((p: any) => p?.model).map((p: any) => p.model) : [];
+        setModels(dbModels.length > 0 ? dbModels : DEFAULT_MODELS[data.phone.brand] || []);
+      })
+      .catch(() => setModels(DEFAULT_MODELS[data.phone.brand] || []));
   }, [data.phone.brand]);
 
   const update = (partial: any) => setData(prev => ({ ...prev, ...partial }));
@@ -148,15 +155,32 @@ export default function BookingFlow() {
               {data.phone.brand && (
                 <>
                   <p style={{ color: "var(--text2)", marginBottom: "0.75rem", fontSize: "0.9rem" }}>Model</p>
-                  {models.length > 0 ? (
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "0.5rem", marginBottom: "1.5rem" }}>
-                      {models.map((m: any) => (
-                        <motion.button key={m._id} whileTap={{ scale: 0.95 }} onClick={() => updatePhone({ model: m.model })} style={pillStyle(data.phone.model === m.model)}>{m.model}</motion.button>
+                  {customModel ? (
+                    <input
+                      autoFocus
+                      placeholder="Type your model (e.g. iPhone 15 Pro Max)"
+                      value={data.phone.model}
+                      onChange={e => updatePhone({ model: e.target.value })}
+                      style={{ ...inputStyle, marginBottom: "0.5rem" }}
+                    />
+                  ) : (
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                      {models.map((m) => (
+                        <motion.button key={m} whileTap={{ scale: 0.95 }} onClick={() => updatePhone({ model: m })} style={pillStyle(data.phone.model === m)}>{m}</motion.button>
                       ))}
                     </div>
-                  ) : (
-                    <input placeholder="Enter model name" value={data.phone.model} onChange={e => updatePhone({ model: e.target.value })} style={{ ...inputStyle, marginBottom: "1.5rem" }} />
                   )}
+                  <button
+                    onClick={() => { setCustomModel(v => !v); if (!customModel) updatePhone({ model: "" }); }}
+                    style={{
+                      background: "transparent", border: "none", color: "var(--primary)",
+                      fontWeight: 600, fontSize: "0.85rem", cursor: "pointer",
+                      padding: "0.35rem 0", textDecoration: "underline", textUnderlineOffset: 3,
+                      marginBottom: "1.5rem",
+                    }}
+                  >
+                    {customModel ? "← Choose from list instead" : "My model isn't listed — enter it manually"}
+                  </button>
                   <p style={{ color: "var(--text2)", marginBottom: "0.75rem", fontSize: "0.9rem" }}>Condition</p>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "0.5rem" }}>
                     {PHONE_CONDITIONS.map(c => (

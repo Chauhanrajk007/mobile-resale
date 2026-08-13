@@ -129,6 +129,25 @@ export default function AdminDashboard() {
     }
   };
 
+  // Delete Booking
+  const handleDeleteBooking = async (bookingId: string) => {
+    if (!confirm("Delete this booking permanently? This cannot be undone.")) return;
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}`, {
+        method: "DELETE",
+      });
+      if (res.ok) {
+        setExpandedBooking(null);
+        fetchBookings();
+      } else {
+        const d = await res.json();
+        alert(d.error || "Failed to delete booking");
+      }
+    } catch (e) {
+      alert("Error deleting booking");
+    }
+  };
+
   // Toggle Technician active state
   const handleToggleTechActive = async (id: string, currentStatus: boolean) => {
     try {
@@ -452,8 +471,28 @@ export default function AdminDashboard() {
                             <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginTop: "0.25rem" }}>{b.phone?.brand} {b.phone?.model}</h3>
                             <p style={{ color: "var(--text2)", fontSize: "0.85rem", marginTop: "0.25rem" }}>Scheduled: {formatDate(b.meetDate)} at {b.timeSlot}</p>
                           </div>
-                          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                             <span style={{ padding: "0.25rem 0.75rem", background: status.color, color: "#fff", borderRadius: 99, fontSize: "0.75rem", fontWeight: 700 }}>{status.label}</span>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleDeleteBooking(b._id); }}
+                              title="Delete booking"
+                              aria-label="Delete booking"
+                              style={{
+                                background: "transparent", border: "1px solid var(--border)",
+                                color: "var(--danger)", borderRadius: "var(--radius-sm)",
+                                width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center",
+                                cursor: "pointer", transition: "background 0.2s, color 0.2s, border-color 0.2s",
+                              }}
+                              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "var(--danger)"; (e.currentTarget as HTMLButtonElement).style.color = "#fff"; (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--danger)"; }}
+                              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "transparent"; (e.currentTarget as HTMLButtonElement).style.color = "var(--danger)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border)"; }}
+                            >
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="3 6 5 6 21 6" />
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                <line x1="10" y1="11" x2="10" y2="17" />
+                                <line x1="14" y1="11" x2="14" y2="17" />
+                              </svg>
+                            </button>
                           </div>
                         </div>
 
@@ -510,6 +549,21 @@ export default function AdminDashboard() {
                                 </div>
                               </div>
                             )}
+
+                            <div style={{ marginTop: "1.5rem", paddingTop: "1rem", borderTop: "1px solid var(--border)", display: "flex", justifyContent: "flex-end" }}>
+                              <button
+                                onClick={() => handleDeleteBooking(b._id)}
+                                style={{
+                                  background: "color-mix(in srgb, var(--danger) 10%, transparent)",
+                                  border: "1px solid color-mix(in srgb, var(--danger) 40%, transparent)",
+                                  color: "var(--danger)", padding: "0.6rem 1.25rem", borderRadius: "var(--radius)",
+                                  fontWeight: 700, fontSize: "0.85rem", cursor: "pointer",
+                                  transition: "background 0.2s, color 0.2s",
+                                }}
+                              >
+                                Delete Booking
+                              </button>
+                            </div>
                           </motion.div>
                         )}
                       </div>

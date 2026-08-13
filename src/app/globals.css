@@ -214,10 +214,19 @@ input, button, textarea, select {
 
 /* Mobile bottom nav (height 64px) overlaps fixed wizard controls */
 @media (max-width: 767px) {
+  .app-main {
+    padding-top: 0;
+  }
   .wizard-bottom-nav {
     bottom: 64px !important;
     padding-bottom: calc(16px + env(safe-area-inset-bottom)) !important;
   }
+}
+
+.app-main {
+  padding-top: 64px;
+  padding-bottom: 80px;
+  min-height: 100vh;
 }
 
 /* Mobile sticky booking CTA on landing page */

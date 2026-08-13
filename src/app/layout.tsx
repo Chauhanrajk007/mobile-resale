@@ -43,7 +43,7 @@ export default function RootLayout({
         <ToastProvider>
           <SmoothScroll />
           <Nav />
-          <main style={{ paddingBottom: '80px', paddingTop: '64px', minHeight: '100vh' }}>
+          <main className="app-main">
             {children}
           </main>
           <PwaRegister />

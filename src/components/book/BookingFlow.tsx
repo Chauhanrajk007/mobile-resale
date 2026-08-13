@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BRANDS, TIME_SLOTS, PHONE_CONDITIONS, DEFAULT_MODELS } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
+import { DatePicker } from "@/components/DatePicker";
 import Link from "next/link";
 
 const STEPS = ["Phone", "Location", "Review", "Done"];
@@ -190,26 +191,35 @@ export default function BookingFlow() {
                     />
                   ) : (
                     <div>
-                      {/* Sleek Search Bar */}
+                      {/* Search Bar */}
                       <div style={{ position: "relative", marginBottom: "0.65rem" }}>
-                        <span style={{ position: "absolute", left: "0.85rem", top: "50%", transform: "translateY(-50%)", fontSize: "0.9rem", color: "var(--text2)", pointerEvents: "none" }}>🔍</span>
+                        <svg
+                          width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                          style={{ position: "absolute", left: "0.85rem", top: "50%", transform: "translateY(-50%)", color: "var(--text2)", pointerEvents: "none" }}
+                        >
+                          <circle cx="11" cy="11" r="8" />
+                          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
                         <input
                           placeholder={`Search ${data.phone.brand} models...`}
                           value={modelSearch}
                           onChange={(e) => setModelSearch(e.target.value)}
-                          style={{ ...inputStyle, paddingLeft: "2.2rem", paddingRight: "2rem", height: "38px" }}
+                          style={{ ...inputStyle, paddingLeft: "2.4rem", paddingRight: "2.4rem", height: "40px" }}
                         />
                         {modelSearch && (
                           <button
                             type="button"
                             onClick={() => setModelSearch("")}
+                            aria-label="Clear search"
                             style={{
-                              position: "absolute", right: "0.85rem", top: "50%", transform: "translateY(-50%)",
-                              background: "none", border: "none", color: "var(--text2)", cursor: "pointer",
-                              fontSize: "0.8rem", padding: "4px"
+                              position: "absolute", right: "0.5rem", top: "50%", transform: "translateY(-50%)",
+                              background: "var(--surface2)", border: "none", color: "var(--text2)",
+                              cursor: "pointer", width: 26, height: 26, borderRadius: "50%",
+                              display: "flex", alignItems: "center", justifyContent: "center", padding: 0,
                             }}
                           >
-                            ✕
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
                           </button>
                         )}
                       </div>
@@ -283,7 +293,7 @@ export default function BookingFlow() {
                 </div>
                 <input placeholder="Landmark (optional)" value={data.address.landmark} onChange={e => updateAddress({ landmark: e.target.value })} style={inputStyle} />
                 <p style={{ color: "var(--text2)", fontSize: "0.9rem", marginTop: "0.5rem" }}>Preferred Date</p>
-                <input type="date" value={data.meetDate} onChange={e => update({ meetDate: e.target.value })} min={minDate} style={inputStyle} required />
+                <DatePicker value={data.meetDate} onChange={v => update({ meetDate: v })} min={minDate} />
                 <p style={{ color: "var(--text2)", fontSize: "0.9rem" }}>Time Slot</p>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
                   {TIME_SLOTS.map(t => (

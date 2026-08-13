@@ -35,19 +35,9 @@ npm install
 cp .env.example .env.local
 # Edit .env.local with your MongoDB URI, JWT secret, etc.
 
-# Seed database (creates admin + technician + phone models)
-npm run seed
-
 # Start development server
 npm run dev
 ```
-
-## Default Accounts
-
-| Role | Email | Password |
-|------|-------|----------|
-| Admin | admin@checkmyphone.in | Admin@123 |
-| Technician | tech@checkmyphone.in | Tech@123 |
 
 ## Deploy to Vercel
 

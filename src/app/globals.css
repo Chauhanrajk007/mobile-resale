@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #FAFAF7;
+  --bg: #FAFAF8;
   --surface: #FFFFFF;
-  --surface2: #F3F1EC;
+  --surface2: #F4F2EE;
   --text: #1C1917;
   --text2: #78716C;
   --primary: #D97706;
@@ -15,29 +15,33 @@
   --warning: #CA8A04;
   --radius: 12px;
   --radius-sm: 8px;
-  --radius-lg: 16px;
-  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-  --shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
+  --radius-lg: 18px;
+  --shadow: 0 1px 2px rgba(0,0,0,0.05), 0 2px 6px rgba(0,0,0,0.05);
+  --shadow-md: 0 6px 16px rgba(0,0,0,0.07);
+  --shadow-lg: 0 16px 40px rgba(0,0,0,0.10);
+  --shadow-xl: 0 24px 60px rgba(0,0,0,0.14);
+  --glow: 0 8px 24px color-mix(in srgb, var(--primary) 30%, transparent);
   --font: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .dark {
-  --bg: #1C1917;
-  --surface: #292524;
-  --surface2: #1C1917;
-  --text: #F5F5F4;
+  --bg: #17140F;
+  --surface: #26211A;
+  --surface2: #1D1913;
+  --text: #F5F3F0;
   --text2: #A8A29E;
   --primary: #F59E0B;
-  --primary-hover: #D97706;
+  --primary-hover: #FBBF24;
   --accent: #34D399;
-  --border: #44403C;
+  --border: #3A342B;
   --success: #22C55E;
   --danger: #EF4444;
   --warning: #EAB308;
-  --shadow: 0 1px 3px rgba(0,0,0,0.3);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
-  --shadow-lg: 0 12px 32px rgba(0,0,0,0.5);
+  --shadow: 0 1px 2px rgba(0,0,0,0.35);
+  --shadow-md: 0 6px 16px rgba(0,0,0,0.4);
+  --shadow-lg: 0 16px 40px rgba(0,0,0,0.45);
+  --shadow-xl: 0 24px 60px rgba(0,0,0,0.55);
+  --glow: 0 8px 24px color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
 * {
@@ -86,6 +90,30 @@ input, button, textarea, select {
   background: color-mix(in srgb, var(--surface) 80%, transparent);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
+}
+
+/* Gradient accent text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Subtle card hover lift */
+.hover-lift {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Hide number input spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 :focus-visible {

@@ -16,26 +16,61 @@ const steps = [
 ];
 
 const features = [
-  { icon: "✓", title: "30+ Point Check", desc: "Display, camera, sensors, battery — everything tested" },
-  { icon: "₹", title: "Fair Pricing", desc: "₹350 flat inspection fee. No hidden charges." },
-  { icon: "★", title: "Trusted Reports", desc: "Share your inspection report with any buyer or seller" },
+  {
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+    ),
+    title: "30+ Point Check",
+    desc: "Display, camera, sensors, battery — every component tested by a certified technician.",
+  },
+  {
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="1" x2="12" y2="23" />
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+      </svg>
+    ),
+    title: "Fair Pricing",
+    desc: "₹350 flat inspection fee. No hidden charges, no markups, ever.",
+  },
+  {
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+        <line x1="16" y1="13" x2="8" y2="13" />
+        <line x1="16" y1="17" x2="8" y2="17" />
+      </svg>
+    ),
+    title: "Verified Reports",
+    desc: "Share your inspection report with any buyer or seller. Trusted proof, instantly.",
+  },
 ];
 
-function AnimatedSection({ children, className }: { children: React.ReactNode; className?: string }) {
+function AnimatedSection({ children, className, delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 36 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6 }}
+      transition={{ duration: 0.55, delay }}
       className={className}
     >
       {children}
     </motion.div>
   );
 }
+
+const inputStyle = {
+  width: "100%", padding: "0.75rem 1rem", background: "var(--surface2)",
+  border: "1px solid var(--border)", borderRadius: "var(--radius)",
+  color: "var(--text)", fontSize: "0.9rem", outline: "none",
+  transition: "border-color 0.2s ease, box-shadow 0.2s ease",
+};
 
 export default function LandingPage() {
   const router = useRouter();
@@ -45,7 +80,6 @@ export default function LandingPage() {
   const [models, setModels] = useState<any[]>([]);
   const [modelsLoading, setModelsLoading] = useState(false);
 
-  // Fetch models when brand changes
   useEffect(() => {
     if (!phone.brand) return;
     setModelsLoading(true);
@@ -60,10 +94,7 @@ export default function LandingPage() {
 
   const handleBook = () => {
     if (!phone.brand || !phone.model || !phone.condition) return;
-
-    // Save selected phone to localStorage draft
     localStorage.setItem("bookingDraft", JSON.stringify({ phone }));
-
     if (user) {
       router.push("/book");
     } else {
@@ -71,9 +102,11 @@ export default function LandingPage() {
     }
   };
 
+  const ready = phone.brand && phone.model && phone.condition;
+
   const pillStyle = (selected: boolean) => ({
     padding: "0.55rem 0.95rem",
-    borderRadius: "var(--radius)",
+    borderRadius: "var(--radius-sm)",
     border: `1px solid ${selected ? "var(--primary)" : "var(--border)"}`,
     background: selected ? "var(--primary)" : "var(--surface)",
     color: selected ? "#fff" : "var(--text)",
@@ -83,146 +116,271 @@ export default function LandingPage() {
     transition: "all 0.15s ease",
     textAlign: "center" as const,
     outline: "none",
-    boxShadow: selected ? "0 4px 12px color-mix(in srgb, var(--primary) 20%, transparent)" : "none",
+    boxShadow: selected ? "0 4px 12px color-mix(in srgb, var(--primary) 25%, transparent)" : "none",
   });
 
-  const buttonStyle = {
-    padding: "1rem",
-    background: phone.brand && phone.model && phone.condition ? "var(--primary)" : "var(--border)",
-    color: phone.brand && phone.model && phone.condition ? "#fff" : "var(--text2)",
-    border: "none",
-    borderRadius: "var(--radius)",
-    fontWeight: 700,
-    fontSize: "1rem",
-    cursor: phone.brand && phone.model && phone.condition ? "pointer" : "not-allowed",
-    transition: "all 0.2s ease",
-    width: "100%",
-    boxShadow: phone.brand && phone.model && phone.condition ? "0 4px 14px color-mix(in srgb, var(--primary) 30%, transparent)" : "none",
-    outline: "none",
+  const labelStyle = {
+    fontSize: "0.8rem", fontWeight: 600, color: "var(--text2)",
+    display: "block", marginBottom: "0.5rem", letterSpacing: "0.01em",
   };
 
   return (
     <div style={{ minHeight: "100vh" }}>
-      {/* Top bar */}
-      <div style={{
-        position: "fixed", top: 0, left: 0, right: 0, height: 64,
+      {/* ── Top bar ── */}
+      <header style={{
+        position: "fixed", top: 0, left: 0, right: 0, height: 64, zIndex: 50,
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "0 1.5rem", zIndex: 50, borderBottom: "1px solid var(--border)",
-        background: "color-mix(in srgb, var(--surface) 80%, transparent)",
-        backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)"
+        padding: "0 1.5rem", borderBottom: "1px solid var(--border)",
+        background: "color-mix(in srgb, var(--surface) 82%, transparent)",
+        backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
       }}>
-        <span style={{ fontWeight: 800, fontSize: "1.25rem", color: "var(--primary)" }}>CheckMyPhone</span>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+          <div style={{
+            width: 34, height: 34, borderRadius: 10,
+            background: "linear-gradient(135deg, var(--primary), var(--primary-hover))",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            boxShadow: "0 4px 10px color-mix(in srgb, var(--primary) 35%, transparent)",
+          }}>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="6" y="2" width="12" height="20" rx="2" />
+              <line x1="12" y1="18" x2="12.01" y2="18" />
+            </svg>
+          </div>
+          <span style={{ fontWeight: 800, fontSize: "1.15rem", letterSpacing: "-0.02em", color: "var(--text)" }}>
+            Check<span style={{ color: "var(--primary)" }}>My</span>Phone
+          </span>
+        </div>
+
+        <nav style={{ display: "flex", gap: "0.25rem", alignItems: "center" }}>
+          {[
+            { href: "#how", label: "How it works" },
+            { href: "#why", label: "Why us" },
+          ].map((l) => (
+            <a key={l.href} href={l.href} style={{
+              padding: "0.5rem 0.9rem", color: "var(--text2)", textDecoration: "none",
+              fontWeight: 500, fontSize: "0.9rem", borderRadius: "var(--radius-sm)",
+              transition: "color 0.2s, background 0.2s",
+            }}>{l.label}</a>
+          ))}
+        </nav>
+
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
           <ThemeToggle />
           {authLoading ? (
-            <span
-              style={{
-                padding: "0.5rem 1.25rem", color: "var(--text2)",
-                border: "1px solid var(--border)", borderRadius: "var(--radius)",
-                fontSize: "0.875rem", fontWeight: 600,
-              }}
-            >
-              ...
-            </span>
+            <span style={{
+              padding: "0.5rem 1.25rem", color: "var(--text2)",
+              border: "1px solid var(--border)", borderRadius: "var(--radius)",
+              fontSize: "0.875rem", fontWeight: 600,
+            }}>...</span>
           ) : user ? (
             <Link href={user.role === "admin" ? "/admin" : user.role === "technician" ? "/technician" : "/account"} style={{
-              padding: "0.5rem 1.25rem", background: "var(--surface2)", border: "1px solid var(--border)", color: "var(--text)",
-              borderRadius: "var(--radius)", textDecoration: "none", fontWeight: 600, fontSize: "0.875rem"
+              padding: "0.5rem 1.25rem", background: "var(--surface2)", border: "1px solid var(--border)",
+              color: "var(--text)", borderRadius: "var(--radius)", textDecoration: "none",
+              fontWeight: 600, fontSize: "0.875rem",
             }}>Dashboard</Link>
           ) : (
             <Link href="/login" style={{
-              padding: "0.5rem 1.25rem", background: "var(--primary)", color: "#fff",
-              borderRadius: "var(--radius)", textDecoration: "none", fontWeight: 600, fontSize: "0.875rem",
-              boxShadow: "0 2px 8px color-mix(in srgb, var(--primary) 35%, transparent)",
-            }}>Login</Link>
+              padding: "0.55rem 1.35rem", background: "linear-gradient(135deg, var(--primary), var(--primary-hover))",
+              color: "#fff", borderRadius: "var(--radius)", textDecoration: "none",
+              fontWeight: 600, fontSize: "0.875rem",
+              boxShadow: "0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent)",
+            }}>Sign in</Link>
           )}
         </div>
-      </div>
+      </header>
 
-      {/* Hero with direct Booking Option */}
+      {/* ── Hero ── */}
       <section style={{
-        display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center",
-        minHeight: "100vh", padding: "4.5rem 1.5rem 4rem", position: "relative",
-        flexWrap: "wrap", gap: "3rem", maxWidth: 1200, margin: "0 auto"
+        position: "relative", overflow: "hidden",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        flexWrap: "wrap", gap: "3.5rem",
+        minHeight: "100vh", padding: "7rem 1.5rem 5rem",
+        maxWidth: 1240, margin: "0 auto",
       }}>
-        {/* Left Side: Hero Title */}
-        <div style={{ flex: "1 1 450px", textAlign: "left" }}>
+        {/* Ambient glows */}
+        <div style={{
+          position: "absolute", top: "-15%", right: "-10%", width: 480, height: 480,
+          borderRadius: "50%", pointerEvents: "none",
+          background: "radial-gradient(circle, color-mix(in srgb, var(--primary) 16%, transparent), transparent 65%)",
+        }} />
+        <div style={{
+          position: "absolute", bottom: "-20%", left: "-12%", width: 420, height: 420,
+          borderRadius: "50%", pointerEvents: "none",
+          background: "radial-gradient(circle, color-mix(in srgb, var(--accent) 10%, transparent), transparent 65%)",
+        }} />
+        <div style={{
+          position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.45,
+          backgroundImage: "radial-gradient(var(--border) 1px, transparent 1px)",
+          backgroundSize: "30px 30px",
+        }} />
+
+        {/* Left */}
+        <div style={{ flex: "1 1 460px", position: "relative" }}>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: "0.5rem",
+              padding: "0.4rem 0.9rem", borderRadius: 999, marginBottom: "1.5rem",
+              background: "color-mix(in srgb, var(--primary) 10%, transparent)",
+              border: "1px solid color-mix(in srgb, var(--primary) 25%, transparent)",
+              color: "var(--primary)", fontSize: "0.8rem", fontWeight: 700, letterSpacing: "0.02em",
+            }}
+          >
+            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--success)", boxShadow: "0 0 0 3px color-mix(in srgb, var(--success) 25%, transparent)" }} />
+            Doorstep inspections · Across your city
+          </motion.div>
+
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: 0.7, delay: 0.05 }}
             style={{
-              fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 800, lineHeight: 1.1,
-              letterSpacing: "-0.04em",
-              background: "linear-gradient(135deg, var(--primary), var(--primary-hover))",
-              WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-              marginBottom: "1.5rem"
+              fontSize: "clamp(2.6rem, 5.5vw, 4.1rem)", fontWeight: 800, lineHeight: 1.06,
+              letterSpacing: "-0.045em", marginBottom: "1.5rem",
             }}
           >
-            Get Your Phone Inspected Doorstep
+            Know exactly what{" "}
+            <span className="gradient-text">your phone is worth</span> before you buy or sell
           </motion.h1>
+
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            style={{ color: "var(--text2)", fontSize: "1.2rem", lineHeight: 1.6, maxWidth: 480 }}
+            style={{ color: "var(--text2)", fontSize: "1.15rem", lineHeight: 1.65, maxWidth: 520, marginBottom: "2rem" }}
           >
-            Buying or selling a used mobile? Book a professional inspection. A technician will inspect the phone at your place and generate a verified report.
+            A certified technician inspects 30+ checkpoints at your doorstep and generates a verified,
+            shareable report — so every used-phone deal is fair and transparent.
           </motion.p>
+
+          {/* CTA row */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
-            style={{ display: "flex", gap: "1rem", marginTop: "2rem" }}
+            transition={{ duration: 0.7, delay: 0.35 }}
+            style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", marginBottom: "2.5rem" }}
           >
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--text)", flexWrap: "wrap" }}>
-                <span style={{ fontSize: "1.8rem", color: "var(--primary)", fontWeight: 800 }}>₹350</span>
-                <span style={{ fontSize: "0.95rem", color: "var(--text2)", fontWeight: 500 }}>Flat Doorstep Inspection Fee</span>
+            <a href="#book" style={{
+              display: "inline-flex", alignItems: "center", gap: "0.5rem",
+              padding: "0.9rem 1.6rem", borderRadius: "var(--radius)",
+              background: "linear-gradient(135deg, var(--primary), var(--primary-hover))",
+              color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: "0.95rem",
+              boxShadow: "var(--glow)",
+            }}>
+              Book an Inspection
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </a>
+            <a href="#how" style={{
+              display: "inline-flex", alignItems: "center", gap: "0.5rem",
+              padding: "0.9rem 1.6rem", borderRadius: "var(--radius)",
+              background: "var(--surface)", border: "1px solid var(--border)",
+              color: "var(--text)", textDecoration: "none", fontWeight: 600, fontSize: "0.95rem",
+              transition: "border-color 0.2s, background 0.2s",
+            }}>How it works</a>
+          </motion.div>
+
+          {/* Trust stats */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.5 }}
+            style={{
+              display: "flex", gap: "2.25rem", flexWrap: "wrap",
+              paddingTop: "1.75rem", borderTop: "1px solid var(--border)",
+            }}
+          >
+            {[
+              { value: "₹350", label: "Flat fee" },
+              { value: "30+", label: "Checkpoints" },
+              { value: "60 min", label: "Avg. visit" },
+              { value: "100%", label: "Verified report" },
+            ].map((s) => (
+              <div key={s.label}>
+                <div style={{ fontSize: "1.5rem", fontWeight: 800, letterSpacing: "-0.02em", color: "var(--text)" }}>{s.value}</div>
+                <div style={{ fontSize: "0.82rem", color: "var(--text2)", fontWeight: 500, marginTop: "0.15rem" }}>{s.label}</div>
               </div>
+            ))}
           </motion.div>
         </div>
 
-        {/* Right Side: Direct Booking Card */}
+        {/* Right: Booking card */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          id="book"
+          initial={{ opacity: 0, scale: 0.94, y: 24 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
           style={{
-            flex: "1 1 420px", maxWidth: 480,
-            background: "color-mix(in srgb, var(--surface) 95%, transparent)",
-            backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+            flex: "1 1 400px", maxWidth: 500, width: "100%",
+            background: "color-mix(in srgb, var(--surface) 92%, transparent)",
+            backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
             border: "1px solid var(--border)", borderRadius: "var(--radius-lg)",
-            padding: "2.25rem 2rem", boxShadow: "var(--shadow-lg)"
+            padding: "2.25rem 2rem", boxShadow: "var(--shadow-xl)",
+            position: "relative",
           }}
         >
-          <h2 style={{ fontSize: "1.35rem", fontWeight: 800, marginBottom: "1.5rem", letterSpacing: "-0.02em" }}>Book Doorstep Inspection</h2>
-          
-          <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
-            {/* Brand Selection */}
+          <div style={{
+            position: "absolute", top: 0, left: "20%", right: "20%", height: 3,
+            borderRadius: "0 0 6px 6px",
+            background: "linear-gradient(90deg, transparent, var(--primary), transparent)",
+          }} />
+
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.75rem" }}>
+            <h2 style={{ fontSize: "1.3rem", fontWeight: 800, letterSpacing: "-0.02em" }}>Book Doorstep Inspection</h2>
+            <div style={{
+              display: "flex", alignItems: "center", gap: "0.4rem",
+              padding: "0.3rem 0.75rem", borderRadius: 999,
+              background: "color-mix(in srgb, var(--success) 12%, transparent)",
+              color: "var(--success)", fontSize: "0.78rem", fontWeight: 700,
+            }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--success)" }} />
+              ₹350 flat
+            </div>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "1.35rem" }}>
+            {/* Brand */}
             <div>
-              <label style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text2)", display: "block", marginBottom: "0.5rem" }}>Brand</label>
-              <div style={{ display: "flex", gap: "0.375rem", flexWrap: "wrap" }}>
+              <label style={labelStyle}>Brand</label>
+              <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
                 {BRANDS.slice(0, 8).map((b) => (
-                  <motion.button key={b} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setPhone({ ...phone, brand: b, model: "", condition: "" })} style={pillStyle(phone.brand === b)}>
+                  <motion.button
+                    key={b} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                    onClick={() => setPhone({ ...phone, brand: b, model: "", condition: "" })}
+                    style={pillStyle(phone.brand === b)}
+                  >
                     {b}
                   </motion.button>
                 ))}
                 {phone.brand && !(BRANDS.slice(0, 8) as readonly string[]).includes(phone.brand) && (
-                  <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} style={pillStyle(true)}>{phone.brand}</motion.button>
+                  <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} style={pillStyle(true)}>
+                    {phone.brand}
+                  </motion.button>
                 )}
               </div>
             </div>
 
-            {/* Model Selection */}
+            {/* Model */}
             {phone.brand && (
               <div>
-                <label style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text2)", display: "block", marginBottom: "0.5rem" }}>Model</label>
+                <label style={labelStyle}>Model</label>
                 {modelsLoading ? (
-                  <div style={{ fontSize: "0.85rem", color: "var(--text2)" }}>Loading models...</div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "0.85rem", color: "var(--text2)" }}>
+                    <div style={{ width: 16, height: 16, border: "2px solid var(--border)", borderTopColor: "var(--primary)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+                    Loading models…
+                  </div>
                 ) : models.length > 0 ? (
-                  <div style={{ display: "flex", gap: "0.375rem", flexWrap: "wrap", maxHeight: 120, overflowY: "auto" }}>
+                  <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", maxHeight: 132, overflowY: "auto", paddingRight: "0.25rem" }}>
                     {models.map((m) => (
-                      <motion.button key={m._id} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setPhone({ ...phone, model: m.model })} style={pillStyle(phone.model === m.model)}>
+                      <motion.button
+                        key={m._id} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                        onClick={() => setPhone({ ...phone, model: m.model })}
+                        style={pillStyle(phone.model === m.model)}
+                      >
                         {m.model}
                       </motion.button>
                     ))}
@@ -232,24 +390,23 @@ export default function LandingPage() {
                     placeholder="Enter model name manually"
                     value={phone.model}
                     onChange={(e) => setPhone({ ...phone, model: e.target.value })}
-                    style={{
-                      width: "100%", padding: "0.75rem 1rem", background: "var(--surface2)",
-                      border: "1px solid var(--border)", borderRadius: "var(--radius)",
-                      color: "var(--text)", fontSize: "0.9rem", outline: "none",
-                      transition: "border-color 0.2s ease"
-                    }}
+                    style={inputStyle}
                   />
                 )}
               </div>
             )}
 
-            {/* Condition Selection */}
+            {/* Condition */}
             {phone.brand && phone.model && (
               <div>
-                <label style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text2)", display: "block", marginBottom: "0.5rem" }}>Condition</label>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.375rem" }}>
+                <label style={labelStyle}>Condition</label>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.4rem" }}>
                   {PHONE_CONDITIONS.map((c) => (
-                    <motion.button key={c} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setPhone({ ...phone, condition: c })} style={pillStyle(phone.condition === c)}>
+                    <motion.button
+                      key={c} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                      onClick={() => setPhone({ ...phone, condition: c })}
+                      style={pillStyle(phone.condition === c)}
+                    >
                       {c}
                     </motion.button>
                   ))}
@@ -257,96 +414,129 @@ export default function LandingPage() {
               </div>
             )}
 
-            {/* CTA Button */}
+            {/* CTA */}
             <motion.button
-              whileHover={phone.brand && phone.model && phone.condition ? { scale: 1.01, boxShadow: "0 6px 20px color-mix(in srgb, var(--primary) 40%, transparent)" } : {}}
-              whileTap={phone.brand && phone.model && phone.condition ? { scale: 0.99 } : {}}
+              whileHover={ready ? { scale: 1.01, boxShadow: "0 8px 24px color-mix(in srgb, var(--primary) 45%, transparent)" } : {}}
+              whileTap={ready ? { scale: 0.99 } : {}}
               onClick={handleBook}
-              disabled={!phone.brand || !phone.model || !phone.condition}
-              aria-disabled={!phone.brand || !phone.model || !phone.condition}
-              title={phone.brand && phone.model && phone.condition ? "Continue to booking" : "Select brand, model and condition first"}
-              style={buttonStyle}
+              disabled={!ready}
+              aria-disabled={!ready}
+              title={ready ? "Continue to booking" : "Select brand, model and condition first"}
+              style={{
+                padding: "1rem",
+                background: ready ? "linear-gradient(135deg, var(--primary), var(--primary-hover))" : "var(--border)",
+                color: ready ? "#fff" : "var(--text2)",
+                border: "none", borderRadius: "var(--radius)", fontWeight: 700, fontSize: "1rem",
+                cursor: ready ? "pointer" : "not-allowed",
+                transition: "all 0.2s ease", width: "100%",
+                boxShadow: ready ? "0 6px 18px color-mix(in srgb, var(--primary) 35%, transparent)" : "none",
+                outline: "none",
+              }}
             >
-              {phone.brand && phone.model && phone.condition
-                ? "Book Doorstep Inspection →"
-                : "Select brand, model & condition"}
+              {ready ? "Book Doorstep Inspection →" : "Select brand, model & condition"}
             </motion.button>
+
+            <p style={{ textAlign: "center", color: "var(--text2)", fontSize: "0.8rem" }}>
+              Free cancellation · Pay after inspection
+            </p>
           </div>
         </motion.div>
-
-        <div style={{
-          position: "absolute", inset: 0,
-          backgroundImage: "radial-gradient(var(--border) 1px, transparent 1px)",
-          backgroundSize: "32px 32px", opacity: 0.4, zIndex: -1, pointerEvents: "none"
-        }} />
       </section>
 
-      {/* How It Works */}
-      <section style={{ padding: "5rem 1.5rem", maxWidth: 900, margin: "0 auto" }}>
+      {/* ── How It Works ── */}
+      <section id="how" style={{ padding: "5.5rem 1.5rem", maxWidth: 1080, margin: "0 auto", scrollMarginTop: "4rem" }}>
         <AnimatedSection>
-          <h2 style={{ textAlign: "center", fontSize: "2rem", fontWeight: 700, marginBottom: "3rem" }}>
-            How It Works
-          </h2>
+          <div style={{ textAlign: "center", maxWidth: 560, margin: "0 auto 3.5rem" }}>
+            <div style={{
+              display: "inline-block", padding: "0.35rem 0.85rem", borderRadius: 999, marginBottom: "1rem",
+              background: "color-mix(in srgb, var(--primary) 10%, transparent)",
+              color: "var(--primary)", fontSize: "0.78rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
+            }}>Process</div>
+            <h2 style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.4rem)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "0.75rem" }}>
+              How it works
+            </h2>
+            <p style={{ color: "var(--text2)", fontSize: "1rem", lineHeight: 1.6 }}>
+              From booking to verified report in four simple steps.
+            </p>
+          </div>
         </AnimatedSection>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.5rem" }}>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: "1.5rem" }}>
           {steps.map((step, i) => (
-            <AnimatedSection key={i}>
+            <AnimatedSection key={i} delay={i * 0.08}>
               <motion.div
-                whileHover={{ y: -4 }}
+                whileHover={{ y: -5 }}
                 style={{
                   background: "var(--surface)", border: "1px solid var(--border)",
                   borderRadius: "var(--radius-lg)", padding: "2rem 1.5rem", textAlign: "center",
-                  boxShadow: "var(--shadow)", transition: "box-shadow 0.3s",
+                  boxShadow: "var(--shadow)", transition: "box-shadow 0.3s, transform 0.3s",
+                  height: "100%",
                 }}
               >
                 <div style={{
-                  width: 56, height: 56, borderRadius: "50%",
-                  background: "var(--surface2)", display: "flex", alignItems: "center",
-                  justifyContent: "center", fontSize: "1.5rem", margin: "0 auto 1rem",
-                  position: "relative"
+                  width: 58, height: 58, borderRadius: "50%", margin: "0 auto 1.1rem",
+                  background: "linear-gradient(135deg, color-mix(in srgb, var(--primary) 15%, transparent), color-mix(in srgb, var(--primary) 5%, transparent))",
+                  border: "1px solid color-mix(in srgb, var(--primary) 25%, transparent)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: "1.5rem", position: "relative",
                 }}>
                   {step.icon}
                   <span style={{
-                    position: "absolute", top: -4, right: -4,
-                    width: 22, height: 22, borderRadius: "50%",
-                    background: "var(--primary)", color: "#fff",
-                    fontSize: "0.7rem", fontWeight: 700,
-                    display: "flex", alignItems: "center", justifyContent: "center"
+                    position: "absolute", top: -6, right: -6,
+                    width: 24, height: 24, borderRadius: "50%",
+                    background: "linear-gradient(135deg, var(--primary), var(--primary-hover))",
+                    color: "#fff", fontSize: "0.72rem", fontWeight: 700,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    boxShadow: "0 4px 10px color-mix(in srgb, var(--primary) 40%, transparent)",
                   }}>{i + 1}</span>
                 </div>
-                <h3 style={{ fontSize: "1.1rem", fontWeight: 600, marginBottom: "0.5rem" }}>{step.title}</h3>
-                <p style={{ color: "var(--text2)", fontSize: "0.9rem" }}>{step.desc}</p>
+                <h3 style={{ fontSize: "1.05rem", fontWeight: 700, marginBottom: "0.5rem", letterSpacing: "-0.01em" }}>{step.title}</h3>
+                <p style={{ color: "var(--text2)", fontSize: "0.875rem", lineHeight: 1.55 }}>{step.desc}</p>
               </motion.div>
             </AnimatedSection>
           ))}
         </div>
       </section>
 
-      {/* Features */}
-      <section style={{ padding: "4rem 1.5rem", background: "var(--surface2)" }}>
-        <div style={{ maxWidth: 900, margin: "0 auto" }}>
+      {/* ── Features ── */}
+      <section id="why" style={{ padding: "5rem 1.5rem", background: "var(--surface2)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+        <div style={{ maxWidth: 1080, margin: "0 auto", scrollMarginTop: "4rem" }}>
           <AnimatedSection>
-            <h2 style={{ textAlign: "center", fontSize: "2rem", fontWeight: 700, marginBottom: "3rem" }}>
-              Why CheckMyPhone?
-            </h2>
+            <div style={{ textAlign: "center", maxWidth: 560, margin: "0 auto 3.5rem" }}>
+              <div style={{
+                display: "inline-block", padding: "0.35rem 0.85rem", borderRadius: 999, marginBottom: "1rem",
+                background: "color-mix(in srgb, var(--accent) 12%, transparent)",
+                color: "var(--accent)", fontSize: "0.78rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
+              }}>Why us</div>
+              <h2 style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.4rem)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "0.75rem" }}>
+                Peace of mind, every time
+              </h2>
+              <p style={{ color: "var(--text2)", fontSize: "1rem", lineHeight: 1.6 }}>
+                A professional inspection removes the guesswork from every used-phone transaction.
+              </p>
+            </div>
           </AnimatedSection>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1.5rem" }}>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1.5rem" }}>
             {features.map((f, i) => (
-              <AnimatedSection key={i}>
+              <AnimatedSection key={i} delay={i * 0.1}>
                 <motion.div
-                  whileHover={{ y: -6, boxShadow: "var(--shadow-lg)" }}
+                  whileHover={{ y: -6 }}
                   style={{
                     background: "var(--surface)", borderRadius: "var(--radius-lg)",
-                    padding: "2rem", boxShadow: "var(--shadow)", transition: "all 0.3s",
+                    padding: "2rem", boxShadow: "var(--shadow)", transition: "all 0.3s", height: "100%",
+                    border: "1px solid var(--border)",
                   }}
                 >
                   <div style={{
-                    width: 48, height: 48, borderRadius: "var(--radius)",
-                    background: "var(--primary)", color: "#fff",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "1.5rem", fontWeight: 700, marginBottom: "1rem"
-                  }}>{f.icon}</div>
-                  <h3 style={{ fontSize: "1.15rem", fontWeight: 600, marginBottom: "0.5rem" }}>{f.title}</h3>
+                    width: 50, height: 50, borderRadius: "var(--radius)",
+                    background: "linear-gradient(135deg, var(--primary), var(--primary-hover))",
+                    color: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
+                    marginBottom: "1.1rem", boxShadow: "0 6px 16px color-mix(in srgb, var(--primary) 30%, transparent)",
+                  }}>
+                    {f.icon}
+                  </div>
+                  <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem", letterSpacing: "-0.01em" }}>{f.title}</h3>
                   <p style={{ color: "var(--text2)", fontSize: "0.9rem", lineHeight: 1.6 }}>{f.desc}</p>
                 </motion.div>
               </AnimatedSection>
@@ -355,17 +545,69 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* ── CTA band ── */}
+      <section style={{ padding: "5rem 1.5rem", maxWidth: 1080, margin: "0 auto" }}>
+        <AnimatedSection>
+          <div style={{
+            position: "relative", overflow: "hidden", textAlign: "center",
+            borderRadius: "var(--radius-lg)", padding: "3.5rem 2rem",
+            background: "linear-gradient(135deg, color-mix(in srgb, var(--primary) 90%, var(--text)), color-mix(in srgb, var(--primary-hover) 90%, var(--text)))",
+            color: "#fff", boxShadow: "var(--shadow-xl)",
+          }}>
+            <div style={{
+              position: "absolute", inset: 0, opacity: 0.15,
+              backgroundImage: "radial-gradient(rgba(255,255,255,0.8) 1px, transparent 1px)",
+              backgroundSize: "26px 26px",
+            }} />
+            <div style={{ position: "relative" }}>
+              <h2 style={{ fontSize: "clamp(1.6rem, 3.5vw, 2.2rem)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "0.75rem" }}>
+                Sell or buy with total confidence
+              </h2>
+              <p style={{ fontSize: "1rem", opacity: 0.9, marginBottom: "2rem" }}>
+                Get your phone inspected today — the ₹350 fee pays for itself on your first fair deal.
+              </p>
+              <a href="#book" style={{
+                display: "inline-flex", alignItems: "center", gap: "0.5rem",
+                padding: "0.95rem 2rem", borderRadius: "var(--radius)",
+                background: "#fff", color: "var(--primary-hover)",
+                textDecoration: "none", fontWeight: 800, fontSize: "0.95rem",
+                boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+              }}>
+                Start Your Inspection
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </AnimatedSection>
+      </section>
+
+      {/* ── Footer ── */}
       <footer style={{
-        padding: "3rem 1.5rem", textAlign: "center",
-        borderTop: "1px solid var(--border)"
+        padding: "3rem 1.5rem 4rem", textAlign: "center",
+        borderTop: "1px solid var(--border)",
       }}>
-        <p style={{ color: "var(--text2)", fontSize: "0.875rem" }}>
-          CheckMyPhone © {new Date().getFullYear()} • Built with ☕
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.6rem", marginBottom: "0.75rem" }}>
+          <div style={{
+            width: 28, height: 28, borderRadius: 8,
+            background: "linear-gradient(135deg, var(--primary), var(--primary-hover))",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="6" y="2" width="12" height="20" rx="2" />
+              <line x1="12" y1="18" x2="12.01" y2="18" />
+            </svg>
+          </div>
+          <span style={{ fontWeight: 800, color: "var(--text)" }}>CheckMyPhone</span>
+        </div>
+        <p style={{ color: "var(--text2)", fontSize: "0.85rem", marginBottom: "1.25rem" }}>
+          Professional phone inspection reports · © {new Date().getFullYear()}
         </p>
-        <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center", marginTop: "1rem" }}>
-          <Link href="/book" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: 500, fontSize: "0.875rem" }}>Book Inspection</Link>
-          <Link href="/login" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: 500, fontSize: "0.875rem" }}>Login</Link>
+        <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center" }}>
+          <Link href="/book" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: 600, fontSize: "0.875rem" }}>Book Inspection</Link>
+          <Link href="/login" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: 600, fontSize: "0.875rem" }}>Sign in</Link>
         </div>
       </footer>
     </div>

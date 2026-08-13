@@ -5,12 +5,16 @@ import { requireRoles } from "@/lib/auth";
 export async function POST(request: Request) {
   try {
     await dbConnect();
-    await requireRoles(["admin"]);
 
     const { name, email, phone, password, role } = await request.json();
 
     if (!name || !email || !password) {
       return Response.json({ error: "Name, email, and password are required" }, { status: 400 });
+    }
+
+    const requestedRole = role || "customer";
+    if (requestedRole === "technician" || requestedRole === "admin") {
+      await requireRoles(["admin"]);
     }
 
     const existing = await User.findOne({ email });
@@ -23,7 +27,7 @@ export async function POST(request: Request) {
       email,
       phone,
       passwordHash: password, // Pre-save hook will hash this
-      role: role || "technician",
+      role: requestedRole,
     });
 
     return Response.json({ user }, { status: 201 });

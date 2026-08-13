@@ -6,10 +6,12 @@ import { useAuth } from "@/hooks/useAuth";
 import { BOOKING_STATUSES } from "@/lib/constants";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { startPayment } from "@/lib/payments";
+import { useToast } from "@/components/ToastProvider";
 import Link from "next/link";
 
 export default function AccountDashboard() {
   const { user, logout } = useAuth();
+  const { toast, confirm } = useToast();
   const [bookings, setBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -31,28 +33,34 @@ export default function AccountDashboard() {
       const result = await startPayment(id);
       if (result.success) {
         await fetchBookings();
-        alert("Payment successful!");
+        toast("success", "Payment successful", "Your booking has been paid.");
       } else {
-        alert(result.error || "Payment failed");
+        toast("error", "Payment failed", result.error || "Please try again.");
       }
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Payment failed");
+      toast("error", "Payment failed", err instanceof Error ? err.message : "Please try again.");
     } finally { setPaying(""); }
   };
 
   const handleCancel = async (id: string) => {
-    if (!confirm("Cancel this booking? This cannot be undone.")) return;
+    const ok = await confirm({
+      title: "Cancel this booking?",
+      message: "Once cancelled, this booking cannot be recovered.",
+      confirmLabel: "Cancel Booking",
+      danger: true,
+    });
+    if (!ok) return;
     try {
       const res = await fetch(`/api/bookings/${id}`, { method: "DELETE" });
       if (res.ok) {
         await fetchBookings();
-        alert("Booking cancelled.");
+        toast("success", "Booking cancelled", "Your booking has been cancelled.");
       } else {
         const d = await res.json();
-        alert(d.error || "Failed to cancel booking");
+        toast("error", "Failed to cancel booking", d.error);
       }
     } catch (err) {
-      alert("Error cancelling booking");
+      toast("error", "Error", "Something went wrong cancelling the booking.");
     }
   };
 

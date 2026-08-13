@@ -318,7 +318,7 @@ export default function LandingPage() {
             }}>How it works</a>
           </motion.div>
 
-          {/* Trust stats */}
+                    {/* Trust stats */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -341,6 +341,72 @@ export default function LandingPage() {
             ))}
           </motion.div>
         </div>
+
+        {/* Phone mockup + floating cards (decorative) */}
+        <motion.div
+          initial={{ opacity: 0, y: 40, rotate: -3 }}
+          animate={{ opacity: 1, y: 0, rotate: -3 }}
+          transition={{ duration: 0.8, delay: 0.35 }}
+          style={{ flex: "1 1 240px", display: "flex", justifyContent: "center", position: "relative" }}
+        >
+          <div style={{
+            width: 210, height: 400, borderRadius: 28,
+            background: "linear-gradient(160deg, var(--surface2), var(--surface))",
+            border: "1px solid var(--border)", boxShadow: "var(--shadow-xl)",
+            padding: "0.75rem", display: "flex", flexDirection: "column", gap: "0.5rem",
+          }}>
+            <div style={{ alignSelf: "center", width: 84, height: 18, borderRadius: 99, background: "var(--border)" }} />
+            <div style={{
+              flex: 1, borderRadius: 18, background: "var(--surface2)",
+              border: "1px solid var(--border)", padding: "1rem",
+              display: "flex", flexDirection: "column", gap: "0.5rem",
+            }}>
+              <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--primary)" }}>Inspection Report</div>
+              <div style={{ fontSize: "0.95rem", fontWeight: 800 }}>iPhone 15 Pro</div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <div style={{ flex: 1, height: 6, borderRadius: 99, background: "var(--border)" }} />
+                <span style={{ fontSize: "0.85rem", fontWeight: 800, color: "var(--success)" }}>96%</span>
+              </div>
+              {["Display", "Battery", "Camera"].map((t) => (
+                <div key={t} style={{ display: "flex", justifyContent: "space-between", fontSize: "0.72rem", color: "var(--text2)" }}>
+                  <span>{t}</span>
+                  <span style={{ color: "var(--success)", fontWeight: 700 }}>PASS</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Floating chip: technician en route */}
+          <div style={{
+            position: "absolute", top: "12%", right: "-1.5rem",
+            display: "flex", alignItems: "center", gap: "0.5rem",
+            padding: "0.55rem 0.9rem", borderRadius: "var(--radius)",
+            background: "color-mix(in srgb, var(--surface) 90%, transparent)",
+            border: "1px solid var(--border)", boxShadow: "var(--shadow-lg)",
+            backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
+          }}>
+            <span style={{ width: 9, height: 9, borderRadius: "50%", background: "var(--success)", boxShadow: "0 0 0 3px color-mix(in srgb, var(--success) 25%, transparent)" }} />
+            <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--text)" }}>Technician en route</span>
+          </div>
+
+          {/* Floating chip: report ready */}
+          <div style={{
+            position: "absolute", bottom: "10%", left: "-2rem",
+            display: "flex", alignItems: "center", gap: "0.5rem",
+            padding: "0.55rem 0.9rem", borderRadius: "var(--radius)",
+            background: "color-mix(in srgb, var(--surface) 90%, transparent)",
+            border: "1px solid var(--border)", boxShadow: "var(--shadow-lg)",
+            backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
+          }}>
+            <span style={{ width: 30, height: 30, borderRadius: "var(--radius-sm)", background: "color-mix(in srgb, var(--primary) 14%, transparent)", color: "var(--primary)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+            </span>
+            <div>
+              <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--text)" }}>Report ready</div>
+              <div style={{ fontSize: "0.68rem", color: "var(--text2)" }}>Shareable & verified</div>
+            </div>
+          </div>
+        </motion.div>
 
         {/* Right: Booking card */}
         <motion.div
@@ -556,6 +622,35 @@ export default function LandingPage() {
             </p>
           </div>
         </motion.div>
+      </section>
+
+      {/* ── Popular brands strip ── */}
+      <section style={{ padding: "3rem 1.5rem 4.5rem", maxWidth: 1080, margin: "0 auto", borderTop: "1px solid var(--border)" }}>
+        <AnimatedSection>
+          <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+            <span style={{ color: "var(--text2)", fontSize: "0.8rem", fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" }}>
+              We inspect every major brand
+            </span>
+          </div>
+          <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+            {(Array.isArray(brands) && brands.length ? brands : Array.from(BRANDS)).map((b) => (
+              <button
+                key={b}
+                onClick={() => { setPhone({ brand: b, model: "", condition: "" }); document.getElementById("book")?.scrollIntoView({ behavior: "smooth" }); }}
+                style={{
+                  padding: "0.6rem 1.25rem", borderRadius: 999,
+                  background: "var(--surface2)", border: "1px solid var(--border)",
+                  color: "var(--text2)", fontWeight: 600, fontSize: "0.85rem",
+                  cursor: "pointer", transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "var(--primary)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "color-mix(in srgb, var(--primary) 45%, var(--border))"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "var(--text2)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border)"; }}
+              >
+                {b}
+              </button>
+            ))}
+          </div>
+        </AnimatedSection>
       </section>
 
       {/* ── How It Works ── */}

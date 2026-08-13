@@ -10,6 +10,7 @@ import PhotoCapture from "./PhotoCapture";
 import InspectionSummary from "./InspectionSummary";
 import { ALL_TEST_ITEMS } from "@/lib/constants";
 import type { TestResult, PhysicalCondition, InspectionPhoto } from "@/lib/types";
+import { useToast } from "@/components/ToastProvider";
 
 const STEPS = [
   "Device Model",
@@ -41,6 +42,7 @@ const INITIAL_CONDITION: PhysicalCondition = {
 };
 
 export default function InspectionWizard() {
+  const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -147,7 +149,7 @@ export default function InspectionWizard() {
       localStorage.removeItem("inspectionDraft");
     } catch (err) {
       console.error(err);
-      alert("Failed to submit inspection. Please try again.");
+      toast("error", "Failed to submit inspection", "Please try again.");
     } finally {
       setIsSubmitting(false);
     }

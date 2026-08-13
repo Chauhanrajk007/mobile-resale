@@ -5,11 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { BRANDS, TIME_SLOTS, PHONE_CONDITIONS, DEFAULT_MODELS } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
 import { DatePicker } from "@/components/DatePicker";
+import { useToast } from "@/components/ToastProvider";
 import Link from "next/link";
 
 const STEPS = ["Phone", "Location", "Review", "Done"];
 
 export default function BookingFlow() {
+  const { toast } = useToast();
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [bookingNo, setBookingNo] = useState("");
@@ -110,7 +112,7 @@ export default function BookingFlow() {
       setBookingNo(result.booking.bookingNo);
       setStep(3);
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to book");
+      toast("error", "Booking failed", err instanceof Error ? err.message : "Please try again.");
     } finally {
       setLoading(false);
     }

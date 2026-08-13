@@ -15,7 +15,13 @@ export async function sendEmail({
   const port = Number(process.env.SMTP_PORT) || 587;
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
-  const from = process.env.EMAIL_FROM || "CheckMyPhone <noreply@checkmyphone.in>";
+  // Gmail SMTP rejects a "from" whose domain is not the authenticated account,
+  // so default the sender to the SMTP user unless EMAIL_FROM is explicitly set.
+  const from = process.env.EMAIL_FROM
+    ? process.env.EMAIL_FROM
+    : user
+      ? `CheckMyPhone <${user}>`
+      : "CheckMyPhone <noreply@checkmyphone.in>";
 
   console.log(`[EMAIL-SERVICE] Preparing email to: ${to}, subject: "${subject}"`);
 

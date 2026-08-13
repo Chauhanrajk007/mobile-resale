@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import PwaRegister from "@/components/PwaRegister";
+import { ToastProvider } from "@/components/ToastProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font" });
 
@@ -33,11 +34,13 @@ export default function RootLayout({
         <Script id="theme-init" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body className={inter.variable}>
-        <Nav />
-        <main style={{ paddingBottom: '80px', paddingTop: '64px', minHeight: '100vh' }}>
-          {children}
-        </main>
-        <PwaRegister />
+        <ToastProvider>
+          <Nav />
+          <main style={{ paddingBottom: '80px', paddingTop: '64px', minHeight: '100vh' }}>
+            {children}
+          </main>
+          <PwaRegister />
+        </ToastProvider>
       </body>
     </html>
   );

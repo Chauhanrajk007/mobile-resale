@@ -1,8 +1,10 @@
 "use client";
 
 import { formatDate, formatCurrency } from "@/lib/utils";
+import { useToast } from "@/components/ToastProvider";
 
 export default function InvoiceView({ booking }: { booking: any }) {
+  const { toast } = useToast();
   return (
     <div style={{ maxWidth: 800, margin: "0 auto", padding: "2rem" }}>
       <style>{`
@@ -18,11 +20,19 @@ export default function InvoiceView({ booking }: { booking: any }) {
         <button onClick={() => window.print()} style={{
           padding: "0.625rem 1.25rem", background: "var(--primary)", color: "#fff",
           border: "none", borderRadius: "var(--radius)", fontWeight: 600, cursor: "pointer",
-        }}>🖨 Print</button>
-        <button onClick={() => { navigator.clipboard.writeText(window.location.href); alert("Link copied!"); }} style={{
+          display: "inline-flex", alignItems: "center", gap: "0.5rem",
+        }}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 6 2 18 2 18 9" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /><rect x="6" y="14" width="12" height="8" /></svg>
+          Print
+        </button>
+        <button onClick={() => { navigator.clipboard.writeText(window.location.href); toast("success", "Link copied to clipboard"); }} style={{
           padding: "0.625rem 1.25rem", background: "var(--surface2)", color: "var(--text)",
           border: "1px solid var(--border)", borderRadius: "var(--radius)", fontWeight: 600, cursor: "pointer",
-        }}>🔗 Share</button>
+          display: "inline-flex", alignItems: "center", gap: "0.5rem",
+        }}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></svg>
+          Share
+        </button>
       </div>
 
       {/* Invoice Card */}

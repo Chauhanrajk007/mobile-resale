@@ -2,8 +2,10 @@
 
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui";
+import { useToast } from "@/components/ToastProvider";
 
 export default function ReportView({ inspection }: { inspection: any }) {
+  const { toast } = useToast();
   const handlePrint = () => {
     window.print();
   };
@@ -16,7 +18,7 @@ export default function ReportView({ inspection }: { inspection: any }) {
       }).catch(console.error);
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert("Link copied to clipboard!");
+      toast("success", "Link copied to clipboard");
     }
   };
 

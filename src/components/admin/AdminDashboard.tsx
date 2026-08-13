@@ -5,9 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { BOOKING_STATUSES, BRANDS } from "@/lib/constants";
 import { formatDate, formatCurrency } from "@/lib/utils";
+import { useToast } from "@/components/ToastProvider";
 
 export default function AdminDashboard() {
   const { user, refresh: refreshUser, loading: authLoading } = useAuth();
+  const { toast, confirm } = useToast();
   const [activeTab, setActiveTab] = useState("overview");
 
   // State for Overview Tab
@@ -118,20 +120,26 @@ export default function AdminDashboard() {
         body: JSON.stringify({ technicianId }),
       });
       if (res.ok) {
-        alert("Technician assigned successfully!");
+        toast("success", "Technician assigned", "The booking has been assigned successfully.");
         fetchBookings();
       } else {
         const d = await res.json();
-        alert(d.error || "Assignment failed");
+        toast("error", "Assignment failed", d.error || "Could not assign technician.");
       }
     } catch (e) {
-      alert("Error assigning technician");
+      toast("error", "Error", "Something went wrong assigning the technician.");
     }
   };
 
   // Delete Booking
   const handleDeleteBooking = async (bookingId: string) => {
-    if (!confirm("Delete this booking permanently? This cannot be undone.")) return;
+    const ok = await confirm({
+      title: "Delete booking?",
+      message: "This booking will be permanently removed. This action cannot be undone.",
+      confirmLabel: "Delete",
+      danger: true,
+    });
+    if (!ok) return;
     try {
       const res = await fetch(`/api/bookings/${bookingId}`, {
         method: "DELETE",
@@ -139,12 +147,13 @@ export default function AdminDashboard() {
       if (res.ok) {
         setExpandedBooking(null);
         fetchBookings();
+        toast("success", "Booking deleted", "The booking has been removed.");
       } else {
         const d = await res.json();
-        alert(d.error || "Failed to delete booking");
+        toast("error", "Failed to delete booking", d.error);
       }
     } catch (e) {
-      alert("Error deleting booking");
+      toast("error", "Error", "Something went wrong deleting the booking.");
     }
   };
 
@@ -217,12 +226,21 @@ export default function AdminDashboard() {
 
   // Delete/Deactivate Phone Model
   const handleDeactivatePhone = async (id: string) => {
-    if (!confirm("Are you sure you want to deactivate this phone model?")) return;
+    const ok = await confirm({
+      title: "Deactivate phone model?",
+      message: "This model will no longer appear in booking options.",
+      confirmLabel: "Deactivate",
+      danger: true,
+    });
+    if (!ok) return;
     try {
       const res = await fetch(`/api/phones/${id}`, {
         method: "DELETE",
       });
-      if (res.ok) fetchPhones();
+      if (res.ok) {
+        fetchPhones();
+        toast("success", "Phone model deactivated");
+      }
     } catch (e) {
       console.error(e);
     }

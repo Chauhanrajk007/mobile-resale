@@ -60,7 +60,8 @@ const inputStyle = {
 
 export default function LandingPage() {
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, logout } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
@@ -119,13 +120,10 @@ export default function LandingPage() {
   }, [phone.brand]);
 
   const handleBook = () => {
+    if (authLoading) return;
     if (!phone.brand || !phone.model || !phone.condition) return;
     localStorage.setItem("bookingDraft", JSON.stringify({ phone }));
-    if (user) {
-      router.push("/book");
-    } else {
-      router.push("/login?redirect=/book");
-    }
+    router.push("/book");
   };
 
   const ready = phone.brand && phone.model && phone.condition;
@@ -177,7 +175,7 @@ export default function LandingPage() {
           </span>
         </div>
 
-        <nav style={{ display: "flex", gap: "0.25rem", alignItems: "center" }}>
+        <nav className="hide-on-mobile" style={{ display: "flex", gap: "0.25rem", alignItems: "center" }}>
           {[
             { href: "#how", label: "How it works" },
             { href: "#why", label: "Why us" },
@@ -190,28 +188,91 @@ export default function LandingPage() {
           ))}
         </nav>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
           <ThemeToggle />
-          {authLoading ? (
-            <span style={{
-              padding: "0.5rem 1.25rem", color: "var(--text2)",
-              border: "1px solid var(--border)", borderRadius: "var(--radius)",
-              fontSize: "0.875rem", fontWeight: 600,
-            }}>...</span>
-          ) : user ? (
-            <Link href={user.role === "admin" ? "/admin" : user.role === "technician" ? "/technician" : "/account"} style={{
-              padding: "0.5rem 1.25rem", background: "var(--surface2)", border: "1px solid var(--border)",
-              color: "var(--text)", borderRadius: "var(--radius)", textDecoration: "none",
-              fontWeight: 600, fontSize: "0.875rem",
-            }}>Dashboard</Link>
-          ) : (
-            <Link href="/login" style={{
-              padding: "0.55rem 1.35rem", background: "linear-gradient(135deg, var(--primary), var(--primary-hover))",
-              color: "#fff", borderRadius: "var(--radius)", textDecoration: "none",
-              fontWeight: 600, fontSize: "0.875rem",
-              boxShadow: "0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent)",
-            }}>Sign in</Link>
-          )}
+          <div style={{ position: "relative" }}>
+            <button
+              type="button"
+              aria-label="Account menu"
+              onClick={() => setMenuOpen((o) => !o)}
+              style={{
+                display: "flex", alignItems: "center", gap: "0.55rem",
+                padding: "0.3rem 0.3rem 0.3rem 0.6rem", cursor: "pointer",
+                background: "var(--surface2)", border: "1px solid var(--border)",
+                borderRadius: 999, transition: "all 0.2s",
+              }}
+            >
+              <div style={{
+                width: 30, height: 30, borderRadius: "50%",
+                background: user ? "linear-gradient(135deg, var(--primary), var(--primary-hover))" : "var(--surface)",
+                border: "1px solid var(--border)",
+                color: user ? "#fff" : "var(--text2)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontWeight: 700, fontSize: "0.8rem",
+              }}>
+                {user ? user.name.charAt(0).toUpperCase() : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>}
+              </div>
+              {user && <span className="hide-on-mobile" style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text)", maxWidth: 90, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.name}</span>}
+              <svg className="hide-on-mobile" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: "0.25rem" }}><polyline points="6 9 12 15 18 9" /></svg>
+            </button>
+
+            {menuOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.18 }}
+                style={{
+                  position: "absolute", top: "calc(100% + 0.5rem)", right: 0, zIndex: 60,
+                  minWidth: 200, background: "var(--surface)", border: "1px solid var(--border)",
+                  borderRadius: "var(--radius)", boxShadow: "var(--shadow-lg)", overflow: "hidden",
+                }}
+              >
+                {user ? (
+                  <>
+                    <div style={{ padding: "0.9rem 1rem", borderBottom: "1px solid var(--border)" }}>
+                      <div style={{ fontWeight: 700, fontSize: "0.875rem" }}>{user.name}</div>
+                      <div style={{ color: "var(--text2)", fontSize: "0.78rem", marginTop: "0.15rem" }}>{user.email}</div>
+                    </div>
+                    <Link href={user.role === "admin" ? "/admin" : user.role === "technician" ? "/technician" : "/account"} onClick={() => setMenuOpen(false)} style={{
+                      display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.75rem 1rem",
+                      color: "var(--text)", textDecoration: "none", fontSize: "0.85rem", fontWeight: 500,
+                      transition: "background 0.15s",
+                    }} onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "var(--surface2)"; }} onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" /><rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" /></svg>
+                      Dashboard
+                    </Link>
+                    <button type="button" onClick={() => { setMenuOpen(false); logout(); }} style={{
+                      display: "flex", alignItems: "center", gap: "0.5rem", width: "100%", padding: "0.75rem 1rem",
+                      background: "none", border: "none", cursor: "pointer", color: "var(--danger)",
+                      fontSize: "0.85rem", fontWeight: 600, textAlign: "left", transition: "background 0.15s",
+                    }} onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "var(--surface2)"; }} onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/login" onClick={() => setMenuOpen(false)} style={{
+                      display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.75rem 1rem",
+                      color: "var(--text)", textDecoration: "none", fontSize: "0.85rem", fontWeight: 500,
+                      transition: "background 0.15s",
+                    }} onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "var(--surface2)"; }} onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" /></svg>
+                      Sign in
+                    </Link>
+                    <Link href="/login?tab=register" onClick={() => setMenuOpen(false)} style={{
+                      display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.75rem 1rem",
+                      color: "var(--text)", textDecoration: "none", fontSize: "0.85rem", fontWeight: 500,
+                      transition: "background 0.15s",
+                    }} onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "var(--surface2)"; }} onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="8.5" cy="7" r="4" /><line x1="20" y1="8" x2="20" y2="14" /><line x1="23" y1="11" x2="17" y2="11" /></svg>
+                      Create account
+                    </Link>
+                  </>
+                )}
+              </motion.div>
+            )}
+          </div>
         </div>
       </header>
 
@@ -412,9 +473,9 @@ export default function LandingPage() {
         <motion.div
           id="book"
           className="booking-card"
-          initial={{ opacity: 0, scale: 0.94, y: 24 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.25 }}
+          initial={{ opacity: 0, y: 40, filter: "blur(12px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.9, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
           style={{
             flex: "1 1 400px", maxWidth: 500, width: "100%",
             background: "color-mix(in srgb, var(--surface) 92%, transparent)",

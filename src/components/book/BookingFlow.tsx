@@ -107,6 +107,11 @@ export default function BookingFlow() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+      if (res.status === 401) {
+        localStorage.setItem("bookingDraft", JSON.stringify(data));
+        window.location.href = "/login?redirect=/book";
+        return;
+      }
       const result = await res.json();
       if (!res.ok) throw new Error(result.error);
       setBookingNo(result.booking.bookingNo);

@@ -156,6 +156,18 @@ input, button, textarea, select {
   }
 }
 
+@media (min-width: 641px) and (max-width: 768px) {
+  .hide-on-tablet {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  header > div:first-child span {
+    font-size: 1rem;
+  }
+}
+
 /* Hide number input spinners */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {

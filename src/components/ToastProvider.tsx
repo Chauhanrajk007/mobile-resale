@@ -89,7 +89,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
 
       {/* Toasts */}
-      <div style={{ position: "fixed", top: "5rem", right: "1rem", zIndex: 1000, display: "flex", flexDirection: "column", gap: "0.6rem", maxWidth: "min(90vw, 380px)" }}>
+      <div style={{ position: "fixed", bottom: "5rem", right: "1rem", zIndex: 1000, display: "flex", flexDirection: "column", gap: "0.6rem", maxWidth: "min(90vw, 380px)" }}>
         <AnimatePresence>
           {toasts.map((t) => {
             const c = COLORS[t.type];

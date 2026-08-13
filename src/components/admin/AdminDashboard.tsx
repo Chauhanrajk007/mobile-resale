@@ -8,7 +8,7 @@ import { formatDate, formatCurrency } from "@/lib/utils";
 import { useToast } from "@/components/ToastProvider";
 
 export default function AdminDashboard() {
-  const { user, refresh: refreshUser, loading: authLoading } = useAuth();
+  const { user, refresh: refreshUser, loading: authLoading, logout } = useAuth();
   const { toast, confirm } = useToast();
   const [activeTab, setActiveTab] = useState("overview");
 
@@ -331,9 +331,29 @@ export default function AdminDashboard() {
 
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "1.5rem" }}>
-      <header style={{ marginBottom: "2rem" }}>
-        <h1 style={{ fontSize: "2.25rem", fontWeight: 800 }}>Admin Center</h1>
-        <p style={{ color: "var(--text2)", fontSize: "0.95rem", marginTop: "0.25rem" }}>Manage technicians, phone models, inspections, and update system settings.</p>
+      <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", marginBottom: "2rem", flexWrap: "wrap" }}>
+        <div>
+          <h1 style={{ fontSize: "2.25rem", fontWeight: 800 }}>Admin Center</h1>
+          <p style={{ color: "var(--text2)", fontSize: "0.95rem", marginTop: "0.25rem" }}>Manage technicians, phone models, inspections, and update system settings.</p>
+        </div>
+        <button
+          onClick={() => logout()}
+          style={{
+            display: "inline-flex", alignItems: "center", gap: "0.5rem",
+            padding: "0.6rem 1.1rem", background: "var(--surface2)", border: "1px solid var(--border)",
+            borderRadius: "var(--radius)", color: "var(--danger)", fontWeight: 600,
+            fontSize: "0.875rem", cursor: "pointer", transition: "background 0.2s",
+          }}
+          onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "color-mix(in srgb, var(--danger) 10%, var(--surface2))"; }}
+          onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "var(--surface2)"; }}
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Logout
+        </button>
       </header>
 
       {/* Tabs list */}

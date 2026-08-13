@@ -10,7 +10,8 @@ function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirect") || "/account";
-  const [tab, setTab] = useState<"login" | "register">("login");
+  const initialTab = searchParams.get("tab") === "register" ? "register" : "login";
+  const [tab, setTab] = useState<"login" | "register">(initialTab);
   const [form, setForm] = useState({ name: "", email: "", phone: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");

@@ -25,7 +25,7 @@ export default function Nav() {
     { href: "/admin", label: "Overview", icon: "M4 6h16M4 12h16M4 18h16" }, // Just a basic layout for now
   ];
 
-  const links = user?.role === "admin" ? adminLinks : techLinks;
+  const links = user?.role === "admin" ? [] : techLinks;
 
   return (
     <>
@@ -94,7 +94,7 @@ export default function Nav() {
           CMP
         </div>
 
-        {user && (
+        {user && links.length > 0 && (
           <div className="cmp-nav-links">
             {links.map((link) => {
               const isActive = pathname === link.href || (link.href !== "/technician" && link.href !== "/admin" && pathname.startsWith(link.href));

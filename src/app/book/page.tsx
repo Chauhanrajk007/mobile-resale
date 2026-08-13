@@ -1,19 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import BookingFlow from "@/components/book/BookingFlow";
 
 export default function BookPage() {
-  const router = useRouter();
   const [ok, setOk] = useState(false);
 
   useEffect(() => {
-    fetch("/api/auth/me").then((r) => {
-      if (!r.ok) { router.replace("/login"); return; }
-      return r.json();
-    }).then(() => setOk(true)).catch(() => router.replace("/login"));
-  }, [router]);
+    fetch("/api/auth/me")
+      .then((r) => r.json())
+      .then(() => setOk(true))
+      .catch(() => setOk(true));
+  }, []);
 
   if (!ok) return (
     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}>

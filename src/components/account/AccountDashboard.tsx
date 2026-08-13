@@ -40,6 +40,22 @@ export default function AccountDashboard() {
     } finally { setPaying(""); }
   };
 
+  const handleCancel = async (id: string) => {
+    if (!confirm("Cancel this booking? This cannot be undone.")) return;
+    try {
+      const res = await fetch(`/api/bookings/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        await fetchBookings();
+        alert("Booking cancelled.");
+      } else {
+        const d = await res.json();
+        alert(d.error || "Failed to cancel booking");
+      }
+    } catch (err) {
+      alert("Error cancelling booking");
+    }
+  };
+
   return (
     <div style={{ maxWidth: 700, margin: "0 auto", padding: "1.5rem" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
@@ -119,6 +135,14 @@ export default function AccountDashboard() {
                       padding: "0.625rem 1.25rem", background: "var(--primary)", color: "#fff",
                       borderRadius: "var(--radius)", textDecoration: "none", fontWeight: 600, fontSize: "0.875rem",
                     }}>View Invoice</Link>
+                  )}
+                  {b.status === "pending" && (
+                    <button onClick={() => handleCancel(b._id)} style={{
+                      padding: "0.625rem 1.25rem", background: "color-mix(in srgb, var(--danger) 10%, transparent)",
+                      border: "1px solid color-mix(in srgb, var(--danger) 40%, transparent)",
+                      color: "var(--danger)", borderRadius: "var(--radius)", fontWeight: 600, fontSize: "0.875rem",
+                      cursor: "pointer", transition: "background 0.2s, color 0.2s",
+                    }}>Cancel Booking</button>
                   )}
                 </div>
               </motion.div>

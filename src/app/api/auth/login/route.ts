@@ -11,12 +11,23 @@ export async function POST(request: Request) {
       return Response.json({ error: "Email and password are required" }, { status: 400 });
     }
 
-    const user = await User.findOne({ email, active: true });
+    const user = await User.findOne({ email: email.toLowerCase().trim(), active: true });
     if (!user) {
       return Response.json({ error: "Invalid credentials" }, { status: 401 });
     }
 
-    const isMatch = await user.comparePassword(password);
+    let isMatch = await user.comparePassword(password);
+
+    // Self-heal: if the stored password is NOT bcrypt (e.g. plaintext inserted
+    // directly in the DB via Compass), compare directly and upgrade it to a hash.
+    if (!isMatch && typeof user.passwordHash === "string" && !user.passwordHash.startsWith("$2")) {
+      isMatch = user.passwordHash === password;
+      if (isMatch) {
+        const bcrypt = await import("bcryptjs");
+        user.passwordHash = await bcrypt.hash(password, 10);
+      }
+    }
+
     if (!isMatch) {
       return Response.json({ error: "Invalid credentials" }, { status: 401 });
     }

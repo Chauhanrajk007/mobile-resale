@@ -1,6 +1,6 @@
 import { dbConnect } from "@/lib/db";
 import Booking from "@/models/Booking";
-import { getAuthUser, requireRoles } from "@/lib/auth";
+import { getAuthUser } from "@/lib/auth";
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -47,10 +47,33 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await dbConnect();
-    await requireRoles(["admin"]);
+    const authUser = await getAuthUser();
+    if (!authUser) return Response.json({ error: "Unauthorized" }, { status: 401 });
     const { id } = await params;
-    await Booking.findByIdAndDelete(id);
-    return Response.json({ success: true });
+
+    const booking = await Booking.findById(id);
+    if (!booking) return Response.json({ error: "Not found" }, { status: 404 });
+
+    // Admins can delete any booking; customers can only cancel their own pending ones.
+    if (authUser.role === "admin") {
+      await Booking.findByIdAndDelete(id);
+      return Response.json({ success: true });
+    }
+
+    if (authUser.role === "customer") {
+      if (!booking.customer || booking.customer.toString() !== authUser._id.toString()) {
+        return Response.json({ error: "Forbidden" }, { status: 403 });
+      }
+      if (booking.status !== "pending") {
+        return Response.json({ error: "Only pending bookings can be cancelled" }, { status: 400 });
+      }
+      booking.status = "cancelled";
+      booking.timeline.push({ status: "cancelled", label: "Booking cancelled by customer", at: new Date(), by: authUser._id });
+      await booking.save();
+      return Response.json({ success: true });
+    }
+
+    return Response.json({ error: "Forbidden" }, { status: 403 });
   } catch (error) {
     const msg = error instanceof Error ? error.message : "Server error";
     const status = msg === "Unauthorized" ? 401 : msg === "Forbidden" ? 403 : 500;

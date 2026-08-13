@@ -577,6 +577,70 @@ export default function AdminDashboard() {
                               </div>
                             </div>
 
+                            {b.bill && (
+                              <div style={{ marginTop: "1.25rem", borderTop: "1px solid var(--border)", paddingTop: "1.25rem" }}>
+                                <h4 style={{ fontSize: "0.9rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--primary)" }}>Bill & Payment</h4>
+                                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
+                                  <thead>
+                                    <tr style={{ borderBottom: "1px solid var(--border)", color: "var(--text2)" }}>
+                                      <th style={{ textAlign: "left", padding: "0.4rem 0" }}>Item</th>
+                                      <th style={{ textAlign: "center", padding: "0.4rem 0" }}>Qty</th>
+                                      <th style={{ textAlign: "right", padding: "0.4rem 0" }}>Amount</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr style={{ borderBottom: "1px solid var(--border)" }}>
+                                      <td style={{ padding: "0.4rem 0" }}>Inspection Service Fee</td>
+                                      <td style={{ textAlign: "center", padding: "0.4rem 0" }}>1</td>
+                                      <td style={{ textAlign: "right", padding: "0.4rem 0" }}>{formatCurrency(b.bill.serviceFee || 350)}</td>
+                                    </tr>
+                                    {(b.bill.items || []).map((item: any, i: number) => (
+                                      <tr key={i} style={{ borderBottom: "1px solid var(--border)" }}>
+                                        <td style={{ padding: "0.4rem 0" }}>{item.name}</td>
+                                        <td style={{ textAlign: "center", padding: "0.4rem 0" }}>{item.qty}</td>
+                                        <td style={{ textAlign: "right", padding: "0.4rem 0" }}>{formatCurrency(item.amount)}</td>
+                                      </tr>
+                                    ))}
+                                    <tr>
+                                      <td colSpan={2} style={{ textAlign: "right", padding: "0.6rem 0", fontWeight: 800 }}>Total</td>
+                                      <td style={{ textAlign: "right", padding: "0.6rem 0", fontWeight: 800, color: "var(--primary)" }}>{formatCurrency(b.bill.total || 350)}</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+
+                                {b.review && (
+                                  <div style={{ marginTop: "0.75rem", padding: "0.75rem 1rem", background: "var(--surface2)", borderRadius: "var(--radius)" }}>
+                                    {b.review.verdict && <p style={{ fontSize: "0.85rem", fontWeight: 600, marginBottom: "0.35rem" }}>Verdict: {b.review.verdict}</p>}
+                                    {b.review.issues && <p style={{ fontSize: "0.8rem", color: "var(--text2)" }}>Issues: {b.review.issues}</p>}
+                                  </div>
+                                )}
+
+                                {b.bill.notes && <p style={{ fontSize: "0.8rem", color: "var(--text2)", fontStyle: "italic", marginTop: "0.5rem" }}>Note: {b.bill.notes}</p>}
+
+                                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "0.75rem", flexWrap: "wrap", gap: "0.5rem" }}>
+                                  <span style={{
+                                    padding: "0.3rem 0.75rem", borderRadius: 99, fontSize: "0.78rem", fontWeight: 700,
+                                    background: b.payment?.status === "paid" ? "color-mix(in srgb, var(--success) 12%, transparent)" : "color-mix(in srgb, var(--warning) 12%, transparent)",
+                                    color: b.payment?.status === "paid" ? "var(--success)" : "var(--warning)"
+                                  }}>
+                                    {b.payment?.status === "paid" ? "Paid" : "Payment Pending"}
+                                  </span>
+                                  <a href={`/invoice/${b._id}?print=1`} target="_blank" rel="noreferrer" style={{
+                                    display: "inline-flex", alignItems: "center", gap: "0.4rem",
+                                    padding: "0.5rem 1rem", background: "var(--primary)", color: "#fff",
+                                    borderRadius: "var(--radius)", textDecoration: "none", fontWeight: 600, fontSize: "0.8rem"
+                                  }}>
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                      <polyline points="7 10 12 15 17 10" />
+                                      <line x1="12" y1="15" x2="12" y2="3" />
+                                    </svg>
+                                    View Invoice / PDF
+                                  </a>
+                                </div>
+                              </div>
+                            )}
+
                             {b.timeline && (
                               <div style={{ marginTop: "1.25rem" }}>
                                 <h4 style={{ fontSize: "0.9rem", fontWeight: 700, marginBottom: "0.5rem", color: "var(--text2)" }}>Timeline</h4>

@@ -10,8 +10,8 @@ export default function Nav() {
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
-  // Don't show nav on login or home or report pages
-  if (pathname === "/" || pathname === "/login" || pathname.startsWith("/report/")) {
+  // Don't show nav on login or home or report or invoice (PDF) pages
+  if (pathname === "/" || pathname === "/login" || pathname.startsWith("/report/") || pathname.startsWith("/invoice/")) {
     return null;
   }
 

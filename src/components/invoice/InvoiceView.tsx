@@ -14,6 +14,18 @@ export default function InvoiceView({ booking }: { booking: any }) {
     }
   }, []);
 
+  useEffect(() => {
+    const main = document.querySelector<HTMLElement>(".app-main");
+    if (main) {
+      main.style.paddingTop = "0";
+      main.style.paddingBottom = "0";
+      return () => {
+        main.style.paddingTop = "";
+        main.style.paddingBottom = "";
+      };
+    }
+  }, []);
+
   return (
     <div className="invoice-pad" style={{ maxWidth: 800, margin: "0 auto", padding: "2rem" }}>
       <style>{`

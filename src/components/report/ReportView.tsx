@@ -1,11 +1,25 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui";
 import { useToast } from "@/components/ToastProvider";
 
 export default function ReportView({ inspection }: { inspection: any }) {
   const { toast } = useToast();
+
+  useEffect(() => {
+    const main = document.querySelector<HTMLElement>(".app-main");
+    if (main) {
+      main.style.paddingTop = "0";
+      main.style.paddingBottom = "0";
+      return () => {
+        main.style.paddingTop = "";
+        main.style.paddingBottom = "";
+      };
+    }
+  }, []);
+
   const handlePrint = () => {
     window.print();
   };

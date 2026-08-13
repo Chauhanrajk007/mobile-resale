@@ -69,7 +69,7 @@ export default function Nav() {
             bottom: 0;
             border-bottom: none;
             border-top: 1px solid var(--border);
-            padding: 0 1rem;
+            padding: 0 1rem env(safe-area-inset-bottom);
             justify-content: space-around;
             background: var(--surface); /* Ensure solid for mobile */
           }

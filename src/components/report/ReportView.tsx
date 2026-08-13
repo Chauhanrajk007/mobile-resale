@@ -23,7 +23,7 @@ export default function ReportView({ inspection }: { inspection: any }) {
   };
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem 1.5rem' }}>
+    <div className="report-pad" style={{ maxWidth: '800px', margin: '0 auto', padding: '2rem 1.5rem' }}>
       <div className="no-print" style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', justifyContent: 'flex-end' }}>
         <button 
           onClick={handleShare}
@@ -42,7 +42,7 @@ export default function ReportView({ inspection }: { inspection: any }) {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="glass"
+        className="glass report-card-pad"
         style={{
           padding: '3rem',
           borderRadius: 'var(--radius-lg)',
@@ -51,7 +51,7 @@ export default function ReportView({ inspection }: { inspection: any }) {
           background: 'var(--surface)' // solid background for report
         }}
       >
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px solid var(--border)', paddingBottom: '2rem', marginBottom: '2rem' }}>
+        <header className="report-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '2px solid var(--border)', paddingBottom: '2rem', marginBottom: '2rem' }}>
           <div>
             <h1 style={{ fontSize: '2.5rem', fontWeight: '800', color: 'var(--primary)', letterSpacing: '-0.05em', marginBottom: '0.5rem' }}>CheckMyPhone</h1>
             <p style={{ color: 'var(--text2)' }}>Certified Inspection Report</p>
@@ -67,7 +67,7 @@ export default function ReportView({ inspection }: { inspection: any }) {
 
         <section style={{ marginBottom: '3rem' }}>
           <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', marginBottom: '1rem' }}>Device Details</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className="grid-2-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <div>
               <span style={{ color: 'var(--text2)', fontSize: '0.875rem' }}>Brand</span>
               <div style={{ fontWeight: '600', fontSize: '1.125rem' }}>{inspection.brand || "N/A"}</div>
@@ -89,7 +89,7 @@ export default function ReportView({ inspection }: { inspection: any }) {
 
         <section style={{ marginBottom: '3rem' }}>
           <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem', marginBottom: '1rem' }}>Condition Summary</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div className="grid-2-col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <div>
               <span style={{ color: 'var(--text2)', fontSize: '0.875rem' }}>Screen Condition</span>
               <div style={{ fontWeight: '600' }}>{inspection.condition?.screen || "N/A"}</div>

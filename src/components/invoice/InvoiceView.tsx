@@ -6,7 +6,7 @@ import { useToast } from "@/components/ToastProvider";
 export default function InvoiceView({ booking }: { booking: any }) {
   const { toast } = useToast();
   return (
-    <div style={{ maxWidth: 800, margin: "0 auto", padding: "2rem" }}>
+    <div className="invoice-pad" style={{ maxWidth: 800, margin: "0 auto", padding: "2rem" }}>
       <style>{`
         @media print {
           .no-print { display: none !important; }
@@ -36,7 +36,7 @@ export default function InvoiceView({ booking }: { booking: any }) {
       </div>
 
       {/* Invoice Card */}
-      <div style={{
+      <div className="invoice-card-pad" style={{
         background: "var(--surface)", border: "1px solid var(--border)",
         borderRadius: "var(--radius-lg)", padding: "2.5rem", boxShadow: "var(--shadow-md)",
       }}>
@@ -54,7 +54,7 @@ export default function InvoiceView({ booking }: { booking: any }) {
         </div>
 
         {/* Customer & Phone */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "2rem" }}>
+        <div className="grid-2-col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "2rem" }}>
           <div>
             <p style={{ color: "var(--text2)", fontSize: "0.8rem", fontWeight: 600, marginBottom: "0.25rem" }}>CUSTOMER</p>
             <p style={{ fontWeight: 600 }}>{booking.customer?.name}</p>
@@ -90,7 +90,7 @@ export default function InvoiceView({ booking }: { booking: any }) {
         )}
 
         {/* Bill Table */}
-        <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "1.5rem" }}>
+        <table className="invoice-bill-table" style={{ width: "100%", borderCollapse: "collapse", marginBottom: "1.5rem" }}>
           <thead>
             <tr style={{ borderBottom: "2px solid var(--border)" }}>
               <th style={{ textAlign: "left", padding: "0.75rem 0", fontSize: "0.85rem", color: "var(--text2)" }}>Item</th>

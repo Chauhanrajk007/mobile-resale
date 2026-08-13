@@ -188,7 +188,7 @@ export default function LandingPage() {
           ))}
         </nav>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+        <div className="nav-actions" style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
           <ThemeToggle />
           <div style={{ position: "relative" }}>
             <button

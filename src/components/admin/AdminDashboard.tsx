@@ -330,10 +330,10 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "1.5rem" }}>
+    <div className="admin-page" style={{ maxWidth: "1200px", margin: "0 auto", padding: "1.5rem" }}>
       <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", marginBottom: "2rem", flexWrap: "wrap" }}>
         <div>
-          <h1 style={{ fontSize: "2.25rem", fontWeight: 800 }}>Admin Center</h1>
+          <h1 className="admin-header-title" style={{ fontSize: "2.25rem", fontWeight: 800 }}>Admin Center</h1>
           <p style={{ color: "var(--text2)", fontSize: "0.95rem", marginTop: "0.25rem" }}>Manage technicians, phone models, inspections, and update system settings.</p>
         </div>
         <button
@@ -357,7 +357,7 @@ export default function AdminDashboard() {
       </header>
 
       {/* Tabs list */}
-      <div style={{
+      <div className="admin-tabs" style={{
         display: "flex", gap: "0.25rem", marginBottom: "2rem",
         borderBottom: "1px solid var(--border)", overflowX: "auto", paddingBottom: "0.5rem"
       }}>

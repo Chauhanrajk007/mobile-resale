@@ -57,6 +57,11 @@ body {
   transition: background 0.3s, color 0.3s;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a {
+  touch-action: manipulation;
 }
 
 html {
@@ -148,23 +153,70 @@ input, button, textarea, select {
   body {
     font-size: 16px;
   }
-}
-
-@media (max-width: 380px) {
-  .mockup-wrap {
-    display: none !important;
+  .report-pad {
+    padding: 2rem 1rem !important;
+  }
+  .report-card-pad {
+    padding: 1.5rem 1.25rem !important;
+  }
+  .invoice-pad {
+    padding: 1rem !important;
+  }
+  .invoice-card-pad {
+    padding: 1.5rem 1.25rem !important;
+  }
+  .grid-2-col {
+    grid-template-columns: 1fr !important;
+  }
+  .section-pad {
+    padding: 3.5rem 1rem !important;
+  }
+  .report-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .invoice-bill-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+  .admin-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .admin-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .admin-tabs > button {
+    flex-shrink: 0;
+  }
+  .admin-header-title {
+    font-size: 1.5rem !important;
+  }
+  .admin-page {
+    padding: 1rem !important;
+  }
+  .tech-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .two-col {
+    grid-template-columns: 1fr !important;
   }
 }
 
-@media (min-width: 641px) and (max-width: 768px) {
-  .hide-on-tablet {
-    display: none !important;
+@media (max-width: 420px) {
+  .nav-actions {
+    gap: 0.4rem !important;
   }
 }
 
-@media (max-width: 480px) {
-  header > div:first-child span {
-    font-size: 1rem;
+/* Mobile bottom nav (height 64px) overlaps fixed wizard controls */
+@media (max-width: 767px) {
+  .wizard-bottom-nav {
+    bottom: 64px !important;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom)) !important;
   }
 }
 

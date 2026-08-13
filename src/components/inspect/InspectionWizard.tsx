@@ -243,7 +243,7 @@ export default function InspectionWizard() {
 
       {/* Bottom Navigation */}
       {currentStep < STEPS.length - 1 && (
-        <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: "16px", background: "var(--bg)", borderTop: "1px solid var(--border)", display: "flex", gap: "16px", zIndex: 10, maxWidth: "600px", margin: "0 auto" }}>
+        <div className="wizard-bottom-nav" style={{ position: "fixed", bottom: 0, left: 0, right: 0, padding: "16px", background: "var(--bg)", borderTop: "1px solid var(--border)", display: "flex", gap: "16px", zIndex: 10, maxWidth: "600px", margin: "0 auto" }}>
           <button
             onClick={prevStep}
             disabled={currentStep === 0}

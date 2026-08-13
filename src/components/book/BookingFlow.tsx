@@ -21,6 +21,7 @@ export default function BookingFlow() {
   const [customModel, setCustomModel] = useState(false);
   const [modelSearch, setModelSearch] = useState("");
   const [minDate, setMinDate] = useState("");
+  const [immediate, setImmediate] = useState(false);
   const [data, setData] = useState({
     phone: { brand: "", model: "", condition: "" },
     address: { line1: "", city: "", pincode: "", landmark: "" },
@@ -58,6 +59,7 @@ export default function BookingFlow() {
         const parsed = JSON.parse(draft);
         if (parsed.phone) {
           setData(prev => ({ ...prev, ...parsed }));
+          if (parsed.timeSlot === "ASAP (Immediate)") setImmediate(true);
           if (parsed.phone.brand && parsed.phone.model && parsed.phone.condition) {
             setStep(1);
           }
@@ -95,8 +97,19 @@ export default function BookingFlow() {
 
   const canNext = () => {
     if (step === 0) return data.phone.brand && data.phone.model && data.phone.condition;
-    if (step === 1) return data.address.line1 && data.address.city && data.address.pincode && data.meetDate && data.timeSlot;
+    if (step === 1) return data.address.line1 && data.address.city && data.address.pincode && (immediate || (data.meetDate && data.timeSlot));
     return true;
+  };
+
+  const selectImmediate = () => {
+    setImmediate(true);
+    const today = new Date();
+    update({ meetDate: today.toISOString().split("T")[0], timeSlot: "ASAP (Immediate)" });
+  };
+
+  const selectScheduled = () => {
+    setImmediate(false);
+    update({ meetDate: "", timeSlot: "" });
   };
 
   const handleSubmit = async () => {
@@ -299,14 +312,34 @@ export default function BookingFlow() {
                   <input placeholder="Pincode *" value={data.address.pincode} onChange={e => updateAddress({ pincode: e.target.value })} style={inputStyle} required />
                 </div>
                 <input placeholder="Landmark (optional)" value={data.address.landmark} onChange={e => updateAddress({ landmark: e.target.value })} style={inputStyle} />
-                <p style={{ color: "var(--text2)", fontSize: "0.9rem", marginTop: "0.5rem" }}>Preferred Date</p>
-                <DatePicker value={data.meetDate} onChange={v => update({ meetDate: v })} min={minDate} />
-                <p style={{ color: "var(--text2)", fontSize: "0.9rem" }}>Time Slot</p>
+                <p style={{ color: "var(--text2)", fontSize: "0.9rem", marginTop: "0.5rem" }}>Booking Type</p>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
-                  {TIME_SLOTS.map(t => (
-                    <motion.button key={t} whileTap={{ scale: 0.95 }} onClick={() => update({ timeSlot: t })} style={pillStyle(data.timeSlot === t)}>{t}</motion.button>
-                  ))}
+                  <motion.button whileTap={{ scale: 0.95 }} onClick={selectImmediate} style={pillStyle(immediate)}>
+                    <span style={{ display: "block" }}>⚡ Immediate</span>
+                    <span style={{ display: "block", fontSize: "0.72rem", fontWeight: 500, opacity: 0.85 }}>As soon as possible</span>
+                  </motion.button>
+                  <motion.button whileTap={{ scale: 0.95 }} onClick={selectScheduled} style={pillStyle(!immediate)}>
+                    <span style={{ display: "block" }}>📅 Schedule</span>
+                    <span style={{ display: "block", fontSize: "0.72rem", fontWeight: 500, opacity: 0.85 }}>Pick date & time</span>
+                  </motion.button>
                 </div>
+                {!immediate && (
+                  <>
+                    <p style={{ color: "var(--text2)", fontSize: "0.9rem", marginTop: "0.75rem" }}>Preferred Date</p>
+                    <DatePicker value={data.meetDate} onChange={v => update({ meetDate: v })} min={minDate} />
+                    <p style={{ color: "var(--text2)", fontSize: "0.9rem" }}>Time Slot</p>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
+                      {TIME_SLOTS.map(t => (
+                        <motion.button key={t} whileTap={{ scale: 0.95 }} onClick={() => update({ timeSlot: t })} style={pillStyle(data.timeSlot === t)}>{t}</motion.button>
+                      ))}
+                    </div>
+                  </>
+                )}
+                {immediate && (
+                  <div style={{ padding: "0.9rem 1rem", background: "color-mix(in srgb, var(--primary) 8%, transparent)", border: "1px dashed var(--primary)", borderRadius: "var(--radius)", color: "var(--text)", fontSize: "0.85rem" }}>
+                    ⚡ A technician will be assigned as soon as possible for today.
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -328,7 +361,11 @@ export default function BookingFlow() {
                 </div>
                 <div style={{ marginBottom: "1rem" }}>
                   <span style={{ color: "var(--text2)", fontSize: "0.85rem" }}>When</span>
-                  <p style={{ fontWeight: 500 }}>{data.meetDate && formatDate(data.meetDate)} • {data.timeSlot}</p>
+                  {immediate || data.timeSlot === "ASAP (Immediate)" ? (
+                    <p style={{ fontWeight: 500 }}>⚡ Immediate — as soon as possible (today)</p>
+                  ) : (
+                    <p style={{ fontWeight: 500 }}>{data.meetDate && formatDate(data.meetDate)} • {data.timeSlot}</p>
+                  )}
                 </div>
                 <div style={{ borderTop: "1px solid var(--border)", paddingTop: "1rem", display: "flex", justifyContent: "space-between" }}>
                   <span style={{ fontWeight: 600 }}>Inspection Fee</span>

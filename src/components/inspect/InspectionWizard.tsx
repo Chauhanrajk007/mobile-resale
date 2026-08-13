@@ -41,7 +41,13 @@ const INITIAL_CONDITION: PhysicalCondition = {
   overallBody: "good"
 };
 
-export default function InspectionWizard() {
+export default function InspectionWizard({
+  initialBooking,
+  onComplete,
+}: {
+  initialBooking?: { _id?: string; phone?: { brand?: string; model?: string; condition?: string } } | null;
+  onComplete?: () => void;
+}) {
   const { toast } = useToast();
   const [currentStep, setCurrentStep] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -49,7 +55,11 @@ export default function InspectionWizard() {
   const [location, setLocation] = useState<{lat: number | null, lng: number | null, address: string}>({ lat: null, lng: null, address: "" });
 
   const [data, setData] = useState({
-    phone: { brand: "", model: "", variant: "" },
+    phone: {
+      brand: initialBooking?.phone?.brand || "",
+      model: initialBooking?.phone?.model || "",
+      variant: ""
+    },
     imei: "",
     serialNumber: "",
     deviceInfo: {
@@ -67,7 +77,8 @@ export default function InspectionWizard() {
   });
 
   useEffect(() => {
-    // Load draft
+    // Load draft (skip when starting from an assigned booking)
+    if (initialBooking) return;
     const draft = localStorage.getItem("inspectionDraft");
     if (draft) {
       try {
@@ -82,11 +93,12 @@ export default function InspectionWizard() {
         (err) => console.log("Location access denied")
       );
     }
-  }, []);
+  }, [initialBooking]);
 
   useEffect(() => {
+    if (initialBooking) return;
     localStorage.setItem("inspectionDraft", JSON.stringify(data));
-  }, [data]);
+  }, [data, initialBooking]);
 
   const updateData = (updates: Partial<typeof data>) => {
     setData((prev) => ({ ...prev, ...updates }));
@@ -146,7 +158,19 @@ export default function InspectionWizard() {
       });
       if (!completeRes.ok) throw new Error("Failed to complete inspection");
 
+      // 4. Mark the linked booking as inspected
+      if (initialBooking?._id) {
+        try {
+          await fetch(`/api/bookings/${initialBooking._id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: "inspected", timelineLabel: "Inspection completed by technician" }),
+          });
+        } catch (e) { console.error(e); }
+      }
+
       localStorage.removeItem("inspectionDraft");
+      onComplete?.();
     } catch (err) {
       console.error(err);
       toast("error", "Failed to submit inspection", "Please try again.");

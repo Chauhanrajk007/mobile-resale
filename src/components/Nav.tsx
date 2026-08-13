@@ -16,9 +16,8 @@ export default function Nav() {
   }
 
   const techLinks = [
-    { href: "/technician", label: "Home", icon: "M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10" },
-    { href: "/inspect", label: "Inspect", icon: "M12 4v16m8-8H4" },
-    { href: "/technician/history", label: "History", icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" },
+    { href: "/technician", label: "Dashboard", icon: "M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M9 22V12h6v10" },
+    { href: "/", label: "Home", icon: "M3 10.5V21a1 1 0 0 0 1 1h5v-6h6v6h5a1 1 0 0 0 1-1V10.5M21 8.5l-9-6.5-9 6.5" },
   ];
 
   const adminLinks = [
@@ -90,14 +89,14 @@ export default function Nav() {
         }
       `}</style>
       <nav className="cmp-nav glass">
-        <div className="cmp-nav-brand" style={{ fontWeight: 800, fontSize: '1.25rem', color: 'var(--primary)' }}>
+        <Link href="/" className="cmp-nav-brand" style={{ fontWeight: 800, fontSize: '1.25rem', color: 'var(--primary)', textDecoration: 'none' }}>
           CMP
-        </div>
+        </Link>
 
         {user && links.length > 0 && (
           <div className="cmp-nav-links">
             {links.map((link) => {
-              const isActive = pathname === link.href || (link.href !== "/technician" && link.href !== "/admin" && pathname.startsWith(link.href));
+              const isActive = pathname === link.href || (link.href !== "/" && link.href !== "/technician" && link.href !== "/admin" && pathname.startsWith(link.href));
               return (
                 <Link key={link.href} href={link.href} className="cmp-nav-link" data-active={isActive}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

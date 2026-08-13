@@ -54,10 +54,14 @@ export async function POST(request: Request) {
 
     // Notify admins with email notifications enabled
     try {
+      const notifyTargets = new Set<string>();
+      if (process.env.NOTIFY_EMAIL) notifyTargets.add(process.env.NOTIFY_EMAIL);
       const admins = await User.find({ role: "admin", emailNotifications: { $ne: false }, active: true });
-      for (const admin of admins) {
+      for (const admin of admins) notifyTargets.add(admin.email);
+
+      for (const to of notifyTargets) {
         await sendEmail({
-          to: admin.email,
+          to,
           subject: `[New Booking] ${bookingNo} - ${body.phone?.brand} ${body.phone?.model}`,
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e7e5e4; border-radius: 12px; background: #fff; color: #1c1917;">

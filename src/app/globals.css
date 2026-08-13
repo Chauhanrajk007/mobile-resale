@@ -252,6 +252,9 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 @media print {
+  @page {
+    margin: 0;
+  }
   body {
     background: #fff;
     color: #000;

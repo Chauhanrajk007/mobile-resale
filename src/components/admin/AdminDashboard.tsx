@@ -577,7 +577,7 @@ export default function AdminDashboard() {
                               </div>
                             </div>
 
-                            {b.bill && (
+                            {b.bill?.generatedAt && (
                               <div style={{ marginTop: "1.25rem", borderTop: "1px solid var(--border)", paddingTop: "1.25rem" }}>
                                 <h4 style={{ fontSize: "0.9rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--primary)" }}>Bill & Payment</h4>
                                 <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>

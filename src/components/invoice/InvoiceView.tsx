@@ -26,6 +26,22 @@ export default function InvoiceView({ booking }: { booking: any }) {
     }
   }, []);
 
+  if (!booking?.bill?.generatedAt) {
+    return (
+      <div className="invoice-pad" style={{ maxWidth: 800, margin: "0 auto", padding: "2rem" }}>
+        <div style={{
+          background: "var(--surface)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)",
+          padding: "3rem 2rem", textAlign: "center", boxShadow: "var(--shadow-md)",
+        }}>
+          <p style={{ fontSize: "1.25rem", fontWeight: 700, marginBottom: "0.5rem" }}>No bill generated yet</p>
+          <p style={{ color: "var(--text2)", fontSize: "0.9rem", maxWidth: 420, margin: "0 auto" }}>
+            A bill has not been generated for this booking yet. Once the inspection is priced, the invoice will appear here.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="invoice-pad" style={{ maxWidth: 800, margin: "0 auto", padding: "2rem" }}>
       <style>{`

@@ -8,6 +8,14 @@ export async function GET(request: Request) {
     
     const { searchParams } = new URL(request.url);
     const brand = searchParams.get("brand");
+    const distinct = searchParams.get("distinct");
+
+    if (distinct === "brand") {
+      const brands = await PhoneModel.distinct("brand", { active: true });
+      // Sort alphabetically
+      brands.sort();
+      return Response.json({ brands });
+    }
     
     const query: any = { active: true };
     if (brand) {

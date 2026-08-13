@@ -12,8 +12,11 @@ export default function BookingFlow() {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [bookingNo, setBookingNo] = useState("");
+  const [brands, setBrands] = useState<string[]>([]);
+  const [brandsLoading, setBrandsLoading] = useState(true);
   const [models, setModels] = useState<string[]>([]);
   const [customModel, setCustomModel] = useState(false);
+  const [modelSearch, setModelSearch] = useState("");
   const [minDate, setMinDate] = useState("");
   const [data, setData] = useState({
     phone: { brand: "", model: "", condition: "" },
@@ -21,6 +24,23 @@ export default function BookingFlow() {
     meetDate: "",
     timeSlot: "",
   });
+
+  useEffect(() => {
+    fetch("/api/phones?distinct=brand")
+      .then((r) => r.json())
+      .then((d) => {
+        if (Array.isArray(d?.brands) && d.brands.length > 0) {
+          setBrands(d.brands);
+        } else {
+          setBrands(Array.from(BRANDS));
+        }
+        setBrandsLoading(false);
+      })
+      .catch(() => {
+        setBrands(Array.from(BRANDS));
+        setBrandsLoading(false);
+      });
+  }, []);
 
   useEffect(() => {
     const today = new Date();
@@ -56,6 +76,7 @@ export default function BookingFlow() {
   useEffect(() => {
     if (!data.phone.brand) return;
     setCustomModel(false);
+    setModelSearch(""); // Reset search on brand change
     fetch(`/api/phones?brand=${encodeURIComponent(data.phone.brand)}`)
       .then(r => r.json())
       .then(d => {
@@ -148,9 +169,13 @@ export default function BookingFlow() {
               <h2 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1.5rem" }}>Select Your Phone</h2>
               <p style={{ color: "var(--text2)", marginBottom: "1rem", fontSize: "0.9rem" }}>Brand</p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))", gap: "0.5rem", marginBottom: "1.5rem" }}>
-                {BRANDS.map(b => (
-                  <motion.button key={b} whileTap={{ scale: 0.95 }} onClick={() => updatePhone({ brand: b, model: "" })} style={pillStyle(data.phone.brand === b)}>{b}</motion.button>
-                ))}
+                {brandsLoading ? (
+                  <span style={{ fontSize: "0.85rem", color: "var(--text2)", gridColumn: "1 / -1" }}>Loading brands…</span>
+                ) : (
+                  brands.map(b => (
+                    <motion.button key={b} whileTap={{ scale: 0.95 }} onClick={() => updatePhone({ brand: b, model: "" })} style={pillStyle(data.phone.brand === b)}>{b}</motion.button>
+                  ))
+                )}
               </div>
               {data.phone.brand && (
                 <>
@@ -164,10 +189,64 @@ export default function BookingFlow() {
                       style={{ ...inputStyle, marginBottom: "0.5rem" }}
                     />
                   ) : (
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))", gap: "0.5rem", marginBottom: "0.5rem" }}>
-                      {models.map((m) => (
-                        <motion.button key={m} whileTap={{ scale: 0.95 }} onClick={() => updatePhone({ model: m })} style={pillStyle(data.phone.model === m)}>{m}</motion.button>
-                      ))}
+                    <div>
+                      {/* Sleek Search Bar */}
+                      <div style={{ position: "relative", marginBottom: "0.65rem" }}>
+                        <span style={{ position: "absolute", left: "0.85rem", top: "50%", transform: "translateY(-50%)", fontSize: "0.9rem", color: "var(--text2)", pointerEvents: "none" }}>🔍</span>
+                        <input
+                          placeholder={`Search ${data.phone.brand} models...`}
+                          value={modelSearch}
+                          onChange={(e) => setModelSearch(e.target.value)}
+                          style={{ ...inputStyle, paddingLeft: "2.2rem", paddingRight: "2rem", height: "38px" }}
+                        />
+                        {modelSearch && (
+                          <button
+                            type="button"
+                            onClick={() => setModelSearch("")}
+                            style={{
+                              position: "absolute", right: "0.85rem", top: "50%", transform: "translateY(-50%)",
+                              background: "none", border: "none", color: "var(--text2)", cursor: "pointer",
+                              fontSize: "0.8rem", padding: "4px"
+                            }}
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+
+                      {/* Filtered Grid */}
+                      {(() => {
+                        const filtered = models.filter((m) => m.toLowerCase().includes(modelSearch.toLowerCase()));
+                        if (filtered.length === 0) {
+                          return (
+                            <div style={{ textAlign: "center", padding: "1.25rem 0", color: "var(--text2)", fontSize: "0.85rem", border: "1px dashed var(--border)", borderRadius: "var(--radius)", marginBottom: "0.5rem" }}>
+                              No matching models found.
+                            </div>
+                          );
+                        }
+                        return (
+                          <div style={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))",
+                            gap: "0.45rem",
+                            maxHeight: "170px",
+                            overflowY: "auto",
+                            paddingRight: "0.25rem",
+                            marginBottom: "0.5rem"
+                          }}>
+                            {filtered.map((m) => (
+                              <motion.button
+                                type="button"
+                                key={m} whileTap={{ scale: 0.95 }}
+                                onClick={() => updatePhone({ model: m })}
+                                style={pillStyle(data.phone.model === m)}
+                              >
+                                {m}
+                              </motion.button>
+                            ))}
+                          </div>
+                        );
+                      })()}
                     </div>
                   )}
                   <button
@@ -176,7 +255,7 @@ export default function BookingFlow() {
                       background: "transparent", border: "none", color: "var(--primary)",
                       fontWeight: 600, fontSize: "0.85rem", cursor: "pointer",
                       padding: "0.35rem 0", textDecoration: "underline", textUnderlineOffset: 3,
-                      marginBottom: "1.5rem",
+                      marginBottom: "1.5rem", display: "inline-block"
                     }}
                   >
                     {customModel ? "← Choose from list instead" : "My model isn't listed — enter it manually"}

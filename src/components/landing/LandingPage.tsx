@@ -76,17 +76,38 @@ export default function LandingPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
 
+  const [brands, setBrands] = useState<string[]>([]);
+  const [brandsLoading, setBrandsLoading] = useState(true);
   const [phone, setPhone] = useState({ brand: "", model: "", condition: "" });
   const [models, setModels] = useState<string[]>([]);
   const [modelsLoading, setModelsLoading] = useState(false);
   const [modelsSource, setModelsSource] = useState<"db" | "builtin">("builtin");
   const [customModel, setCustomModel] = useState(false);
+  const [modelSearch, setModelSearch] = useState("");
+
+  useEffect(() => {
+    fetch("/api/phones?distinct=brand")
+      .then((r) => r.json())
+      .then((d) => {
+        if (Array.isArray(d?.brands) && d.brands.length > 0) {
+          setBrands(d.brands);
+        } else {
+          setBrands(Array.from(BRANDS));
+        }
+        setBrandsLoading(false);
+      })
+      .catch(() => {
+        setBrands(Array.from(BRANDS));
+        setBrandsLoading(false);
+      });
+  }, []);
 
   useEffect(() => {
     if (!phone.brand) return;
     setModelsLoading(true);
     setModelsSource("builtin");
     setCustomModel(false);
+    setModelSearch(""); // Reset search on brand change
     fetch(`/api/phones?brand=${encodeURIComponent(phone.brand)}`)
       .then((r) => r.json())
       .then((d) => {
@@ -360,19 +381,21 @@ export default function LandingPage() {
             <div>
               <label style={labelStyle}>Brand</label>
               <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
-                {BRANDS.slice(0, 8).map((b) => (
-                  <motion.button
-                    key={b} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                    onClick={() => setPhone({ ...phone, brand: b, model: "", condition: "" })}
-                    style={pillStyle(phone.brand === b)}
-                  >
-                    {b}
-                  </motion.button>
-                ))}
-                {phone.brand && !(BRANDS.slice(0, 8) as readonly string[]).includes(phone.brand) && (
-                  <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} style={pillStyle(true)}>
-                    {phone.brand}
-                  </motion.button>
+                {brandsLoading ? (
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "0.85rem", color: "var(--text2)" }}>
+                    <div style={{ width: 14, height: 14, border: "2px solid var(--border)", borderTopColor: "var(--primary)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
+                    Loading brands…
+                  </div>
+                ) : (
+                  brands.map((b) => (
+                    <motion.button
+                      key={b} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                      onClick={() => setPhone({ ...phone, brand: b, model: "", condition: "" })}
+                      style={pillStyle(phone.brand === b)}
+                    >
+                      {b}
+                    </motion.button>
+                  ))
                 )}
               </div>
             </div>
@@ -388,9 +411,6 @@ export default function LandingPage() {
                   </div>
                 ) : models.length > 0 ? (
                   <div>
-                    {modelsSource === "builtin" && (
-                      <p style={{ fontSize: "0.72rem", color: "var(--text2)", marginBottom: "0.5rem" }}>Popular models</p>
-                    )}
                     {customModel ? (
                       <input
                         autoFocus
@@ -400,16 +420,63 @@ export default function LandingPage() {
                         style={inputStyle}
                       />
                     ) : (
-                      <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", maxHeight: 150, overflowY: "auto", paddingRight: "0.25rem" }}>
-                        {models.map((m) => (
-                          <motion.button
-                            key={m} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                            onClick={() => setPhone({ ...phone, model: m })}
-                            style={pillStyle(phone.model === m)}
-                          >
-                            {m}
-                          </motion.button>
-                        ))}
+                      <div>
+                        {/* Sleek Search Bar */}
+                        <div style={{ position: "relative", marginBottom: "0.65rem" }}>
+                          <span style={{ position: "absolute", left: "0.85rem", top: "50%", transform: "translateY(-50%)", fontSize: "0.9rem", color: "var(--text2)", pointerEvents: "none" }}>🔍</span>
+                          <input
+                            placeholder={`Search ${phone.brand} models...`}
+                            value={modelSearch}
+                            onChange={(e) => setModelSearch(e.target.value)}
+                            style={{ ...inputStyle, paddingLeft: "2.2rem", paddingRight: "2rem", height: "38px" }}
+                          />
+                          {modelSearch && (
+                            <button
+                              type="button"
+                              onClick={() => setModelSearch("")}
+                              style={{
+                                position: "absolute", right: "0.85rem", top: "50%", transform: "translateY(-50%)",
+                                background: "none", border: "none", color: "var(--text2)", cursor: "pointer",
+                                fontSize: "0.8rem", padding: "4px"
+                              }}
+                            >
+                              ✕
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Filtered Grid */}
+                        {(() => {
+                          const filtered = models.filter((m) => m.toLowerCase().includes(modelSearch.toLowerCase()));
+                          if (filtered.length === 0) {
+                            return (
+                              <div style={{ textAlign: "center", padding: "1.25rem 0", color: "var(--text2)", fontSize: "0.85rem", border: "1px dashed var(--border)", borderRadius: "var(--radius)" }}>
+                                No matching models found.
+                              </div>
+                            );
+                          }
+                          return (
+                            <div style={{
+                              display: "grid",
+                              gridTemplateColumns: "1fr 1fr",
+                              gap: "0.45rem",
+                              maxHeight: "170px",
+                              overflowY: "auto",
+                              paddingRight: "0.25rem",
+                            }}>
+                              {filtered.map((m) => (
+                                <motion.button
+                                  type="button"
+                                  key={m} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                                  onClick={() => setPhone({ ...phone, model: m })}
+                                  style={pillStyle(phone.model === m)}
+                                >
+                                  {m}
+                                </motion.button>
+                              ))}
+                            </div>
+                          );
+                        })()}
                       </div>
                     )}
                     <button
@@ -418,7 +485,7 @@ export default function LandingPage() {
                         background: "transparent", border: "none", color: "var(--primary)",
                         fontWeight: 600, fontSize: "0.8rem", cursor: "pointer",
                         padding: "0.35rem 0", textDecoration: "underline", textUnderlineOffset: 3,
-                        marginTop: "0.5rem",
+                        marginTop: "0.6rem", display: "inline-block"
                       }}
                     >
                       {customModel ? "← Choose from list instead" : "My model isn't listed — enter it manually"}

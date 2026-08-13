@@ -195,11 +195,14 @@ function LoginPageContent() {
                 aria-label={showPassword ? "Hide password" : "Show password"}
                 title={showPassword ? "Hide password" : "Show password"}
                 style={{
-                  position: "absolute", right: "0.75rem", top: "50%", transform: "translateY(-50%)",
-                  width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center",
-                  background: "transparent", border: "none", cursor: "pointer",
-                  color: "var(--text2)", borderRadius: "var(--radius-sm)",
+                  position: "absolute", right: "0.5rem", top: "50%", transform: "translateY(-50%)",
+                  width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center",
+                  background: "var(--surface2)", border: "1px solid var(--border)",
+                  cursor: "pointer", color: "var(--text2)", borderRadius: "var(--radius-sm)",
+                  transition: "background 0.2s, color 0.2s, border-color 0.2s",
                 }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "var(--primary)"; (e.currentTarget as HTMLButtonElement).style.color = "#fff"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "var(--surface2)"; (e.currentTarget as HTMLButtonElement).style.color = "var(--text2)"; }}
               >
                 {showPassword ? (
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -240,13 +243,6 @@ function LoginPageContent() {
         fontSize: "0.875rem", fontWeight: 500, display: "flex", alignItems: "center", gap: "0.35rem",
       }}>
         ← Back to home
-      </Link>
-
-      <Link href="/login/admin" style={{
-        marginTop: "0.75rem", color: "var(--text2)", textDecoration: "none",
-        fontSize: "0.8rem", fontWeight: 500,
-      }}>
-        Admin login →
       </Link>
     </div>
   );

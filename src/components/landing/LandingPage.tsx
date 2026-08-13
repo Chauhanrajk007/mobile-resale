@@ -624,7 +624,6 @@ export default function LandingPage() {
         <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center", flexWrap: "wrap" }}>
           <Link href="/book" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: 600, fontSize: "0.875rem" }}>Book Inspection</Link>
           <Link href="/login" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: 600, fontSize: "0.875rem" }}>Sign in</Link>
-          <Link href="/login/admin" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: 600, fontSize: "0.875rem" }}>Admin Portal</Link>
         </div>
       </footer>
     </div>

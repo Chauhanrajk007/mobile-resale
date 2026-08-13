@@ -57,12 +57,15 @@ npm run dev
    - `TECH_EMAIL` / `TECH_PASSWORD` — Creates the technician account on first connect
 4. Deploy
 
-## Logins
+## Login
 
-| Portal | URL |
-|--------|-----|
-| Customer / Technician | `/login` |
-| Admin | `/login/admin` |
+One login page at `/login`. After signing in you're taken to the right dashboard automatically:
+
+| Account | Goes to |
+|---------|---------|
+| Admin | `/admin` |
+| Technician | `/technician` |
+| Customer | `/account` |
 
 ## Inspection Flow
 

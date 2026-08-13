@@ -20,7 +20,16 @@ export default function Nav() {
     { href: "/", label: "Home", icon: "M3 10.5V21a1 1 0 0 0 1 1h5v-6h6v6h5a1 1 0 0 0 1-1V10.5M21 8.5l-9-6.5-9 6.5" },
   ];
 
-  const links = user?.role === "admin" ? [] : techLinks.filter((l) => !(l.href === "/technician" && pathname === "/technician"));
+  const customerLinks = [
+    { href: "/account", label: "My Bookings", icon: "M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z M17 21v-8H7v8 M7 3v5h8" },
+    { href: "/", label: "Home", icon: "M3 10.5V21a1 1 0 0 0 1 1h5v-6h6v6h5a1 1 0 0 0 1-1V10.5M21 8.5l-9-6.5-9 6.5" },
+  ];
+
+  const links =
+    user?.role === "admin" ? [] :
+    user?.role === "customer"
+      ? customerLinks.filter((l) => !(l.href === "/account" && pathname === "/account"))
+      : techLinks.filter((l) => !(l.href === "/technician" && pathname === "/technician"));
 
   const adminLinks = [
     { href: "/admin", label: "Overview", icon: "M4 6h16M4 12h16M4 18h16" }, // Just a basic layout for now

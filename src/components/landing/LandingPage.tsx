@@ -273,14 +273,16 @@ export default function LandingPage() {
                       <div style={{ fontWeight: 700, fontSize: "0.875rem" }}>{user.name}</div>
                       <div style={{ color: "var(--text2)", fontSize: "0.78rem", marginTop: "0.15rem" }}>{user.email}</div>
                     </div>
-                    <Link href={user.role === "admin" ? "/admin" : user.role === "technician" ? "/technician" : "/account"} onClick={() => setMenuOpen(false)} style={{
-                      display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.75rem 1rem",
-                      color: "var(--text)", textDecoration: "none", fontSize: "0.85rem", fontWeight: 500,
-                      transition: "background 0.15s",
-                    }} onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "var(--surface2)"; }} onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; }}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" /><rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" /></svg>
-                      Dashboard
-                    </Link>
+                    {(user.role === "admin" || user.role === "technician") && (
+                      <Link href={user.role === "admin" ? "/admin" : "/technician"} onClick={() => setMenuOpen(false)} style={{
+                        display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.75rem 1rem",
+                        color: "var(--text)", textDecoration: "none", fontSize: "0.85rem", fontWeight: 500,
+                        transition: "background 0.15s",
+                      }} onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "var(--surface2)"; }} onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" /><rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" /></svg>
+                        Dashboard
+                      </Link>
+                    )}
                     <button type="button" onClick={() => { setMenuOpen(false); logout(); }} style={{
                       display: "flex", alignItems: "center", gap: "0.5rem", width: "100%", padding: "0.75rem 1rem",
                       background: "none", border: "none", cursor: "pointer", color: "var(--danger)",

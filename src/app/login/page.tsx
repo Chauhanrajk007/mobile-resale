@@ -64,7 +64,7 @@ function LoginPageContent() {
   };
 
   return (
-    <div style={{
+    <div className="cmp-login" style={{
       display: "flex", flexDirection: "column", alignItems: "center",
       justifyContent: "center", minHeight: "100vh", padding: "2rem 1.5rem",
       position: "relative", overflow: "hidden",

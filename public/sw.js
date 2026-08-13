@@ -18,23 +18,36 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const { request } = e;
   if (request.method !== "GET") return;
-  if (request.url.includes("/api/")) return;
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+  if (url.pathname.startsWith("/api/")) return;
 
   if (request.mode === "navigate") {
     e.respondWith(
-      fetch(request).catch(() => caches.match("/"))
+      fetch(request)
+        .then((res) => {
+          const clone = res.clone();
+          caches.open(CACHE).then((c) => c.put(request, clone));
+          return res;
+        })
+        .catch(() => caches.match("/"))
     );
     return;
   }
 
   e.respondWith(
-    caches.match(request).then((cached) => {
-      const fetched = fetch(request).then((res) => {
-        const clone = res.clone();
-        caches.open(CACHE).then((c) => c.put(request, clone));
-        return res;
-      });
-      return cached || fetched;
-    })
+    caches
+      .match(request)
+      .then((cached) => {
+        if (cached) return cached;
+        return fetch(request).then((res) => {
+          if (res.ok) {
+            const clone = res.clone();
+            caches.open(CACHE).then((c) => c.put(request, clone));
+          }
+          return res;
+        });
+      })
+      .catch(() => new Response("", { status: 503, statusText: "Offline" }))
   );
 });

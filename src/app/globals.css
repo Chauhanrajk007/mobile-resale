@@ -229,6 +229,12 @@ input, button, textarea, select {
   min-height: 100vh;
 }
 
+/* Pages without the top nav don't need the 64px nav spacer */
+.app-main:has(.cmp-login),
+.app-main:has(.landing-page) {
+  padding-top: 0;
+}
+
 /* Mobile sticky booking CTA on landing page */
 @media (max-width: 767px) {
   .mobile-sticky-cta {

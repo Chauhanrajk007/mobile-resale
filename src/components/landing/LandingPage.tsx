@@ -473,9 +473,10 @@ export default function LandingPage() {
         <motion.div
           id="book"
           className="booking-card"
-          initial={{ opacity: 0, y: 40, filter: "blur(12px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.9, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, y: 48, filter: "blur(14px)", scale: 0.98 }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)", scale: 1 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           style={{
             flex: "1 1 400px", maxWidth: 500, width: "100%",
             background: "color-mix(in srgb, var(--surface) 92%, transparent)",

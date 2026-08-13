@@ -35,6 +35,9 @@ npm install
 cp .env.example .env.local
 # Edit .env.local with your MongoDB URI, JWT secret, etc.
 
+# Admin + technician accounts are created automatically on first DB connect
+# using ADMIN_EMAIL / ADMIN_PASSWORD / TECH_EMAIL / TECH_PASSWORD env vars.
+
 # Start development server
 npm run dev
 ```
@@ -50,7 +53,16 @@ npm run dev
    - `RAZORPAY_KEY_SECRET` — Your Razorpay secret
    - `NEXT_PUBLIC_RAZORPAY_KEY_ID` — Same as RAZORPAY_KEY_ID
    - `NEXT_PUBLIC_APP_URL` — Your Vercel domain
+   - `ADMIN_EMAIL` / `ADMIN_PASSWORD` — Creates the admin account on first connect
+   - `TECH_EMAIL` / `TECH_PASSWORD` — Creates the technician account on first connect
 4. Deploy
+
+## Logins
+
+| Portal | URL |
+|--------|-----|
+| Customer / Technician | `/login` |
+| Admin | `/login/admin` |
 
 ## Inspection Flow
 

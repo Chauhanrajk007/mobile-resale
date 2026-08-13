@@ -1,17 +1,14 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import ThemeToggle from "@/components/ThemeToggle";
 
-function LoginPageContent() {
+function AdminLoginContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirect") || "/account";
-  const [tab, setTab] = useState<"login" | "register">("login");
-  const [form, setForm] = useState({ name: "", email: "", phone: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,16 +18,6 @@ function LoginPageContent() {
     setError("");
     setLoading(true);
     try {
-      if (tab === "register") {
-        const res = await fetch("/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: form.name, email: form.email, phone: form.phone, password: form.password }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Registration failed");
-      }
-      // Login
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -39,10 +26,11 @@ function LoginPageContent() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Login failed");
 
-      const role = data.user?.role;
-      if (role === "admin") router.push("/admin");
-      else if (role === "technician") router.push("/technician");
-      else router.push(redirectTo);
+      if (data.user?.role !== "admin") {
+        throw new Error("This portal is for admins only");
+      }
+
+      router.push("/admin");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -68,7 +56,6 @@ function LoginPageContent() {
       justifyContent: "center", minHeight: "100vh", padding: "2rem 1.5rem",
       position: "relative", overflow: "hidden",
     }}>
-      {/* Decorative background */}
       <div style={{
         position: "absolute", inset: 0, zIndex: -1,
         backgroundImage: "radial-gradient(var(--border) 1px, transparent 1px)",
@@ -77,7 +64,7 @@ function LoginPageContent() {
       <div style={{
         position: "absolute", top: "-20%", left: "50%", transform: "translateX(-50%)",
         width: 560, height: 560, borderRadius: "50%", zIndex: -1,
-        background: "radial-gradient(circle, color-mix(in srgb, var(--primary) 14%, transparent), transparent 65%)",
+        background: "radial-gradient(circle, color-mix(in srgb, var(--accent) 14%, transparent), transparent 65%)",
       }} />
 
       <div style={{ position: "absolute", top: "1rem", right: "1rem" }}><ThemeToggle /></div>
@@ -87,56 +74,37 @@ function LoginPageContent() {
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.45, ease: "easeOut" }}
         style={{
-          width: "100%", maxWidth: 440, background: "color-mix(in srgb, var(--surface) 92%, transparent)",
+          width: "100%", maxWidth: 400,
+          background: "color-mix(in srgb, var(--surface) 92%, transparent)",
           backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
           borderRadius: "var(--radius-lg)", boxShadow: "var(--shadow-lg)",
           padding: "2.5rem 2.25rem", border: "1px solid var(--border)",
           position: "relative",
         }}
       >
-        {/* Gradient top accent */}
         <div style={{
           position: "absolute", top: 0, left: "15%", right: "15%", height: 3,
           borderRadius: "0 0 6px 6px",
-          background: "linear-gradient(90deg, transparent, var(--primary), transparent)",
+          background: "linear-gradient(90deg, transparent, var(--accent), transparent)",
         }} />
 
-        {/* Brand */}
         <div style={{ textAlign: "center", marginBottom: "2rem" }}>
           <div style={{
             width: 56, height: 56, borderRadius: "var(--radius-lg)", margin: "0 auto 0.75rem",
-            background: "linear-gradient(135deg, var(--primary), var(--primary-hover))",
+            background: "linear-gradient(135deg, var(--accent), var(--success))",
             display: "flex", alignItems: "center", justifyContent: "center",
-            boxShadow: "0 8px 20px color-mix(in srgb, var(--primary) 35%, transparent)",
+            boxShadow: "0 8px 20px color-mix(in srgb, var(--accent) 35%, transparent)",
           }}>
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="5" y="2" width="14" height="20" rx="2" />
-              <line x1="12" y1="18" x2="12.01" y2="18" />
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
           </div>
-          <h1 style={{ fontSize: "1.5rem", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: "0.25rem" }}>
-            Welcome to CheckMyPhone
+          <h1 style={{ fontSize: "1.4rem", fontWeight: 800, letterSpacing: "-0.02em", marginBottom: "0.25rem" }}>
+            Admin Portal
           </h1>
           <p style={{ color: "var(--text2)", fontSize: "0.9rem" }}>
-            {tab === "login" ? "Sign in to your account" : "Create your account"}
+            Restricted access · Authorized staff only
           </p>
-        </div>
-
-        {/* Tabs */}
-        <div style={{
-          display: "flex", gap: "0", marginBottom: "1.75rem",
-          background: "var(--surface2)", borderRadius: "var(--radius)", padding: 4,
-        }}>
-          {(["login", "register"] as const).map((t) => (
-            <button key={t} onClick={() => { setTab(t); setError(""); }} style={{
-              flex: 1, padding: "0.625rem", border: "none", cursor: "pointer",
-              borderRadius: "var(--radius-sm)", fontWeight: 600, fontSize: "0.875rem",
-              background: tab === t ? "var(--surface)" : "transparent",
-              color: tab === t ? "var(--primary)" : "var(--text2)",
-              boxShadow: tab === t ? "var(--shadow)" : "none",
-              transition: "all 0.2s",
-            }}>{t === "login" ? "Login" : "Register"}</button>
-          ))}
         </div>
 
         {error && (
@@ -152,29 +120,13 @@ function LoginPageContent() {
         )}
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.1rem" }}>
-          <AnimatePresence mode="wait">
-            {tab === "register" && (
-              <motion.div
-                key="reg-fields"
-                initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }}
-                style={{ display: "flex", flexDirection: "column", gap: "1.1rem", overflow: "hidden" }}
-              >
-                <div>
-                  <label style={labelStyle}>Full Name</label>
-                  <input placeholder="Your name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} style={inputStyle} required />
-                </div>
-                <div>
-                  <label style={labelStyle}>Phone Number</label>
-                  <input placeholder="10-digit mobile number" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} style={inputStyle} required />
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
           <div>
-            <label style={labelStyle}>Email</label>
-            <input type="email" placeholder="you@example.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} style={inputStyle} required />
+            <label style={labelStyle}>Admin Email</label>
+            <input
+              type="email" placeholder="admin@checkmyphone.in"
+              value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })}
+              style={inputStyle} required autoComplete="username"
+            />
           </div>
 
           <div>
@@ -182,12 +134,11 @@ function LoginPageContent() {
             <div style={{ position: "relative" }}>
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder={tab === "register" ? "Minimum 6 characters" : "Enter your password"}
+                placeholder="Enter your password"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 style={{ ...inputStyle, paddingRight: "3rem" }}
-                required
-                minLength={tab === "register" ? 6 : undefined}
+                required autoComplete="current-password"
               />
               <button
                 type="button"
@@ -223,43 +174,36 @@ function LoginPageContent() {
             whileHover={{ scale: loading ? 1 : 1.01 }}
             whileTap={{ scale: loading ? 1 : 0.99 }}
             style={{
-              padding: "1rem", background: "linear-gradient(135deg, var(--primary), var(--primary-hover))",
+              padding: "1rem", background: "linear-gradient(135deg, var(--accent), var(--success))",
               color: "#fff", border: "none", borderRadius: "var(--radius)", fontWeight: 700,
               fontSize: "1rem", cursor: loading ? "wait" : "pointer", marginTop: "0.25rem",
               opacity: loading ? 0.7 : 1, transition: "opacity 0.2s",
-              boxShadow: loading ? "none" : "0 6px 18px color-mix(in srgb, var(--primary) 35%, transparent)",
+              boxShadow: loading ? "none" : "0 6px 18px color-mix(in srgb, var(--accent) 35%, transparent)",
             }}
           >
-            {loading ? "Please wait..." : tab === "login" ? "Sign In" : "Create Account"}
+            {loading ? "Signing in..." : "Login to Admin Portal"}
           </motion.button>
         </form>
       </motion.div>
 
-      <Link href="/" style={{
+      <Link href="/login" style={{
         marginTop: "1.75rem", color: "var(--text2)", textDecoration: "none",
         fontSize: "0.875rem", fontWeight: 500, display: "flex", alignItems: "center", gap: "0.35rem",
       }}>
-        ← Back to home
-      </Link>
-
-      <Link href="/login/admin" style={{
-        marginTop: "0.75rem", color: "var(--text2)", textDecoration: "none",
-        fontSize: "0.8rem", fontWeight: 500,
-      }}>
-        Admin login →
+        ← Back to customer login
       </Link>
     </div>
   );
 }
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
   return (
     <Suspense fallback={
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh" }}>
         <div style={{ width: 36, height: 36, border: "3px solid var(--border)", borderTopColor: "var(--primary)", borderRadius: "50%", animation: "spin 0.8s linear infinite" }} />
       </div>
     }>
-      <LoginPageContent />
+      <AdminLoginContent />
     </Suspense>
   );
 }

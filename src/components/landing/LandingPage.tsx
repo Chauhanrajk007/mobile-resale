@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, useInView } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
-import { BRANDS, PHONE_CONDITIONS } from "@/lib/constants";
+import { BRANDS, PHONE_CONDITIONS, DEFAULT_MODELS } from "@/lib/constants";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const steps = [
@@ -77,19 +77,30 @@ export default function LandingPage() {
   const { user, loading: authLoading } = useAuth();
 
   const [phone, setPhone] = useState({ brand: "", model: "", condition: "" });
-  const [models, setModels] = useState<any[]>([]);
+  const [models, setModels] = useState<string[]>([]);
   const [modelsLoading, setModelsLoading] = useState(false);
+  const [modelsSource, setModelsSource] = useState<"db" | "builtin">("builtin");
 
   useEffect(() => {
     if (!phone.brand) return;
     setModelsLoading(true);
+    setModelsSource("builtin");
     fetch(`/api/phones?brand=${encodeURIComponent(phone.brand)}`)
       .then((r) => r.json())
       .then((d) => {
-        setModels(d.phones || []);
+        const dbModels = Array.isArray(d?.phones) ? d.phones.filter((p: any) => p?.model).map((p: any) => p.model) : [];
+        if (dbModels.length > 0) {
+          setModels(dbModels);
+          setModelsSource("db");
+        } else {
+          setModels(DEFAULT_MODELS[phone.brand] || []);
+        }
         setModelsLoading(false);
       })
-      .catch(() => setModelsLoading(false));
+      .catch(() => {
+        setModels(DEFAULT_MODELS[phone.brand] || []);
+        setModelsLoading(false);
+      });
   }, [phone.brand]);
 
   const handleBook = () => {
@@ -374,16 +385,21 @@ export default function LandingPage() {
                     Loading models…
                   </div>
                 ) : models.length > 0 ? (
-                  <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", maxHeight: 132, overflowY: "auto", paddingRight: "0.25rem" }}>
-                    {models.map((m) => (
-                      <motion.button
-                        key={m._id} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                        onClick={() => setPhone({ ...phone, model: m.model })}
-                        style={pillStyle(phone.model === m.model)}
-                      >
-                        {m.model}
-                      </motion.button>
-                    ))}
+                  <div>
+                    {modelsSource === "builtin" && (
+                      <p style={{ fontSize: "0.72rem", color: "var(--text2)", marginBottom: "0.5rem" }}>Popular models</p>
+                    )}
+                    <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", maxHeight: 150, overflowY: "auto", paddingRight: "0.25rem" }}>
+                      {models.map((m) => (
+                        <motion.button
+                          key={m} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                          onClick={() => setPhone({ ...phone, model: m })}
+                          style={pillStyle(phone.model === m)}
+                        >
+                          {m}
+                        </motion.button>
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   <input
@@ -605,9 +621,10 @@ export default function LandingPage() {
         <p style={{ color: "var(--text2)", fontSize: "0.85rem", marginBottom: "1.25rem" }}>
           Professional phone inspection reports · © {new Date().getFullYear()}
         </p>
-        <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center" }}>
+        <div style={{ display: "flex", gap: "1.5rem", justifyContent: "center", flexWrap: "wrap" }}>
           <Link href="/book" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: 600, fontSize: "0.875rem" }}>Book Inspection</Link>
           <Link href="/login" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: 600, fontSize: "0.875rem" }}>Sign in</Link>
+          <Link href="/login/admin" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: 600, fontSize: "0.875rem" }}>Admin Portal</Link>
         </div>
       </footer>
     </div>

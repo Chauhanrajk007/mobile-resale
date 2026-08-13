@@ -63,6 +63,21 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 ::selection {
   background-color: var(--primary);
   color: #fff;
@@ -108,6 +123,37 @@ input, button, textarea, select {
 .hover-lift:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-lg);
+}
+
+/* ── Mobile optimisation ── */
+@media (max-width: 640px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+  .hero-wrap {
+    gap: 2rem !important;
+    padding: 5.5rem 1.25rem 4rem !important;
+    min-height: auto !important;
+  }
+  .mockup-wrap {
+    transform: scale(0.92);
+    margin: -0.5rem 0;
+  }
+  .chip-float {
+    transform: scale(0.85);
+  }
+  .booking-card {
+    padding: 1.5rem 1.25rem !important;
+  }
+  body {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  .mockup-wrap {
+    display: none !important;
+  }
 }
 
 /* Hide number input spinners */

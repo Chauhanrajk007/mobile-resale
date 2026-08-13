@@ -5,6 +5,7 @@ import "./globals.css";
 import Nav from "@/components/Nav";
 import PwaRegister from "@/components/PwaRegister";
 import { ToastProvider } from "@/components/ToastProvider";
+import SmoothScroll from "@/components/motion/SmoothScroll";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font" });
 
@@ -35,6 +36,7 @@ export default function RootLayout({
       </head>
       <body className={inter.variable}>
         <ToastProvider>
+          <SmoothScroll />
           <Nav />
           <main style={{ paddingBottom: '80px', paddingTop: '64px', minHeight: '100vh' }}>
             {children}

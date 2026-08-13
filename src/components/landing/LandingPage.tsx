@@ -3,10 +3,12 @@
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion, useInView } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { BRANDS, PHONE_CONDITIONS, DEFAULT_MODELS } from "@/lib/constants";
 import ThemeToggle from "@/components/ThemeToggle";
+import { Reveal, WordReveal } from "@/components/motion/Reveal";
+import { Marquee } from "@/components/motion/Marquee";
 
 const steps = [
   { icon: "📱", title: "Select Your Phone", desc: "Choose brand, model & current condition" },
@@ -49,22 +51,6 @@ const features = [
   },
 ];
 
-function AnimatedSection({ children, className, delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 36 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.55, delay }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
 const inputStyle = {
   width: "100%", padding: "0.75rem 1rem", background: "var(--surface2)",
   border: "1px solid var(--border)", borderRadius: "var(--radius)",
@@ -75,6 +61,12 @@ const inputStyle = {
 export default function LandingPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
+
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroBlur = useTransform(scrollYProgress, [0, 1], ["blur(0px)", "blur(10px)"]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
 
   const [brands, setBrands] = useState<string[]>([]);
   const [brandsLoading, setBrandsLoading] = useState(true);
@@ -224,10 +216,10 @@ export default function LandingPage() {
       </header>
 
       {/* ── Hero ── */}
-      <section style={{
+      <section ref={heroRef} className="hero-wrap" style={{
         position: "relative", overflow: "hidden",
         display: "flex", alignItems: "center", justifyContent: "center",
-        flexWrap: "wrap", gap: "3.5rem",
+        flexWrap: "wrap", gap: "3rem",
         minHeight: "100vh", padding: "7rem 1.5rem 5rem",
         maxWidth: 1240, margin: "0 auto",
       }}>
@@ -248,8 +240,15 @@ export default function LandingPage() {
           backgroundSize: "30px 30px",
         }} />
 
+        {/* Parallax hero content */}
+        <motion.div
+          style={{
+            display: "contents",
+            filter: heroBlur, opacity: heroOpacity,
+          }}
+        >
+        <motion.div style={{ flex: "1 1 460px", position: "relative", scale: heroScale }}>
         {/* Left */}
-        <div style={{ flex: "1 1 460px", position: "relative" }}>
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -267,11 +266,11 @@ export default function LandingPage() {
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.05 }}
+            initial={{ opacity: 0, y: 30, filter: "blur(12px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.9, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
             style={{
-              fontSize: "clamp(2.6rem, 5.5vw, 4.1rem)", fontWeight: 800, lineHeight: 1.06,
+              fontSize: "clamp(2.4rem, 5.5vw, 4.1rem)", fontWeight: 800, lineHeight: 1.06,
               letterSpacing: "-0.045em", marginBottom: "1.5rem",
             }}
           >
@@ -340,10 +339,11 @@ export default function LandingPage() {
               </div>
             ))}
           </motion.div>
-        </div>
+        </motion.div>
 
         {/* Phone mockup + floating cards (decorative) */}
         <motion.div
+          className="mockup-wrap"
           initial={{ opacity: 0, y: 40, rotate: -3 }}
           animate={{ opacity: 1, y: 0, rotate: -3 }}
           transition={{ duration: 0.8, delay: 0.35 }}
@@ -377,7 +377,7 @@ export default function LandingPage() {
           </div>
 
           {/* Floating chip: technician en route */}
-          <div style={{
+          <div className="chip-float" style={{
             position: "absolute", top: "12%", right: "-1.5rem",
             display: "flex", alignItems: "center", gap: "0.5rem",
             padding: "0.55rem 0.9rem", borderRadius: "var(--radius)",
@@ -390,7 +390,7 @@ export default function LandingPage() {
           </div>
 
           {/* Floating chip: report ready */}
-          <div style={{
+          <div className="chip-float" style={{
             position: "absolute", bottom: "10%", left: "-2rem",
             display: "flex", alignItems: "center", gap: "0.5rem",
             padding: "0.55rem 0.9rem", borderRadius: "var(--radius)",
@@ -411,6 +411,7 @@ export default function LandingPage() {
         {/* Right: Booking card */}
         <motion.div
           id="book"
+          className="booking-card"
           initial={{ opacity: 0, scale: 0.94, y: 24 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.25 }}
@@ -622,58 +623,46 @@ export default function LandingPage() {
             </p>
           </div>
         </motion.div>
+        </motion.div>
       </section>
 
       {/* ── Popular brands strip ── */}
-      <section style={{ padding: "3rem 1.5rem 4.5rem", maxWidth: 1080, margin: "0 auto", borderTop: "1px solid var(--border)" }}>
-        <AnimatedSection>
-          <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+      <section style={{ padding: "3.5rem 0 4.5rem", borderTop: "1px solid var(--border)" }}>
+        <Reveal>
+          <div style={{ textAlign: "center", marginBottom: "2rem", padding: "0 1.5rem" }}>
             <span style={{ color: "var(--text2)", fontSize: "0.8rem", fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" }}>
               We inspect every major brand
             </span>
           </div>
-          <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
-            {(Array.isArray(brands) && brands.length ? brands : Array.from(BRANDS)).map((b) => (
-              <button
-                key={b}
-                onClick={() => { setPhone({ brand: b, model: "", condition: "" }); document.getElementById("book")?.scrollIntoView({ behavior: "smooth" }); }}
-                style={{
-                  padding: "0.6rem 1.25rem", borderRadius: 999,
-                  background: "var(--surface2)", border: "1px solid var(--border)",
-                  color: "var(--text2)", fontWeight: 600, fontSize: "0.85rem",
-                  cursor: "pointer", transition: "all 0.2s",
-                }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "var(--primary)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "color-mix(in srgb, var(--primary) 45%, var(--border))"; }}
-                onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.color = "var(--text2)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border)"; }}
-              >
-                {b}
-              </button>
-            ))}
-          </div>
-        </AnimatedSection>
+          <Marquee
+            items={Array.isArray(brands) && brands.length ? brands : Array.from(BRANDS)}
+            onItemClick={(b) => { setPhone({ brand: b, model: "", condition: "" }); document.getElementById("book")?.scrollIntoView({ behavior: "smooth" }); }}
+          />
+        </Reveal>
       </section>
 
       {/* ── How It Works ── */}
       <section id="how" style={{ padding: "5.5rem 1.5rem", maxWidth: 1080, margin: "0 auto", scrollMarginTop: "4rem" }}>
-        <AnimatedSection>
+        <Reveal>
           <div style={{ textAlign: "center", maxWidth: 560, margin: "0 auto 3.5rem" }}>
             <div style={{
               display: "inline-block", padding: "0.35rem 0.85rem", borderRadius: 999, marginBottom: "1rem",
               background: "color-mix(in srgb, var(--primary) 10%, transparent)",
               color: "var(--primary)", fontSize: "0.78rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
             }}>Process</div>
-            <h2 style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.4rem)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "0.75rem" }}>
-              How it works
-            </h2>
+            <WordReveal
+              text="How it works"
+              style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.4rem)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "0.75rem", justifyContent: "center" }}
+            />
             <p style={{ color: "var(--text2)", fontSize: "1rem", lineHeight: 1.6 }}>
               From booking to verified report in four simple steps.
             </p>
           </div>
-        </AnimatedSection>
+        </Reveal>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: "1.5rem" }}>
           {steps.map((step, i) => (
-            <AnimatedSection key={i} delay={i * 0.08}>
+            <Reveal key={i} delay={i * 0.08}>
               <motion.div
                 whileHover={{ y: -5 }}
                 style={{
@@ -703,7 +692,7 @@ export default function LandingPage() {
                 <h3 style={{ fontSize: "1.05rem", fontWeight: 700, marginBottom: "0.5rem", letterSpacing: "-0.01em" }}>{step.title}</h3>
                 <p style={{ color: "var(--text2)", fontSize: "0.875rem", lineHeight: 1.55 }}>{step.desc}</p>
               </motion.div>
-            </AnimatedSection>
+            </Reveal>
           ))}
         </div>
       </section>
@@ -711,25 +700,26 @@ export default function LandingPage() {
       {/* ── Features ── */}
       <section id="why" style={{ padding: "5rem 1.5rem", background: "var(--surface2)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
         <div style={{ maxWidth: 1080, margin: "0 auto", scrollMarginTop: "4rem" }}>
-          <AnimatedSection>
+          <Reveal>
             <div style={{ textAlign: "center", maxWidth: 560, margin: "0 auto 3.5rem" }}>
               <div style={{
                 display: "inline-block", padding: "0.35rem 0.85rem", borderRadius: 999, marginBottom: "1rem",
                 background: "color-mix(in srgb, var(--accent) 12%, transparent)",
                 color: "var(--accent)", fontSize: "0.78rem", fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase",
               }}>Why us</div>
-              <h2 style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.4rem)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "0.75rem" }}>
-                Peace of mind, every time
-              </h2>
+              <WordReveal
+                text="Peace of mind, every time"
+                style={{ fontSize: "clamp(1.8rem, 3.5vw, 2.4rem)", fontWeight: 800, letterSpacing: "-0.03em", marginBottom: "0.75rem", justifyContent: "center" }}
+              />
               <p style={{ color: "var(--text2)", fontSize: "1rem", lineHeight: 1.6 }}>
                 A professional inspection removes the guesswork from every used-phone transaction.
               </p>
             </div>
-          </AnimatedSection>
+          </Reveal>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1.5rem" }}>
             {features.map((f, i) => (
-              <AnimatedSection key={i} delay={i * 0.1}>
+              <Reveal key={i} delay={i * 0.1}>
                 <motion.div
                   whileHover={{ y: -6 }}
                   style={{
@@ -749,7 +739,7 @@ export default function LandingPage() {
                   <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem", letterSpacing: "-0.01em" }}>{f.title}</h3>
                   <p style={{ color: "var(--text2)", fontSize: "0.9rem", lineHeight: 1.6 }}>{f.desc}</p>
                 </motion.div>
-              </AnimatedSection>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -757,7 +747,7 @@ export default function LandingPage() {
 
       {/* ── CTA band ── */}
       <section style={{ padding: "5rem 1.5rem", maxWidth: 1080, margin: "0 auto" }}>
-        <AnimatedSection>
+        <Reveal>
           <div style={{
             position: "relative", overflow: "hidden", textAlign: "center",
             borderRadius: "var(--radius-lg)", padding: "3.5rem 2rem",
@@ -791,7 +781,7 @@ export default function LandingPage() {
               </a>
             </div>
           </div>
-        </AnimatedSection>
+        </Reveal>
       </section>
 
       {/* ── Footer ── */}

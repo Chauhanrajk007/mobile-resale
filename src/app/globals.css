@@ -220,6 +220,16 @@ input, button, textarea, select {
   }
 }
 
+/* Mobile sticky booking CTA on landing page */
+@media (max-width: 767px) {
+  .mobile-sticky-cta {
+    display: block !important;
+  }
+  .landing-page {
+    padding-bottom: 5.5rem !important;
+  }
+}
+
 /* Hide number input spinners */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {

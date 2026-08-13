@@ -149,7 +149,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh" }}>
+    <div className="landing-page" style={{ minHeight: "100vh" }}>
       {/* ── Top bar ── */}
       <header style={{
         position: "fixed", top: 0, left: 0, right: 0, height: 64, zIndex: 50,
@@ -871,6 +871,38 @@ export default function LandingPage() {
           <Link href="/login" style={{ color: "var(--primary)", textDecoration: "none", fontWeight: 600, fontSize: "0.875rem" }}>Sign in</Link>
         </div>
       </footer>
+
+      {/* Mobile sticky booking CTA */}
+      <motion.div
+        className="mobile-sticky-cta"
+        initial={{ y: 90 }}
+        animate={{ y: 0 }}
+        transition={{ delay: 0.8, type: "spring", stiffness: 260, damping: 24 }}
+        style={{
+          position: "fixed", left: "1rem", right: "1rem", bottom: "calc(1rem + env(safe-area-inset-bottom))",
+          zIndex: 90, display: "none",
+        }}
+      >
+        <button
+          type="button"
+          onClick={handleBook}
+          disabled={!ready || authLoading}
+          style={{
+            width: "100%", padding: "1rem", border: "none", borderRadius: "var(--radius)",
+            background: ready ? "linear-gradient(135deg, var(--primary), var(--primary-hover))" : "var(--border)",
+            color: ready ? "#fff" : "var(--text2)",
+            fontWeight: 700, fontSize: "1rem", cursor: ready ? "pointer" : "not-allowed",
+            boxShadow: "0 8px 24px color-mix(in srgb, var(--primary) 40%, transparent)",
+            display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem",
+          }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 20h9" />
+            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+          </svg>
+          {ready ? "Book Doorstep Inspection" : "Select phone to book"}
+        </button>
+      </motion.div>
     </div>
   );
 }

@@ -99,14 +99,32 @@ export default function TechDashboard() {
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem',
                 }}
               >
-                <div>
-                  <div style={{ fontWeight: 'bold' }}>{b.phone?.brand} {b.phone?.model}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text2)' }}>
-                    {b.bookingNo} · {b.customer?.name}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexWrap: "wrap" }}>
+                    <span style={{ fontWeight: 'bold' }}>{b.phone?.brand} {b.phone?.model}</span>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text2)' }}>{b.bookingNo}</span>
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text2)' }}>
-                    {b.meetDate ? formatDate(b.meetDate) : ""} · {b.timeSlot}
+                  <div style={{ fontSize: '0.78rem', color: 'var(--text2)', marginTop: '0.2rem' }}>
+                    {b.customer?.name} · {b.meetDate ? formatDate(b.meetDate) : ""} · {b.timeSlot}
                   </div>
+                  <div style={{
+                    display: 'flex', alignItems: 'flex-start', gap: '0.35rem', marginTop: '0.4rem',
+                    fontSize: '0.8rem', color: 'var(--text)',
+                  }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 2 }}>
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                      <circle cx="12" cy="10" r="3" />
+                    </svg>
+                    <span>
+                      {b.address?.line1}, {b.address?.city} - {b.address?.pincode}
+                      {b.address?.landmark ? ` · ${b.address.landmark}` : ""}
+                    </span>
+                  </div>
+                  {b.adminNotes && (
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text2)', marginTop: '0.3rem', fontStyle: 'italic' }}>
+                      Note: {b.adminNotes}
+                    </div>
+                  )}
                 </div>
                 <span style={{
                   whiteSpace: 'nowrap', padding: '0.25rem 0.6rem', borderRadius: 999,

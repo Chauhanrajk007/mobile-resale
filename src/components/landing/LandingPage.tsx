@@ -198,7 +198,7 @@ export default function LandingPage() {
         background: "color-mix(in srgb, var(--surface) 82%, transparent)",
         backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+        <Link href="/" style={{ display: "flex", alignItems: "center", gap: "0.6rem", textDecoration: "none" }}>
           <div style={{
             width: 34, height: 34, borderRadius: 10,
             background: "linear-gradient(135deg, var(--primary), var(--primary-hover))",
@@ -213,7 +213,7 @@ export default function LandingPage() {
           <span style={{ fontWeight: 800, fontSize: "1.15rem", letterSpacing: "-0.02em", color: "var(--text)" }}>
             Check<span style={{ color: "var(--primary)" }}>My</span>Phone
           </span>
-        </div>
+        </Link>
 
         <nav className="hide-on-mobile" style={{ display: "flex", gap: "0.25rem", alignItems: "center" }}>
           {[

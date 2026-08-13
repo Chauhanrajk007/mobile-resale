@@ -59,6 +59,10 @@ export async function POST(request: Request) {
       const admins = await User.find({ role: "admin", emailNotifications: { $ne: false }, active: true });
       for (const admin of admins) notifyTargets.add(admin.email);
 
+      const proto = request.headers.get("x-forwarded-proto") || "https";
+      const host = request.headers.get("x-forwarded-host") || request.headers.get("host") || "localhost:3000";
+      const appBase = process.env.NEXT_PUBLIC_APP_URL || `${proto}://${host}`;
+
       for (const to of notifyTargets) {
         await sendEmail({
           to,
@@ -92,10 +96,10 @@ export async function POST(request: Request) {
               </table>
               <hr style="border: 0; border-top: 1px solid #e7e5e4; margin: 20px 0;" />
               <p style="font-size: 0.9rem; color: #78716c;">Please log in to the admin panel to assign a technician for this booking.</p>
-              <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/admin" style="display: inline-block; padding: 10px 20px; background: #d97706; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 10px;">Go to Admin Panel</a>
+              <a href="${appBase}/admin" style="display: inline-block; padding: 10px 20px; background: #d97706; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 10px;">Go to Admin Panel</a>
             </div>
           `,
-          text: `New Booking ${bookingNo}: ${body.phone?.brand} ${body.phone?.model}. Schedule: ${new Date(body.meetDate).toLocaleDateString()} at ${body.timeSlot}. Address: ${body.address?.line1}, ${body.address?.city}.`,
+          text: `New Booking ${bookingNo}: ${body.phone?.brand} ${body.phone?.model}. Schedule: ${new Date(body.meetDate).toLocaleDateString()} at ${body.timeSlot}. Address: ${body.address?.line1}, ${body.address?.city}. Admin panel: ${appBase}/admin`,
         });
       }
     } catch (emailErr) {

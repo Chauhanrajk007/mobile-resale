@@ -1,10 +1,19 @@
 "use client";
 
+import { useEffect } from "react";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { useToast } from "@/components/ToastProvider";
 
 export default function InvoiceView({ booking }: { booking: any }) {
   const { toast } = useToast();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("print") === "1") {
+      const t = setTimeout(() => window.print(), 700);
+      return () => clearTimeout(t);
+    }
+  }, []);
+
   return (
     <div className="invoice-pad" style={{ maxWidth: 800, margin: "0 auto", padding: "2rem" }}>
       <style>{`
@@ -131,7 +140,7 @@ export default function InvoiceView({ booking }: { booking: any }) {
           display: "flex", justifyContent: "space-between", alignItems: "center",
         }}>
           <span style={{ fontWeight: 600, color: booking.payment?.status === "paid" ? "#059669" : "#CA8A04" }}>
-            {booking.payment?.status === "paid" ? "✓ Paid" : "⏳ Payment Pending"}
+            {booking.payment?.status === "paid" ? "Paid" : "Payment Pending"}
           </span>
           {booking.payment?.paidAt && <span style={{ fontSize: "0.85rem", color: "var(--text2)" }}>{formatDate(booking.payment.paidAt)}</span>}
         </div>

@@ -8,6 +8,23 @@ import { DatePicker } from "@/components/DatePicker";
 import { useToast } from "@/components/ToastProvider";
 import Link from "next/link";
 
+const ICON = { fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+
+const boltIcon = (
+  <svg width="16" height="16" viewBox="0 0 24 24" {...ICON}>
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+  </svg>
+);
+
+const calendarIcon = (
+  <svg width="16" height="16" viewBox="0 0 24 24" {...ICON}>
+    <rect x="3" y="4" width="18" height="18" rx="2" />
+    <line x1="16" y1="2" x2="16" y2="6" />
+    <line x1="8" y1="2" x2="8" y2="6" />
+    <line x1="3" y1="10" x2="21" y2="10" />
+  </svg>
+);
+
 const STEPS = ["Phone", "Location", "Review", "Done"];
 
 export default function BookingFlow() {
@@ -314,12 +331,12 @@ export default function BookingFlow() {
                 <input placeholder="Landmark (optional)" value={data.address.landmark} onChange={e => updateAddress({ landmark: e.target.value })} style={inputStyle} />
                 <p style={{ color: "var(--text2)", fontSize: "0.9rem", marginTop: "0.5rem" }}>Booking Type</p>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
-                  <motion.button whileTap={{ scale: 0.95 }} onClick={selectImmediate} style={pillStyle(immediate)}>
-                    <span style={{ display: "block" }}>⚡ Immediate</span>
+                  <motion.button whileTap={{ scale: 0.95 }} onClick={selectImmediate} style={{ ...pillStyle(immediate), display: "flex", flexDirection: "column", alignItems: "center", gap: "0.25rem" }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", fontWeight: 700 }}>{boltIcon} Immediate</span>
                     <span style={{ display: "block", fontSize: "0.72rem", fontWeight: 500, opacity: 0.85 }}>As soon as possible</span>
                   </motion.button>
-                  <motion.button whileTap={{ scale: 0.95 }} onClick={selectScheduled} style={pillStyle(!immediate)}>
-                    <span style={{ display: "block" }}>📅 Schedule</span>
+                  <motion.button whileTap={{ scale: 0.95 }} onClick={selectScheduled} style={{ ...pillStyle(!immediate), display: "flex", flexDirection: "column", alignItems: "center", gap: "0.25rem" }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem", fontWeight: 700 }}>{calendarIcon} Schedule</span>
                     <span style={{ display: "block", fontSize: "0.72rem", fontWeight: 500, opacity: 0.85 }}>Pick date & time</span>
                   </motion.button>
                 </div>
@@ -336,8 +353,9 @@ export default function BookingFlow() {
                   </>
                 )}
                 {immediate && (
-                  <div style={{ padding: "0.9rem 1rem", background: "color-mix(in srgb, var(--primary) 8%, transparent)", border: "1px dashed var(--primary)", borderRadius: "var(--radius)", color: "var(--text)", fontSize: "0.85rem" }}>
-                    ⚡ A technician will be assigned as soon as possible for today.
+                  <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", padding: "0.9rem 1rem", background: "color-mix(in srgb, var(--primary) 8%, transparent)", border: "1px dashed var(--primary)", borderRadius: "var(--radius)", color: "var(--text)", fontSize: "0.85rem" }}>
+                    <span style={{ flexShrink: 0, display: "flex", color: "var(--primary)", marginTop: 1 }}>{boltIcon}</span>
+                    <span>A technician will be assigned as soon as possible for today.</span>
                   </div>
                 )}
               </div>
@@ -362,7 +380,7 @@ export default function BookingFlow() {
                 <div style={{ marginBottom: "1rem" }}>
                   <span style={{ color: "var(--text2)", fontSize: "0.85rem" }}>When</span>
                   {immediate || data.timeSlot === "ASAP (Immediate)" ? (
-                    <p style={{ fontWeight: 500 }}>⚡ Immediate — as soon as possible (today)</p>
+                    <p style={{ fontWeight: 500, display: "flex", alignItems: "center", gap: "0.4rem" }}>{boltIcon} Immediate — as soon as possible (today)</p>
                   ) : (
                     <p style={{ fontWeight: 500 }}>{data.meetDate && formatDate(data.meetDate)} • {data.timeSlot}</p>
                   )}

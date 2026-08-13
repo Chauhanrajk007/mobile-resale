@@ -40,7 +40,19 @@ export default function InspectionSummary({ data, onSubmit, isSubmitting }: Insp
         animate={{ opacity: 1, scale: 1 }}
         style={{ textAlign: "center", padding: "40px 20px" }}
       >
-        <div style={{ fontSize: "64px", marginBottom: "20px" }}>🎉</div>
+        <motion.div
+          initial={{ scale: 0 }} animate={{ scale: 1 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
+          style={{
+            width: 80, height: 80, borderRadius: "50%", background: "var(--success)",
+            color: "#fff", display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: "2.5rem", margin: "0 auto 20px",
+          }}
+        >
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+        </motion.div>
         <h2 style={{ color: "var(--success)", marginBottom: "16px" }}>Inspection Complete!</h2>
         <p style={{ color: "var(--text2)", marginBottom: "32px" }}>The report has been saved successfully.</p>
         <button

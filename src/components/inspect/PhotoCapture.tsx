@@ -138,7 +138,7 @@ export default function PhotoCapture({ photos, comments, onPhotosChange, onComme
                     cursor: "pointer"
                   }}
                 >
-                  ✕
+                  ×
                 </button>
               </div>
               <div style={{ padding: "12px" }}>

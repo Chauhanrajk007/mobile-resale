@@ -11,10 +11,50 @@ import { Reveal, WordReveal } from "@/components/motion/Reveal";
 import { Marquee } from "@/components/motion/Marquee";
 
 const steps = [
-  { icon: "📱", title: "Select Your Phone", desc: "Choose brand, model & current condition" },
-  { icon: "📍", title: "Tell Us Where", desc: "Enter your address & pick a convenient time" },
-  { icon: "🔍", title: "We Inspect", desc: "Our technician visits & checks 30+ test points" },
-  { icon: "📋", title: "Get Your Report", desc: "Detailed inspection report & pay online" },
+  {
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+        <line x1="12" y1="18" x2="12.01" y2="18" />
+      </svg>
+    ),
+    title: "Select Your Phone",
+    desc: "Choose brand, model & current condition",
+  },
+  {
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+        <circle cx="12" cy="10" r="3" />
+      </svg>
+    ),
+    title: "Where We Inspect",
+    desc: "Doorstep service — tell us your location & pick a time slot",
+  },
+  {
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        <line x1="11" y1="8" x2="11" y2="14" />
+        <line x1="8" y1="11" x2="14" y2="11" />
+      </svg>
+    ),
+    title: "We Inspect",
+    desc: "Certified technician checks 30+ test points on the spot",
+  },
+  {
+    icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+        <line x1="16" y1="13" x2="8" y2="13" />
+        <line x1="16" y1="17" x2="8" y2="17" />
+      </svg>
+    ),
+    title: "Get Your Report",
+    desc: "Detailed verified report & pay online — all in one go",
+  },
 ];
 
 const features = [
@@ -757,6 +797,25 @@ export default function LandingPage() {
             </Reveal>
           ))}
         </div>
+
+        {/* Coverage strip */}
+        <Reveal delay={0.2}>
+          <div style={{
+            marginTop: "2.5rem", display: "flex", alignItems: "center", justifyContent: "center",
+            gap: "0.75rem", flexWrap: "wrap", textAlign: "center",
+            padding: "1rem 1.5rem", borderRadius: "var(--radius)",
+            background: "color-mix(in srgb, var(--primary) 8%, transparent)",
+            border: "1px solid color-mix(in srgb, var(--primary) 20%, transparent)",
+          }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            <span style={{ color: "var(--text2)", fontSize: "0.875rem", fontWeight: 500 }}>
+              We inspect at your doorstep — wherever you are.
+            </span>
+          </div>
+        </Reveal>
       </section>
 
       {/* ── Features ── */}

@@ -75,7 +75,7 @@ export default function InspectionSummary({ data, onSubmit, isSubmitting }: Insp
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "24px", paddingBottom: "80px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "24px", paddingBottom: "32px" }}>
       <div style={{ background: "var(--surface)", padding: "20px", borderRadius: "var(--radius)", boxShadow: "var(--shadow)", border: "1px solid var(--border)" }}>
         <h3 style={{ marginBottom: "16px", color: "var(--text)", borderBottom: "1px solid var(--border)", paddingBottom: "8px" }}>Device Info</h3>
         <p style={{ color: "var(--text)", marginBottom: "8px", fontSize: "18px", fontWeight: "bold" }}>

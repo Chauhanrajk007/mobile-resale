@@ -159,7 +159,10 @@ export default function LandingPage() {
 
   const handleBook = () => {
     if (authLoading) return;
-    if (!phone.brand || !phone.model || !phone.condition) return;
+    if (!phone.brand || !phone.model || !phone.condition) {
+      document.getElementById("book")?.scrollIntoView({ behavior: "smooth" });
+      return;
+    }
     localStorage.setItem("bookingDraft", JSON.stringify({ phone }));
     router.push("/book");
   };
@@ -353,7 +356,7 @@ export default function LandingPage() {
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-            transition={{ type: "spring", stiffness: 80, damping: 18, delay: 0.2 }}
+            transition={{ type: "spring", stiffness: 120, damping: 20, delay: 0.1 }}
             style={{
               display: "inline-flex", alignItems: "center", gap: "0.5rem",
               padding: "0.4rem 0.9rem", borderRadius: 999, marginBottom: "1.5rem",
@@ -369,7 +372,7 @@ export default function LandingPage() {
           <motion.h1
             initial={{ opacity: 0, y: 40, scale: 0.96, filter: "blur(12px)" }}
             animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-            transition={{ type: "spring", stiffness: 60, damping: 18, delay: 0.35 }}
+            transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.2 }}
             style={{
               fontSize: "clamp(2.4rem, 5.5vw, 4.1rem)", fontWeight: 800, lineHeight: 1.06,
               letterSpacing: "-0.045em", marginBottom: "1.5rem",
@@ -382,7 +385,7 @@ export default function LandingPage() {
           <motion.p
             initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ type: "spring", stiffness: 70, damping: 20, delay: 0.55 }}
+            transition={{ type: "spring", stiffness: 110, damping: 22, delay: 0.35 }}
             style={{ color: "var(--text2)", fontSize: "1.15rem", lineHeight: 1.65, maxWidth: 520, marginBottom: "2rem" }}
           >
             A certified technician inspects 30+ checkpoints at your doorstep and generates a verified,
@@ -929,12 +932,12 @@ export default function LandingPage() {
         <button
           type="button"
           onClick={handleBook}
-          disabled={!ready || authLoading}
+          disabled={authLoading}
           style={{
             width: "100%", padding: "1rem", border: "none", borderRadius: "var(--radius)",
             background: ready ? "linear-gradient(135deg, var(--primary), var(--primary-hover))" : "var(--border)",
             color: ready ? "#fff" : "var(--text2)",
-            fontWeight: 700, fontSize: "1rem", cursor: ready ? "pointer" : "not-allowed",
+            fontWeight: 700, fontSize: "1rem", cursor: "pointer",
             boxShadow: "0 8px 24px color-mix(in srgb, var(--primary) 40%, transparent)",
             display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem",
           }}

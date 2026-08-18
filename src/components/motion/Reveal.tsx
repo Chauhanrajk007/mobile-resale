@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
-const SPRING = { type: "spring" as const, stiffness: 80, damping: 20, mass: 1 };
+const SPRING = { type: "spring" as const, stiffness: 120, damping: 22, mass: 0.8 };
 
 export function Reveal({
   children,

@@ -201,10 +201,10 @@ export default function InspectionWizard({
   };
 
   return (
-    <div style={{ maxWidth: "600px", margin: "0 auto", padding: "16px", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div style={{ maxWidth: "600px", margin: "0 auto", padding: "16px", height: "100vh", display: "flex", flexDirection: "column", overflow: "hidden" }}>
       
       {/* Progress Header */}
-      <div style={{ marginBottom: "24px" }}>
+      <div style={{ marginBottom: "24px", flexShrink: 0 }}>
         <h2 style={{ color: "var(--text)", marginBottom: "16px", textAlign: "center" }}>New Inspection</h2>
         
         <div style={{ display: "flex", justifyContent: "space-between", position: "relative", marginBottom: "8px" }}>
@@ -243,7 +243,7 @@ export default function InspectionWizard({
       </div>
 
       {/* Main Content Area */}
-      <div style={{ flex: 1, position: "relative", overflowX: "hidden" }}>
+      <div style={{ flex: 1, position: "relative", overflowX: "hidden", overflowY: "auto", WebkitOverflowScrolling: "touch" }}>
         <AnimatePresence custom={direction} mode="wait">
           <motion.div
             key={currentStep}
@@ -253,7 +253,7 @@ export default function InspectionWizard({
             animate="center"
             exit="exit"
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            style={{ width: "100%", paddingBottom: "80px" }}
+            style={{ width: "100%" }}
           >
             {currentStep === 0 && <PhoneSelector value={data.phone} onChange={(phone) => updateData({ phone })} />}
             {currentStep === 1 && <IMEIEntry value={{ imei: data.imei, serialNumber: data.serialNumber, deviceInfo: data.deviceInfo }} onChange={(val) => updateData({ ...val })} />}

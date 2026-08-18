@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BRANDS } from "@/lib/constants";
+import { BRANDS, DEFAULT_MODELS } from "@/lib/constants";
 import type { PhoneModelDoc } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -17,17 +17,26 @@ export default function PhoneSelector({ value, onChange }: PhoneSelectorProps) {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    if (!value.brand) return;
+    if (!value.brand) { setModels([]); return; }
     const fetchModels = async () => {
       setLoading(true);
       try {
         const res = await fetch(`/api/phones?brand=${encodeURIComponent(value.brand)}`);
         if (res.ok) {
           const data = await res.json();
-          setModels(data.phones || []);
+          let list: PhoneModelDoc[] = data.phones || [];
+          if (list.length === 0 && DEFAULT_MODELS[value.brand]) {
+            list = DEFAULT_MODELS[value.brand].map((m) => ({
+              _id: m, brand: value.brand, model: m, variants: [], active: true,
+            } as PhoneModelDoc));
+          }
+          setModels(list);
         }
       } catch (err) {
-        console.error("Failed to fetch models", err);
+        const fallback = (DEFAULT_MODELS[value.brand] || []).map((m) => ({
+          _id: m, brand: value.brand, model: m, variants: [], active: true,
+        } as PhoneModelDoc));
+        setModels(fallback);
       } finally {
         setLoading(false);
       }

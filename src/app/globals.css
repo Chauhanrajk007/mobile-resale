@@ -283,3 +283,22 @@ input[type="number"]::-webkit-outer-spin-button {
     padding: 0 !important;
   }
 }
+
+/* Inspect wizard: fill viewport properly on mobile */
+.inspect-page {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.inspect-page .inspection-wizard {
+  flex: 1;
+  min-height: 0;
+}
+.inspect-page .inspection-wizard > div:nth-child(2) {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}

@@ -32,5 +32,9 @@ export default function InspectPage() {
     );
   }
 
-  return <InspectionWizard />;
+  return (
+    <div className="inspect-page">
+      <InspectionWizard />
+    </div>
+  );
 }

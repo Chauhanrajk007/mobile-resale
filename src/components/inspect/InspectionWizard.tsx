@@ -133,30 +133,59 @@ export default function InspectionWizard({
           serialNumber: data.serialNumber
         })
       });
-      if (!createRes.ok) throw new Error("Failed to create inspection");
+      if (!createRes.ok) {
+        const err = await createRes.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to create inspection");
+      }
       const { inspectionId, _id } = await createRes.json();
 
-      // 2. Update with full data
+      // 2. Update with full data (strip photos if too large)
+      const bodyData: Record<string, unknown> = {
+        deviceInfo: data.deviceInfo,
+        tests: data.tests,
+        physicalCondition: data.physicalCondition,
+        location,
+        comments: data.comments,
+      };
+
+      // Estimate body size — only include photos if under ~3MB
+      const baseBody = JSON.stringify(bodyData);
+      const photosJson = JSON.stringify(data.photos);
+      const totalEstimate = baseBody.length + photosJson.length;
+
+      if (totalEstimate < 3_000_000 && data.photos.length > 0) {
+        bodyData.photos = data.photos;
+      }
+
       const updateRes = await fetch(`/api/inspections/${_id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          _id,
-          deviceInfo: data.deviceInfo,
-          tests: data.tests,
-          physicalCondition: data.physicalCondition,
-          photos: data.photos,
-          location,
-          comments: data.comments
-        })
+        body: JSON.stringify(bodyData)
       });
-      if (!updateRes.ok) throw new Error("Failed to update inspection");
+      if (!updateRes.ok) {
+        const err = await updateRes.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to update inspection");
+      }
+
+      // 2b. If photos were skipped, upload them separately
+      if (totalEstimate >= 3_000_000 && data.photos.length > 0) {
+        try {
+          await fetch(`/api/inspections/${_id}/photos`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ photos: data.photos })
+          });
+        } catch (e) { console.error("Photo upload failed (non-blocking)", e); }
+      }
 
       // 3. Complete inspection
       const completeRes = await fetch(`/api/inspections/${_id}/complete`, {
         method: "POST"
       });
-      if (!completeRes.ok) throw new Error("Failed to complete inspection");
+      if (!completeRes.ok) {
+        const err = await completeRes.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to complete inspection");
+      }
 
       // 4. Mark the linked booking as inspected
       if (initialBooking?._id) {
@@ -201,7 +230,7 @@ export default function InspectionWizard({
   };
 
   return (
-    <div style={{ maxWidth: "600px", margin: "0 auto", padding: "16px", height: "100vh", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    <div className="inspection-wizard" style={{ maxWidth: "600px", margin: "0 auto", padding: "16px", height: "100%", minHeight: "100%", display: "flex", flexDirection: "column" }}>
       
       {/* Progress Header */}
       <div style={{ marginBottom: "24px", flexShrink: 0 }}>
@@ -243,7 +272,7 @@ export default function InspectionWizard({
       </div>
 
       {/* Main Content Area */}
-      <div style={{ flex: 1, position: "relative", overflowX: "hidden", overflowY: "auto", WebkitOverflowScrolling: "touch" }}>
+      <div style={{ flex: 1, position: "relative", overflowX: "hidden", overflowY: "auto", WebkitOverflowScrolling: "touch", minHeight: 0 }}>
         <AnimatePresence custom={direction} mode="wait">
           <motion.div
             key={currentStep}

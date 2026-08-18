@@ -387,7 +387,7 @@ export default function BookingFlow() {
                 </div>
                 <div style={{ borderTop: "1px solid var(--border)", paddingTop: "1rem", display: "flex", justifyContent: "space-between" }}>
                   <span style={{ fontWeight: 600 }}>Inspection Fee</span>
-                  <span style={{ fontWeight: 700, color: "var(--primary)", fontSize: "1.15rem" }}>₹350</span>
+                  <span style={{ fontWeight: 700, color: "var(--primary)", fontSize: "1.15rem" }}>₹349</span>
                 </div>
                 <p style={{ color: "var(--text2)", fontSize: "0.8rem", marginTop: "0.5rem" }}>Payable after inspection is complete</p>
               </div>

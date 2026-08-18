@@ -267,6 +267,36 @@ export default function TechDashboard() {
                       </a>
                     </>
                   )}
+                  {b.status === "paid" && (
+                    <>
+                      <button
+                        onClick={async () => {
+                          try {
+                            const res = await fetch(`/api/bookings/${b._id}/status`, {
+                              method: "PATCH",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ action: "completed" }),
+                            });
+                            if (res.ok) refreshBookings();
+                          } catch (err) { console.error(err); }
+                        }}
+                        style={{
+                          padding: '0.5rem 1.1rem', background: 'var(--success)', color: '#fff',
+                          border: 'none', borderRadius: 'var(--radius)', fontWeight: 600,
+                          fontSize: '0.8rem', cursor: 'pointer',
+                        }}
+                      >
+                        Mark Complete
+                      </button>
+                      <a href={`/invoice/${b._id}`} target="_blank" rel="noreferrer" style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '0.4rem', padding: '0.5rem 1.1rem',
+                        background: 'var(--surface2)', color: 'var(--text)', border: '1px solid var(--border)',
+                        borderRadius: 'var(--radius)', textDecoration: 'none', fontWeight: 600, fontSize: '0.8rem',
+                      }}>
+                        View Invoice
+                      </a>
+                    </>
+                  )}
                   {(b.status === "paid" || b.status === "completed") && (
                     <Link href={`/invoice/${b._id}`} style={{
                       padding: '0.5rem 1.1rem', background: 'var(--success)', color: '#fff',

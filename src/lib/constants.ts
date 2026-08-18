@@ -323,7 +323,7 @@ export const TIME_SLOTS = [
   "05:00 PM – 07:00 PM",
 ] as const;
 
-export const SERVICE_FEE = 350;
+export const SERVICE_FEE = 349;
 
 export const PHONE_CONDITIONS = [
   "Like New",

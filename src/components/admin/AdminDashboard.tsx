@@ -592,7 +592,7 @@ export default function AdminDashboard() {
                                     <tr style={{ borderBottom: "1px solid var(--border)" }}>
                                       <td style={{ padding: "0.4rem 0" }}>Inspection Service Fee</td>
                                       <td style={{ textAlign: "center", padding: "0.4rem 0" }}>1</td>
-                                      <td style={{ textAlign: "right", padding: "0.4rem 0" }}>{formatCurrency(b.bill.serviceFee || 350)}</td>
+                                      <td style={{ textAlign: "right", padding: "0.4rem 0" }}>{formatCurrency(b.bill.serviceFee || 349)}</td>
                                     </tr>
                                     {(b.bill.items || []).map((item: any, i: number) => (
                                       <tr key={i} style={{ borderBottom: "1px solid var(--border)" }}>
@@ -603,7 +603,7 @@ export default function AdminDashboard() {
                                     ))}
                                     <tr>
                                       <td colSpan={2} style={{ textAlign: "right", padding: "0.6rem 0", fontWeight: 800 }}>Total</td>
-                                      <td style={{ textAlign: "right", padding: "0.6rem 0", fontWeight: 800, color: "var(--primary)" }}>{formatCurrency(b.bill.total || 350)}</td>
+                                      <td style={{ textAlign: "right", padding: "0.6rem 0", fontWeight: 800, color: "var(--primary)" }}>{formatCurrency(b.bill.total || 349)}</td>
                                     </tr>
                                   </tbody>
                                 </table>

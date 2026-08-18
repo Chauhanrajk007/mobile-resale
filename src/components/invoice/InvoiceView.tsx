@@ -140,8 +140,8 @@ export default function InvoiceView({ booking }: { booking: any }) {
             <tr style={{ borderBottom: "1px solid var(--border)" }}>
               <td style={{ padding: "0.75rem 0" }}>Inspection Service Fee</td>
               <td style={{ textAlign: "center", padding: "0.75rem 0" }}>1</td>
-              <td style={{ textAlign: "right", padding: "0.75rem 0" }}>{formatCurrency(booking.bill?.serviceFee || 350)}</td>
-              <td style={{ textAlign: "right", padding: "0.75rem 0" }}>{formatCurrency(booking.bill?.serviceFee || 350)}</td>
+              <td style={{ textAlign: "right", padding: "0.75rem 0" }}>{formatCurrency(booking.bill?.serviceFee || 349)}</td>
+              <td style={{ textAlign: "right", padding: "0.75rem 0" }}>{formatCurrency(booking.bill?.serviceFee || 349)}</td>
             </tr>
             {(booking.bill?.items || []).map((item: any, i: number) => (
               <tr key={i} style={{ borderBottom: "1px solid var(--border)" }}>
@@ -155,7 +155,7 @@ export default function InvoiceView({ booking }: { booking: any }) {
           <tfoot>
             <tr style={{ borderTop: "2px solid var(--border)" }}>
               <td colSpan={3} style={{ textAlign: "right", padding: "0.75rem 0", fontWeight: 700, fontSize: "1.1rem" }}>Total</td>
-              <td style={{ textAlign: "right", padding: "0.75rem 0", fontWeight: 800, fontSize: "1.25rem", color: "var(--primary)" }}>{formatCurrency(booking.bill?.total || 350)}</td>
+              <td style={{ textAlign: "right", padding: "0.75rem 0", fontWeight: 800, fontSize: "1.25rem", color: "var(--primary)" }}>{formatCurrency(booking.bill?.total || 349)}</td>
             </tr>
           </tfoot>
         </table>

@@ -65,7 +65,7 @@ const bookingSchema = new Schema(
     technician: { type: Schema.Types.ObjectId, ref: "User", default: null },
     adminNotes: { type: String, default: "" },
     bill: {
-      serviceFee: { type: Number, default: 350 },
+      serviceFee: { type: Number, default: 349 },
       items: [{ name: String, qty: { type: Number, default: 1 }, rate: Number, amount: Number }],
       subtotal: { type: Number, default: 0 },
       total: { type: Number, default: 0 },

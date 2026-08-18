@@ -8,7 +8,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { BRANDS, PHONE_CONDITIONS, DEFAULT_MODELS } from "@/lib/constants";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Reveal, WordReveal } from "@/components/motion/Reveal";
-import { Marquee } from "@/components/motion/Marquee";
 
 const steps = [
   {
@@ -75,7 +74,7 @@ const features = [
       </svg>
     ),
     title: "Fair Pricing",
-    desc: "₹350 flat inspection fee. No hidden charges, no markups, ever.",
+    desc: "₹349 flat inspection fee. No hidden charges, no markups, ever.",
   },
   {
     icon: (
@@ -105,9 +104,8 @@ export default function LandingPage() {
 
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroBlur = useTransform(scrollYProgress, [0, 1], ["blur(0px)", "blur(10px)"]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.8], [1, 0.97]);
 
   const [brands, setBrands] = useState<string[]>([]);
   const [brandsLoading, setBrandsLoading] = useState(true);
@@ -347,15 +345,15 @@ export default function LandingPage() {
         <motion.div
           style={{
             display: "contents",
-            filter: heroBlur, opacity: heroOpacity,
+            opacity: heroOpacity,
           }}
         >
         <motion.div style={{ flex: "1 1 460px", position: "relative", scale: heroScale }}>
         {/* Left */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, y: 20, scale: 0.95, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            transition={{ type: "spring", stiffness: 80, damping: 18, delay: 0.2 }}
             style={{
               display: "inline-flex", alignItems: "center", gap: "0.5rem",
               padding: "0.4rem 0.9rem", borderRadius: 999, marginBottom: "1.5rem",
@@ -369,9 +367,9 @@ export default function LandingPage() {
           </motion.div>
 
           <motion.h1
-            initial={{ opacity: 0, y: 30, filter: "blur(12px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ duration: 0.9, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, y: 40, scale: 0.96, filter: "blur(12px)" }}
+            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+            transition={{ type: "spring", stiffness: 60, damping: 18, delay: 0.35 }}
             style={{
               fontSize: "clamp(2.4rem, 5.5vw, 4.1rem)", fontWeight: 800, lineHeight: 1.06,
               letterSpacing: "-0.045em", marginBottom: "1.5rem",
@@ -382,9 +380,9 @@ export default function LandingPage() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+            initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ type: "spring", stiffness: 70, damping: 20, delay: 0.55 }}
             style={{ color: "var(--text2)", fontSize: "1.15rem", lineHeight: 1.65, maxWidth: 520, marginBottom: "2rem" }}
           >
             A certified technician inspects 30+ checkpoints at your doorstep and generates a verified,
@@ -393,9 +391,9 @@ export default function LandingPage() {
 
           {/* CTA row */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.35 }}
+            initial={{ opacity: 0, y: 30, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ type: "spring", stiffness: 70, damping: 20, delay: 0.7 }}
             style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", marginBottom: "2.5rem" }}
           >
             <a href="#book" style={{
@@ -424,14 +422,14 @@ export default function LandingPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
+            transition={{ type: "spring", stiffness: 70, damping: 20, delay: 0.85 }}
             style={{
               display: "flex", gap: "2.25rem", flexWrap: "wrap",
               paddingTop: "1.75rem", borderTop: "1px solid var(--border)",
             }}
           >
             {[
-              { value: "₹350", label: "Flat fee" },
+              { value: "₹349", label: "Flat fee" },
               { value: "30+", label: "Checkpoints" },
               { value: "60 min", label: "Avg. visit" },
               { value: "100%", label: "Verified report" },
@@ -447,9 +445,9 @@ export default function LandingPage() {
         {/* Phone mockup + floating cards (decorative) */}
         <motion.div
           className="mockup-wrap"
-          initial={{ opacity: 0, y: 40, rotate: -3 }}
-          animate={{ opacity: 1, y: 0, rotate: -3 }}
-          transition={{ duration: 0.8, delay: 0.35 }}
+          initial={{ opacity: 0, y: 60, rotate: -6, scale: 0.92, filter: "blur(10px)" }}
+          animate={{ opacity: 1, y: 0, rotate: -3, scale: 1, filter: "blur(0px)" }}
+          transition={{ type: "spring", stiffness: 50, damping: 16, delay: 0.5 }}
           style={{ flex: "1 1 240px", display: "flex", justifyContent: "center", position: "relative" }}
         >
           <div style={{
@@ -515,10 +513,10 @@ export default function LandingPage() {
         <motion.div
           id="book"
           className="booking-card"
-          initial={{ opacity: 0, y: 48, filter: "blur(14px)", scale: 0.98 }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)", scale: 1 }}
-          viewport={{ once: false, amount: 0.25 }}
-          transition={{ duration: 0.9, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          initial={{ opacity: 0, y: 60, scale: 0.95, filter: "blur(12px)" }}
+          whileInView={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ type: "spring", stiffness: 50, damping: 18 }}
           style={{
             flex: "1 1 400px", maxWidth: 500, width: "100%",
             background: "color-mix(in srgb, var(--surface) 92%, transparent)",
@@ -543,7 +541,7 @@ export default function LandingPage() {
               color: "var(--success)", fontSize: "0.78rem", fontWeight: 700,
             }}>
               <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--success)" }} />
-              ₹350 flat
+              ₹349 flat
             </div>
           </div>
 
@@ -559,13 +557,13 @@ export default function LandingPage() {
                   </div>
                 ) : (
                   brands.map((b) => (
-                    <motion.button
-                      key={b} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                    <button
+                      key={b}
                       onClick={() => setPhone({ ...phone, brand: b, model: "", condition: "" })}
                       style={pillStyle(phone.brand === b)}
                     >
                       {b}
-                    </motion.button>
+                    </button>
                   ))
                 )}
               </div>
@@ -645,14 +643,14 @@ export default function LandingPage() {
                               paddingRight: "0.25rem",
                             }}>
                               {filtered.map((m) => (
-                                <motion.button
+                                <button
                                   type="button"
-                                  key={m} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                                  key={m}
                                   onClick={() => setPhone({ ...phone, model: m })}
                                   style={pillStyle(phone.model === m)}
                                 >
                                   {m}
-                                </motion.button>
+                                </button>
                               ))}
                             </div>
                           );
@@ -688,22 +686,20 @@ export default function LandingPage() {
                 <label style={labelStyle}>Condition</label>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.4rem" }}>
                   {PHONE_CONDITIONS.map((c) => (
-                    <motion.button
-                      key={c} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+                    <button
+                      key={c}
                       onClick={() => setPhone({ ...phone, condition: c })}
                       style={pillStyle(phone.condition === c)}
                     >
                       {c}
-                    </motion.button>
+                    </button>
                   ))}
                 </div>
               </div>
             )}
 
             {/* CTA */}
-            <motion.button
-              whileHover={ready ? { scale: 1.01, boxShadow: "0 8px 24px color-mix(in srgb, var(--primary) 45%, transparent)" } : {}}
-              whileTap={ready ? { scale: 0.99 } : {}}
+            <button
               onClick={handleBook}
               disabled={!ready}
               aria-disabled={!ready}
@@ -716,11 +712,13 @@ export default function LandingPage() {
                 cursor: ready ? "pointer" : "not-allowed",
                 transition: "all 0.2s ease", width: "100%",
                 boxShadow: ready ? "0 6px 18px color-mix(in srgb, var(--primary) 35%, transparent)" : "none",
-                outline: "none",
+                outline: "none", transform: "scale(1)",
               }}
+              onMouseEnter={(e) => { if (ready) e.currentTarget.style.transform = "scale(1.01)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
             >
               {ready ? "Book Doorstep Inspection →" : "Select brand, model & condition"}
-            </motion.button>
+            </button>
 
             <p style={{ textAlign: "center", color: "var(--text2)", fontSize: "0.8rem" }}>
               Free cancellation · Pay after inspection
@@ -730,22 +728,6 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* ── Popular brands strip ── */}
-      <section style={{ padding: "3.5rem 0 4.5rem", borderTop: "1px solid var(--border)" }}>
-        <Reveal>
-          <div style={{ textAlign: "center", marginBottom: "2rem", padding: "0 1.5rem" }}>
-            <span style={{ color: "var(--text2)", fontSize: "0.8rem", fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase" }}>
-              We inspect every major brand
-            </span>
-          </div>
-          <Marquee
-            items={Array.isArray(brands) && brands.length ? brands : Array.from(BRANDS)}
-            onItemClick={(b) => { setPhone({ brand: b, model: "", condition: "" }); document.getElementById("book")?.scrollIntoView({ behavior: "smooth" }); }}
-          />
-        </Reveal>
-      </section>
-
-      {/* ── How It Works ── */}
       <section id="how" style={{ padding: "5.5rem 1.5rem", maxWidth: 1080, margin: "0 auto", scrollMarginTop: "4rem" }}>
         <Reveal>
           <div style={{ textAlign: "center", maxWidth: 560, margin: "0 auto 3.5rem" }}>
@@ -766,15 +748,16 @@ export default function LandingPage() {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(210px, 1fr))", gap: "1.5rem" }}>
           {steps.map((step, i) => (
-            <Reveal key={i} delay={i * 0.08}>
-              <motion.div
-                whileHover={{ y: -5 }}
+            <Reveal key={i} delay={0.1 + i * 0.12}>
+              <div
                 style={{
                   background: "var(--surface)", border: "1px solid var(--border)",
                   borderRadius: "var(--radius-lg)", padding: "2rem 1.5rem", textAlign: "center",
-                  boxShadow: "var(--shadow)", transition: "box-shadow 0.3s, transform 0.3s",
+                  boxShadow: "var(--shadow)", transition: "box-shadow 0.5s ease, transform 0.5s ease",
                   height: "100%",
                 }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
               >
                 <div style={{
                   width: 58, height: 58, borderRadius: "50%", margin: "0 auto 1.1rem",
@@ -795,7 +778,7 @@ export default function LandingPage() {
                 </div>
                 <h3 style={{ fontSize: "1.05rem", fontWeight: 700, marginBottom: "0.5rem", letterSpacing: "-0.01em" }}>{step.title}</h3>
                 <p style={{ color: "var(--text2)", fontSize: "0.875rem", lineHeight: 1.55 }}>{step.desc}</p>
-              </motion.div>
+              </div>
             </Reveal>
           ))}
         </div>
@@ -842,15 +825,16 @@ export default function LandingPage() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1.5rem" }}>
             {features.map((f, i) => (
-              <Reveal key={i} delay={i * 0.1}>
-                <motion.div
-                  whileHover={{ y: -6 }}
-                  style={{
-                    background: "var(--surface)", borderRadius: "var(--radius-lg)",
-                    padding: "2rem", boxShadow: "var(--shadow)", transition: "all 0.3s", height: "100%",
-                    border: "1px solid var(--border)",
-                  }}
-                >
+              <Reveal key={i} delay={0.1 + i * 0.15}>
+              <div
+                style={{
+                  background: "var(--surface)", borderRadius: "var(--radius-lg)",
+                  padding: "2rem", boxShadow: "var(--shadow)", transition: "all 0.3s", height: "100%",
+                  border: "1px solid var(--border)",
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)"; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}
+              >
                   <div style={{
                     width: 50, height: 50, borderRadius: "var(--radius)",
                     background: "linear-gradient(135deg, var(--primary), var(--primary-hover))",
@@ -861,10 +845,10 @@ export default function LandingPage() {
                   </div>
                   <h3 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem", letterSpacing: "-0.01em" }}>{f.title}</h3>
                   <p style={{ color: "var(--text2)", fontSize: "0.9rem", lineHeight: 1.6 }}>{f.desc}</p>
-                </motion.div>
-              </Reveal>
-            ))}
-          </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
         </div>
       </section>
 
@@ -887,7 +871,7 @@ export default function LandingPage() {
                 Sell or buy with total confidence
               </h2>
               <p style={{ fontSize: "1rem", opacity: 0.9, marginBottom: "2rem" }}>
-                Get your phone inspected today — the ₹350 fee pays for itself on your first fair deal.
+                Get your phone inspected today — the ₹349 fee pays for itself on your first fair deal.
               </p>
               <a href="#book" style={{
                 display: "inline-flex", alignItems: "center", gap: "0.5rem",
@@ -935,14 +919,11 @@ export default function LandingPage() {
       </footer>
 
       {/* Mobile sticky booking CTA */}
-      <motion.div
+      <div
         className="mobile-sticky-cta"
-        initial={{ y: 90 }}
-        animate={{ y: 0 }}
-        transition={{ delay: 0.8, type: "spring", stiffness: 260, damping: 24 }}
         style={{
           position: "fixed", left: "1rem", right: "1rem", bottom: "calc(1rem + env(safe-area-inset-bottom))",
-          zIndex: 90, display: "none",
+          zIndex: 90,
         }}
       >
         <button
@@ -964,7 +945,7 @@ export default function LandingPage() {
           </svg>
           {ready ? "Book Doorstep Inspection" : "Select phone to book"}
         </button>
-      </motion.div>
+      </div>
     </div>
   );
 }

@@ -137,7 +137,7 @@ export default function InspectionWizard({
       const { inspectionId, _id } = await createRes.json();
 
       // 2. Update with full data
-      const updateRes = await fetch(`/api/inspections`, {
+      const updateRes = await fetch(`/api/inspections/${_id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

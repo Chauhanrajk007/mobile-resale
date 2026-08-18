@@ -48,7 +48,7 @@ export async function POST(request: Request) {
       meetDate: body.meetDate,
       timeSlot: body.timeSlot,
       status: "pending",
-      bill: { serviceFee: 350 },
+      bill: { serviceFee: 349 },
       timeline: [{ status: "pending", label: "Booking created", at: new Date(), by: authUser._id }],
     });
 

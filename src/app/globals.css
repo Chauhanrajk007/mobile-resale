@@ -236,9 +236,12 @@ input, button, textarea, select {
 }
 
 /* Mobile sticky booking CTA on landing page */
+.mobile-sticky-cta {
+  display: none;
+}
 @media (max-width: 767px) {
   .mobile-sticky-cta {
-    display: block !important;
+    display: block;
   }
   .landing-page {
     padding-bottom: 5.5rem !important;

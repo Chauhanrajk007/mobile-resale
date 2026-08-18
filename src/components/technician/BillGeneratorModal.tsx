@@ -180,11 +180,11 @@ export default function BillGeneratorModal({
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "0.6rem", fontSize: "0.8rem", color: "var(--text2)" }}>
                 <span>Service fee</span>
-                <span>{formatCurrency(350)}</span>
+                <span>{formatCurrency(349)}</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "0.25rem", fontSize: "0.9rem", fontWeight: 800, color: "var(--text)" }}>
                 <span>Total</span>
-                <span>{formatCurrency(subtotal + 350)}</span>
+                <span>{formatCurrency(subtotal + 349)}</span>
               </div>
             </div>
 

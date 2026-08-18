@@ -3,11 +3,13 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
+const SPRING = { type: "spring" as const, stiffness: 80, damping: 20, mass: 1 };
+
 export function Reveal({
   children,
   delay = 0,
   y = 60,
-  blur = 10,
+  blur = 12,
   className,
   style,
 }: {
@@ -19,16 +21,16 @@ export function Reveal({
   style?: React.CSSProperties;
 }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: false, margin: "-80px" });
+  const inView = useInView(ref, { once: true, margin: "-60px" });
 
   return (
     <motion.div
       ref={ref}
       className={className}
       style={style}
-      initial={{ opacity: 0, y, filter: `blur(${blur}px)` }}
-      animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
-      transition={{ duration: 0.9, delay, ease: "easeOut" }}
+      initial={{ opacity: 0, y, scale: 0.97, filter: `blur(${blur}px)` }}
+      animate={inView ? { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" } : {}}
+      transition={{ ...SPRING, delay }}
     >
       {children}
     </motion.div>
@@ -49,7 +51,7 @@ export function WordReveal({
   style?: React.CSSProperties;
 }) {
   const ref = useRef<HTMLHeadingElement>(null);
-  const inView = useInView(ref, { once: false, margin: "-80px" });
+  const inView = useInView(ref, { once: true, margin: "-60px" });
   const words = text.split(" ");
 
   const Tag = as as "h2";
@@ -63,10 +65,10 @@ export function WordReveal({
       {words.map((word, i) => (
         <motion.span
           key={i}
-          style={{ display: "inline-block", willChange: "transform, opacity, filter" }}
-          initial={{ opacity: 0, y: 30, filter: "blur(10px)" }}
+          style={{ display: "inline-block" }}
+          initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
           animate={inView ? { opacity: 1, y: 0, filter: "blur(0px)" } : {}}
-          transition={{ duration: 0.8, delay: delay + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ ...SPRING, delay: delay + i * 0.07 }}
         >
           {word}
           {"\u00A0"}

@@ -21,7 +21,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       amount: (it.qty || 1) * (it.rate || 0),
     }));
     const subtotal = billItems.reduce((s: number, i: any) => s + i.amount, 0);
-    const serviceFee = 350;
+    const serviceFee = 349;
 
     booking.bill = {
       serviceFee,

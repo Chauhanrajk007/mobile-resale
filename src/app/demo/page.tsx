@@ -58,7 +58,7 @@ export default function DemoPage() {
       {generated && (
         <div style={{ marginTop: "1.5rem", padding: "1.25rem", borderRadius: "var(--radius-lg)", background: "var(--surface2)", border: "1px solid var(--border)" }}>
           <div style={{ fontWeight: 800, marginBottom: "0.75rem" }}>
-            {generated.bookingNo} · {formatCurrency(350)}
+            {generated.bookingNo} · {formatCurrency(349)}
           </div>
           <div style={{ fontSize: "0.85rem", color: "var(--text2)" }}>
             In the real flow this booking becomes <b style={{ color: "var(--primary)" }}>Bill Ready</b> and the customer can Pay via Razorpay, then download the invoice from the account dashboard.

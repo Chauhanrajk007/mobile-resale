@@ -138,8 +138,8 @@ export default function InspectionWizard({
         throw new Error(err.error || "Failed to create inspection");
       }
       const createData = await createRes.json();
-      const _id = createData.inspection?._id || createData._id;
-      if (!_id) throw new Error("No inspection ID returned");
+      const _id = createData._id || createData.inspection?._id;
+      if (!_id || _id === "undefined") throw new Error("No inspection ID returned from server");
 
       // 2. Update with full data (strip photos if too large)
       const bodyData: Record<string, unknown> = {

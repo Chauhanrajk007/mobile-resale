@@ -73,7 +73,7 @@ export async function POST(request: Request) {
       status: "in_progress",
     });
 
-    return Response.json({ inspection }, { status: 201 });
+    return Response.json({ inspectionId: inspection.inspectionId, _id: String(inspection._id), inspection }, { status: 201 });
   } catch (error) {
     const msg = error instanceof Error ? error.message : "Server error";
     return Response.json({ error: msg }, { status: 500 });

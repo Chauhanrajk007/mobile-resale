@@ -1,24 +1,23 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useSpring, useVelocity } from "framer-motion";
 
 export default function Phone3D() {
-  const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
+  const { scrollY } = useScroll();
+  const velocity = useVelocity(scrollY);
+  const smoothVelocity = useSpring(velocity, { stiffness: 150, damping: 20, mass: 0.5 });
 
-  const rotateY = useTransform(scrollYProgress, [0, 1], [-25, 25]);
-  const rotateX = useTransform(scrollYProgress, [0, 0.5, 1], [15, 0, -15]);
-  const scale = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.85, 1.05, 1.05, 0.85]);
-  const y = useTransform(scrollYProgress, [0, 0.5, 1], [60, 0, -60]);
+  const rotateY = useTransform(smoothVelocity, [-1500, 0, 1500], [-35, 0, 35]);
+  const rotateXFromScroll = useTransform(scrollY, [0, 3000], [-10, 10]);
+  const rotateXFromVelocity = useTransform(smoothVelocity, [-1500, 0, 1500], [12, 0, -12]);
+  const scale = useTransform(smoothVelocity, [-1500, 0, 1500], [0.92, 1, 0.92]);
 
   return (
     <div
-      ref={ref}
+      ref={containerRef}
       style={{
         perspective: 1200,
         perspectiveOrigin: "50% 50%",
@@ -31,11 +30,11 @@ export default function Phone3D() {
       <motion.div
         style={{
           rotateY,
-          rotateX,
+          rotateX: rotateXFromScroll,
           scale,
-          y,
-          transformStyle: "preserve-3d",
-          position: "relative",
+          transformStyle: "preserve-3d" as const,
+          position: "relative" as const,
+          willChange: "transform",
         }}
       >
         {/* Phone body */}
@@ -53,7 +52,7 @@ export default function Phone3D() {
             `,
             padding: "12px",
             position: "relative",
-            transformStyle: "preserve-3d",
+            transformStyle: "preserve-3d" as const,
           }}
         >
           {/* Side highlight (3D edge) */}

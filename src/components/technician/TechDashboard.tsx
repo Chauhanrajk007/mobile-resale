@@ -71,10 +71,12 @@ export default function TechDashboard() {
   const { user, loading: authLoading } = useAuth();
   const [stats, setStats] = useState({ total: 0, today: 0 });
   const [bookings, setBookings] = useState<any[]>([]);
+  const [inspections, setInspections] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const [billBooking, setBillBooking] = useState<any | null>(null);
   const [inspectBooking, setInspectBooking] = useState<any | null>(null);
+  const [viewInspection, setViewInspection] = useState<any | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -85,9 +87,11 @@ export default function TechDashboard() {
         ]);
         if (inspRes.ok) {
           const data = await inspRes.json();
+          const list = data.inspections || [];
+          setInspections(list);
           setStats({
-            total: data.inspections?.length || 0,
-            today: data.inspections?.filter((i: any) => new Date(i.createdAt).toDateString() === new Date().toDateString()).length || 0
+            total: list.length,
+            today: list.filter((i: any) => new Date(i.createdAt).toDateString() === new Date().toDateString()).length
           });
         }
         if (bookRes.ok) {
@@ -311,6 +315,159 @@ export default function TechDashboard() {
           </div>
         )}
       </motion.div>
+
+      {/* My Inspections */}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem' }}>My Inspections</h2>
+
+        {inspections.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text2)', background: 'var(--surface2)', borderRadius: 'var(--radius-lg)' }}>
+            No inspections yet. Start one from the <a href="/inspect" style={{ color: 'var(--primary)', fontWeight: 600 }}>Inspect</a> page.
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {inspections.map((insp, i) => (
+              <motion.div
+                key={insp._id}
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 * i }}
+                className="glass"
+                style={{
+                  padding: '1.25rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem', marginBottom: '0.5rem' }}>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--text)' }}>
+                      {insp.phone?.brand} {insp.phone?.model}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text2)', marginTop: '0.15rem' }}>
+                      {insp.inspectionId}
+                    </div>
+                  </div>
+                  <span style={{
+                    flexShrink: 0, padding: '0.3rem 0.75rem', borderRadius: 999,
+                    background: insp.status === "completed"
+                      ? 'color-mix(in srgb, var(--success) 12%, transparent)'
+                      : 'color-mix(in srgb, var(--warning) 12%, transparent)',
+                    color: insp.status === "completed" ? 'var(--success)' : 'var(--warning)',
+                    fontSize: '0.75rem', fontWeight: 700,
+                  }}>
+                    {insp.status === "completed" ? "Completed" : "In Progress"}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.82rem', color: 'var(--text2)' }}>
+                  {insp.phone?.imei && <div>IMEI: <span style={{ color: 'var(--text)' }}>{insp.phone.imei}</span></div>}
+                  {insp.overallResult && <div>Result: <span style={{
+                    color: insp.overallResult === "pass" ? "var(--success)" : insp.overallResult === "fail" ? "var(--danger)" : "var(--warning)",
+                    fontWeight: 600,
+                  }}>{insp.overallResult === "pass" ? "Passed" : insp.overallResult === "fail" ? "Failed" : "Conditional"}</span></div>}
+                  <div>{formatDate(insp.createdAt)}</div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.9rem', borderTop: '1px solid var(--border)', paddingTop: '0.75rem' }}>
+                  <button
+                    onClick={() => setViewInspection(insp)}
+                    style={{
+                      padding: '0.5rem 1.1rem', background: 'var(--surface2)', color: 'var(--text)',
+                      border: '1px solid var(--border)', borderRadius: 'var(--radius)', fontWeight: 600,
+                      fontSize: '0.8rem', cursor: 'pointer',
+                    }}
+                  >
+                    View Report
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </motion.div>
+
+      {/* View Inspection Report Modal */}
+      {viewInspection && (
+        <div style={{
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 200,
+          display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem",
+        }} onClick={() => setViewInspection(null)}>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "var(--bg)", borderRadius: "var(--radius-lg)", border: "1px solid var(--border)",
+              maxWidth: "600px", width: "100%", maxHeight: "85vh", overflowY: "auto",
+              padding: "1.5rem", position: "relative",
+            }}
+          >
+            <button
+              onClick={() => setViewInspection(null)}
+              style={{
+                position: "absolute", top: "1rem", right: "1rem",
+                background: "var(--surface2)", border: "1px solid var(--border)",
+                borderRadius: "50%", width: "32px", height: "32px", cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text)",
+                fontSize: "1.1rem", fontWeight: 700,
+              }}
+            >×</button>
+
+            <h2 style={{ fontSize: "1.3rem", fontWeight: 700, marginBottom: "0.5rem", color: "var(--text)" }}>
+              {viewInspection.phone?.brand} {viewInspection.phone?.model}
+            </h2>
+            <p style={{ fontSize: "0.8rem", color: "var(--text2)", marginBottom: "1.25rem" }}>
+              {viewInspection.inspectionId} · {formatDate(viewInspection.createdAt)}
+            </p>
+
+            {/* Device Info */}
+            <div style={{ background: "var(--surface)", padding: "1rem", borderRadius: "var(--radius)", border: "1px solid var(--border)", marginBottom: "1rem" }}>
+              <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--text)", marginBottom: "0.75rem" }}>Device Info</h3>
+              {viewInspection.phone?.imei && <div style={{ fontSize: "0.82rem", color: "var(--text2)" }}>IMEI: <span style={{ color: "var(--text)" }}>{viewInspection.phone.imei}</span></div>}
+              {viewInspection.phone?.serialNumber && <div style={{ fontSize: "0.82rem", color: "var(--text2)" }}>Serial: <span style={{ color: "var(--text)" }}>{viewInspection.phone.serialNumber}</span></div>}
+              {viewInspection.deviceInfo?.storage && <div style={{ fontSize: "0.82rem", color: "var(--text2)" }}>Storage: <span style={{ color: "var(--text)" }}>{viewInspection.deviceInfo.storage}</span></div>}
+            </div>
+
+            {/* Test Results */}
+            {viewInspection.tests?.length > 0 && (
+              <div style={{ background: "var(--surface)", padding: "1rem", borderRadius: "var(--radius)", border: "1px solid var(--border)", marginBottom: "1rem" }}>
+                <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--text)", marginBottom: "0.75rem" }}>Test Results</h3>
+                <div style={{ display: "flex", gap: "1rem", marginBottom: "0.75rem" }}>
+                  <span style={{ color: "var(--success)", fontWeight: 600, fontSize: "0.85rem" }}>Pass: {viewInspection.tests.filter((t: any) => t.result === "pass").length}</span>
+                  <span style={{ color: "var(--danger)", fontWeight: 600, fontSize: "0.85rem" }}>Fail: {viewInspection.tests.filter((t: any) => t.result === "fail").length}</span>
+                </div>
+                {viewInspection.tests.filter((t: any) => t.result === "fail").length > 0 && (
+                  <div>
+                    {viewInspection.tests.filter((t: any) => t.result === "fail").map((t: any, i: number) => (
+                      <div key={i} style={{ fontSize: "0.8rem", color: "var(--danger)", marginBottom: "0.25rem" }}>✕ {t.name} <span style={{ color: "var(--text2)" }}>({t.category})</span></div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Physical Condition */}
+            {viewInspection.physicalCondition && (
+              <div style={{ background: "var(--surface)", padding: "1rem", borderRadius: "var(--radius)", border: "1px solid var(--border)", marginBottom: "1rem" }}>
+                <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "var(--text)", marginBottom: "0.75rem" }}>Physical Condition</h3>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem", fontSize: "0.82rem" }}>
+                  <div><span style={{ color: "var(--text2)" }}>Screen:</span> <span style={{ textTransform: "capitalize", color: "var(--text)" }}>{viewInspection.physicalCondition.screen}</span></div>
+                  <div><span style={{ color: "var(--text2)" }}>Body:</span> <span style={{ textTransform: "capitalize", color: "var(--text)" }}>{viewInspection.physicalCondition.overallBody}</span></div>
+                  <div><span style={{ color: "var(--text2)" }}>Water Damage:</span> <span style={{ color: "var(--text)" }}>{viewInspection.physicalCondition.waterDamage ? "Yes" : "No"}</span></div>
+                </div>
+              </div>
+            )}
+
+            {/* Overall Result */}
+            <div style={{
+              padding: "1rem", borderRadius: "var(--radius)",
+              background: viewInspection.overallResult === "pass" ? "color-mix(in srgb, var(--success) 10%, transparent)" :
+                viewInspection.overallResult === "fail" ? "color-mix(in srgb, var(--danger) 10%, transparent)" :
+                "color-mix(in srgb, var(--warning) 10%, transparent)",
+              textAlign: "center", fontWeight: 700, fontSize: "1.1rem",
+              color: viewInspection.overallResult === "pass" ? "var(--success)" :
+                viewInspection.overallResult === "fail" ? "var(--danger)" : "var(--warning)",
+            }}>
+              Overall: {viewInspection.overallResult === "pass" ? "PASSED" : viewInspection.overallResult === "fail" ? "FAILED" : "CONDITIONAL"}
+            </div>
+          </div>
+        </div>
+      )}
 
       {billBooking && (
         <BillGeneratorModal

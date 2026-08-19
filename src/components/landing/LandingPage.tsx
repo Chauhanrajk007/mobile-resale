@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { BRANDS, PHONE_CONDITIONS, DEFAULT_MODELS } from "@/lib/constants";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Reveal, WordReveal } from "@/components/motion/Reveal";
+import Phone3D from "@/components/landing/Phone3D";
 
 const steps = [
   {
@@ -448,37 +449,12 @@ export default function LandingPage() {
         {/* Phone mockup + floating cards (decorative) */}
         <motion.div
           className="mockup-wrap"
-          initial={{ opacity: 0, y: 60, rotate: -6, scale: 0.92, filter: "blur(10px)" }}
-          animate={{ opacity: 1, y: 0, rotate: -3, scale: 1, filter: "blur(0px)" }}
-          transition={{ type: "spring", stiffness: 50, damping: 16, delay: 0.5 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
           style={{ flex: "1 1 240px", display: "flex", justifyContent: "center", position: "relative" }}
         >
-          <div style={{
-            width: 210, height: 400, borderRadius: 28,
-            background: "linear-gradient(160deg, var(--surface2), var(--surface))",
-            border: "1px solid var(--border)", boxShadow: "var(--shadow-xl)",
-            padding: "0.75rem", display: "flex", flexDirection: "column", gap: "0.5rem",
-          }}>
-            <div style={{ alignSelf: "center", width: 84, height: 18, borderRadius: 99, background: "var(--border)" }} />
-            <div style={{
-              flex: 1, borderRadius: 18, background: "var(--surface2)",
-              border: "1px solid var(--border)", padding: "1rem",
-              display: "flex", flexDirection: "column", gap: "0.5rem",
-            }}>
-              <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--primary)" }}>Inspection Report</div>
-              <div style={{ fontSize: "0.95rem", fontWeight: 800 }}>iPhone 15 Pro</div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <div style={{ flex: 1, height: 6, borderRadius: 99, background: "var(--border)" }} />
-                <span style={{ fontSize: "0.85rem", fontWeight: 800, color: "var(--success)" }}>96%</span>
-              </div>
-              {["Display", "Battery", "Camera"].map((t) => (
-                <div key={t} style={{ display: "flex", justifyContent: "space-between", fontSize: "0.72rem", color: "var(--text2)" }}>
-                  <span>{t}</span>
-                  <span style={{ color: "var(--success)", fontWeight: 700 }}>PASS</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <Phone3D />
 
           {/* Floating chip: technician en route */}
           <div className="chip-float" style={{

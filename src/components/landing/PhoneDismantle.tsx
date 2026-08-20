@@ -7,6 +7,7 @@ import {
   useTransform,
   useSpring,
   useVelocity,
+  useMotionValue,
 } from "framer-motion";
 
 const PW = 240;
@@ -20,23 +21,24 @@ const PARTS = [
   { label: "Verified Report", desc: "Shareable, tamper-proof certificate" },
 ];
 
-// ── HIGH-FIDELITY INLINE IN-REACT VECTOR COMPONENTS ──
+// ── HIGH-FIDELITY VECTOR COMPONENTS WITH SHEEN MASK SUPPORT ──
 
-function PhoneFront() {
+function PhoneFront({ sheenX }: { sheenX: any }) {
   return (
     <svg viewBox="0 0 240 490" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: PW, height: PH, display: "block" }}>
       <defs>
-        <linearGradient id="front-glass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="rgba(255,255,255,0.12)"/>
-          <stop offset="30%" stopColor="rgba(255,255,255,0.02)"/>
-          <stop offset="100%" stopColor="rgba(255,255,255,0.05)"/>
+        {/* Dynamic diagonal sheen gradient */}
+        <linearGradient id="front-sheen" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="rgba(255,255,255,0)"/>
+          <stop offset="50%" stopColor="rgba(255,255,255,0.24)"/>
+          <stop offset="100%" stopColor="rgba(255,255,255,0)"/>
         </linearGradient>
         <linearGradient id="front-bg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#0f0c1b"/>
+          <stop offset="0%" stopColor="#0d0a1b"/>
           <stop offset="50%" stopColor="#050508"/>
-          <stop offset="100%" stopColor="#0a0515"/>
+          <stop offset="100%" stopColor="#090412"/>
         </linearGradient>
-        <linearGradient id="laser-glow" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="glow-btn" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#a855f7"/>
           <stop offset="100%" stopColor="#6366f1"/>
         </linearGradient>
@@ -92,14 +94,25 @@ function PhoneFront() {
       </g>
 
       <g transform="translate(24, 342)">
-        <rect width="192" height="38" rx="12" fill="url(#laser-glow)"/>
+        <rect width="192" height="38" rx="12" fill="url(#glow-btn)"/>
         <text x="96" y="23" fill="#fff" fontSize="11" fontWeight="800" textAnchor="middle" letterSpacing="1.5" fontFamily="system-ui">VERIFIED REPORT</text>
       </g>
+
+      {/* Interactive Light Sheen overlay */}
+      <motion.rect
+        x="-100"
+        y="6"
+        width="200"
+        height="478"
+        fill="url(#front-sheen)"
+        style={{ x: sheenX, skewX: -20, mixBlendMode: "overlay" }}
+        pointerEvents="none"
+      />
     </svg>
   );
 }
 
-function PhoneBack() {
+function PhoneBack({ sheenX }: { sheenX: any }) {
   return (
     <svg viewBox="0 0 240 490" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: PW, height: PH, display: "block" }}>
       <defs>
@@ -113,6 +126,11 @@ function PhoneBack() {
           <stop offset="40%" stopColor="#1e3a8a"/>
           <stop offset="100%" stopColor="#090514"/>
         </radialGradient>
+        <linearGradient id="back-sheen" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stopColor="rgba(255,255,255,0)"/>
+          <stop offset="50%" stopColor="rgba(255,255,255,0.18)"/>
+          <stop offset="100%" stopColor="rgba(255,255,255,0)"/>
+        </linearGradient>
       </defs>
       
       {/* Matte Titanium Back Plate */}
@@ -160,6 +178,17 @@ function PhoneBack() {
         <path d="M -12,-15 H 12 L 18,0 C 18,10 8,18 0,22 C -8,18 -18,10 -18,0 Z" strokeLinejoin="round"/>
         <path d="M -5,0 L -1,4 L 6,-3" strokeLinecap="round"/>
       </g>
+
+      {/* Light sheen overlay */}
+      <motion.rect
+        x="-100"
+        y="6"
+        width="200"
+        height="478"
+        fill="url(#back-sheen)"
+        style={{ x: sheenX, skewX: -20, mixBlendMode: "overlay" }}
+        pointerEvents="none"
+      />
     </svg>
   );
 }
@@ -199,16 +228,13 @@ function Battery() {
       <rect width="116" height="236" rx="8" fill="#131316" stroke="rgba(168,85,247,0.3)" strokeWidth="1"/>
       <rect x="6" y="6" width="104" height="224" rx="5" fill="none" stroke="rgba(168,85,247,0.06)" strokeWidth="1" strokeDasharray="3 3"/>
       
-      {/* Ribbon flex connector */}
       <path d="M -4,52 H 4" fill="none" stroke="#c084fc" strokeWidth="1.5"/>
 
-      {/* Prints */}
       <g transform="translate(14, 24)" fontFamily="system-ui" fill="#a855f7">
         <text x="0" y="10" fontSize="8" fontWeight="800" letterSpacing="1">CMP POWER CELL</text>
         <text x="0" y="24" fill="#fff" fontSize="7" fontWeight="600">Model BATT-L15P</text>
         <text x="0" y="42" fill="rgba(255,255,255,0.4)" fontSize="6.5">Capacity: 3274 mAh</text>
         
-        {/* Warning label */}
         <text x="0" y="106" fill="#f43f5e" fontSize="6.5" fontWeight="800">WARNING / CAUTION</text>
         <text x="0" y="116" fill="rgba(255,255,255,0.3)" fontSize="5.5">DO NOT CRUSH OR INCINERATE</text>
 
@@ -299,14 +325,37 @@ export default function PhoneDismantle() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
+  // Mouse Coordinates for Interactive Cursor 3D Parallax Tilt
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
     checkMobile();
     window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+    
+    // Mouse hover listener on desktop
+    const handleMouseMove = (e: MouseEvent) => {
+      if (window.innerWidth < 768) return;
+      const { clientX, clientY } = e;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      mouseX.set((clientX / width) - 0.5);
+      mouseY.set((clientY / height) - 0.5);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [mouseX, mouseY]);
+
+  // Spring smooth the mouse tilt coordinates
+  const smoothMouseX = useSpring(mouseX, { stiffness: 60, damping: 18 });
+  const smoothMouseY = useSpring(mouseY, { stiffness: 60, damping: 18 });
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -314,25 +363,26 @@ export default function PhoneDismantle() {
   });
 
   const sp = useSpring(scrollYProgress, { stiffness: 45, damping: 22, mass: 0.5 });
-  const rawVelocity = useVelocity(scrollYProgress);
-  const velocity = useSpring(rawVelocity, { stiffness: 60, damping: 12 });
-  const vBoost = useTransform(velocity, [-1.5, 0, 1.5], [-6, 0, 6]);
 
-  // Premium Y-rotation going from -15deg, turning 90deg (sideways), to 180deg (showing back), and finishing a full 360deg spin
+  // Main Scroll Rotation Path
   const containerRotX = useTransform(sp, [0, 0.3, 0.65, 0.85, 1], [15, 20, 15, 10, 0]);
   const containerRotY = useTransform(sp, [0, 0.3, 0.65, 0.85, 1], [-15, 90, 180, 270, 360]);
   const containerRotZ = useTransform(sp, [0, 0.3, 0.65, 0.85, 1], [-4, 0, 4, 0, 0]);
 
-  // Exploded View: Parts translate straight out along the Z-axis (local depth)
-  // Screen detaches forward
+  // Mouse Interactive Tilt added to Scroll Rotation (Tactile Parallax)
+  const hoverRotX = useTransform(smoothMouseY, [-0.5, 0.5], [10, -10]);
+  const hoverRotY = useTransform(smoothMouseX, [-0.5, 0.5], [-12, 12]);
+
+  const finalRotX = useTransform([containerRotX, hoverRotX] as any, ([cX, hX]: number[]) => cX + (hX || 0));
+  const finalRotY = useTransform([containerRotY, hoverRotY] as any, ([cY, hY]: number[]) => cY + (hY || 0));
+
+  // Exploded View Z-axis (Depth Elevation)
   const screenZ = useTransform(sp, [0.05, 0.35, 0.75, 0.90], [0, 220, 220, 0]);
   const screenOp = useTransform(sp, [0.0, 0.05, 0.85, 0.90], [1, 1, 1, 1]);
 
-  // Back panel detaches backward
   const backZ = useTransform(sp, [0.05, 0.35, 0.75, 0.90], [0, -120, -120, 0]);
   const backOp = useTransform(sp, [0.0, 0.05, 0.85, 0.90], [1, 1, 1, 1]);
 
-  // Internal components lift out at different Z-depths while the phone is sideways
   const camZ = useTransform(sp, [0.25, 0.50, 0.75, 0.90], [0, 140, 140, 0]);
   const camOp = useTransform(sp, [0.20, 0.28, 0.85, 0.92], [0, 1, 1, 0]);
 
@@ -345,14 +395,17 @@ export default function PhoneDismantle() {
   const spkZ = useTransform(sp, [0.40, 0.65, 0.75, 0.90], [0, 40, 40, 0]);
   const spkOp = useTransform(sp, [0.35, 0.43, 0.85, 0.92], [0, 1, 1, 0]);
 
-  // Glowing Scanner Line Sweep
+  // Glass light sheen glint sweep coordinates
+  const sheenX = useTransform(sp, [0, 0.4, 0.75, 1], [-250, 250, -250, 250]);
+
+  // Glowing laser diagnostic sweep
   const scannerY = useTransform(sp, [0.45, 0.80], [-230, 230]);
   const scannerOp = useTransform(sp, [0.42, 0.48, 0.78, 0.84], [0, 1, 1, 0]);
 
   const ctaOp = useTransform(sp, [0.88, 0.96], [0, 1]);
   const ctaY = useTransform(sp, [0.88, 0.96], [30, 0]);
 
-  // HUD Information Cards (fade in dynamically on left/right side)
+  // HUD Side menu fade-ins
   const lOps = [
     useTransform(sp, [0.08, 0.16, 0.24, 0.32], [0, 1, 1, 0]),
     useTransform(sp, [0.22, 0.30, 0.42, 0.50], [0, 1, 1, 0]),
@@ -436,7 +489,7 @@ export default function PhoneDismantle() {
             ))}
           </div>
 
-          {/* 3D Exploded Teardown Container */}
+          {/* 3.5D Exploded Teardown Container */}
           <motion.div
             style={{
               perspective: 2000,
@@ -450,8 +503,8 @@ export default function PhoneDismantle() {
           >
             <motion.div
               style={{
-                rotateX: containerRotX,
-                rotateY: containerRotY,
+                rotateX: finalRotX,
+                rotateY: finalRotY,
                 rotateZ: containerRotZ,
                 transformStyle: "preserve-3d",
                 position: "relative",
@@ -460,9 +513,27 @@ export default function PhoneDismantle() {
                 willChange: "transform",
               }}
             >
+              {/* Dynamic Parallax Shadow Layer beneath floating Screen */}
+              <motion.div
+                style={{
+                  position: "absolute",
+                  width: PW - 8,
+                  height: PH - 8,
+                  top: 4,
+                  left: 4,
+                  z: 1,
+                  background: "#000",
+                  borderRadius: 44,
+                  pointerEvents: "none",
+                  opacity: useTransform(screenZ, [0, 220], [0, 0.6]),
+                  filter: useTransform(screenZ, [0, 220], ["blur(1px)", "blur(20px)"]),
+                  scale: useTransform(screenZ, [0, 220], [1, 0.88]),
+                }}
+              />
+
               {/* Back Glass Shell (Explodes backwards along local Z-axis) */}
               <motion.div style={{ position: "absolute", width: PW, height: PH, borderRadius: 44, transformStyle: "preserve-3d", z: backZ, opacity: backOp, zIndex: 1, filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.3))" }}>
-                <PhoneBack />
+                <PhoneBack sheenX={sheenX} />
               </motion.div>
 
               {/* Chassis Internal Chassis Layer (Remains at center z = 0) */}
@@ -472,7 +543,7 @@ export default function PhoneDismantle() {
 
               {/* Exploded Component: 1. Front Glass Display Panel (Explodes forward along local Z-axis) */}
               <motion.div style={{ position: "absolute", width: PW, height: PH, z: screenZ, opacity: screenOp, transformStyle: "preserve-3d", zIndex: 9, filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.45))" }}>
-                <PhoneFront />
+                <PhoneFront sheenX={sheenX} />
               </motion.div>
 
               {/* Exploded Component: 2. Smart Battery Cell */}

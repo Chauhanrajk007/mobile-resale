@@ -20,6 +20,281 @@ const PARTS = [
   { label: "Verified Report", desc: "Shareable, tamper-proof certificate" },
 ];
 
+// ── HIGH-FIDELITY INLINE IN-REACT VECTOR COMPONENTS ──
+
+function PhoneFront() {
+  return (
+    <svg viewBox="0 0 240 490" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: PW, height: PH, display: "block" }}>
+      <defs>
+        <linearGradient id="front-glass" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="rgba(255,255,255,0.12)"/>
+          <stop offset="30%" stopColor="rgba(255,255,255,0.02)"/>
+          <stop offset="100%" stopColor="rgba(255,255,255,0.05)"/>
+        </linearGradient>
+        <linearGradient id="front-bg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#0f0c1b"/>
+          <stop offset="50%" stopColor="#050508"/>
+          <stop offset="100%" stopColor="#0a0515"/>
+        </linearGradient>
+        <linearGradient id="laser-glow" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#a855f7"/>
+          <stop offset="100%" stopColor="#6366f1"/>
+        </linearGradient>
+      </defs>
+      
+      {/* Outer Border Bezel */}
+      <rect width="240" height="490" rx="44" fill="#09090b" stroke="var(--border)" strokeWidth="2.5"/>
+      <rect x="6" y="6" width="228" height="478" rx="38" fill="url(#front-bg)"/>
+
+      {/* Grid Pattern on Screen */}
+      <g opacity="0.12">
+        <path d="M 6,50 H 234 M 6,100 H 234 M 6,150 H 234 M 6,200 H 234 M 6,250 H 234 M 6,300 H 234 M 6,350 H 234 M 6,400 H 234 M 6,450 H 234" stroke="#8b5cf6" strokeWidth="0.5"/>
+        <path d="M 50,6 V 484 M 100,6 V 484 M 150,6 V 484 M 200,6 V 484" stroke="#8b5cf6" strokeWidth="0.5"/>
+      </g>
+
+      {/* Dynamic Island */}
+      <rect x="76" y="16" width="88" height="28" rx="14" fill="#000" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
+      <circle cx="94" cy="30" r="4.5" fill="#111"/>
+      <circle cx="94" cy="30" r="2" fill="#2563eb" opacity="0.6"/>
+
+      {/* Status Bar */}
+      <text x="32" y="34" fill="#fff" fontSize="9.5" fontWeight="700" fontFamily="system-ui">9:41</text>
+      <g transform="translate(182, 25)" fill="#fff">
+        <rect x="0" y="0" width="18" height="9" rx="2" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="0.8"/>
+        <rect x="2" y="2" width="11" height="5" rx="0.5" fill="#22c55e"/>
+      </g>
+
+      {/* Diagnostics Dashboard UI */}
+      <text x="120" y="80" fill="#a855f7" fontSize="9" fontWeight="800" letterSpacing="3" textAnchor="middle" fontFamily="system-ui">SYSTEM REPORT</text>
+      <text x="120" y="104" fill="#fff" fontSize="19" fontWeight="800" textAnchor="middle" fontFamily="system-ui" letterSpacing="-0.02em">Device Health</text>
+
+      <rect x="24" y="124" width="192" height="198" rx="16" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
+
+      {/* Radial Health Gauge */}
+      <circle cx="120" cy="184" r="30" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="5"/>
+      <circle cx="120" cy="184" r="30" fill="none" stroke="#22c55e" strokeWidth="5" strokeDasharray="188" strokeDashoffset="15" strokeLinecap="round" transform="rotate(-90 120 184)"/>
+      <text x="120" y="188" fill="#fff" fontSize="13" fontWeight="800" textAnchor="middle" fontFamily="system-ui">96%</text>
+      <text x="120" y="228" fill="#22c55e" fontSize="8" fontWeight="700" textAnchor="middle" fontFamily="system-ui" letterSpacing="1">EXCELLENT</text>
+
+      {/* Test Checklist */}
+      <g transform="translate(36, 252)" fontFamily="system-ui" fontSize="10">
+        <text x="0" y="0" fill="rgba(255,255,255,0.5)">Display & Touch</text>
+        <text x="144" y="0" fill="#22c55e" fontWeight="700" textAnchor="end">✓</text>
+        <line x1="0" y1="4" x2="148" y2="4" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
+        
+        <text x="0" y="18" fill="rgba(255,255,255,0.5)">Power Cell Health</text>
+        <text x="144" y="18" fill="#22c55e" fontWeight="700" textAnchor="end">✓</text>
+        <line x1="0" y1="22" x2="148" y2="22" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
+        
+        <text x="0" y="36" fill="rgba(255,255,255,0.5)">Camera Aperture</text>
+        <text x="144" y="36" fill="#22c55e" fontWeight="700" textAnchor="end">✓</text>
+        <line x1="0" y1="40" x2="148" y2="40" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
+      </g>
+
+      <g transform="translate(24, 342)">
+        <rect width="192" height="38" rx="12" fill="url(#laser-glow)"/>
+        <text x="96" y="23" fill="#fff" fontSize="11" fontWeight="800" textAnchor="middle" letterSpacing="1.5" fontFamily="system-ui">VERIFIED REPORT</text>
+      </g>
+    </svg>
+  );
+}
+
+function PhoneBack() {
+  return (
+    <svg viewBox="0 0 240 490" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: PW, height: PH, display: "block" }}>
+      <defs>
+        <linearGradient id="back-body" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#2e2e33"/>
+          <stop offset="50%" stopColor="#1c1c1f"/>
+          <stop offset="100%" stopColor="#0f0f11"/>
+        </linearGradient>
+        <radialGradient id="glass-lens" cx="0.4" cy="0.4" r="0.6">
+          <stop offset="0%" stopColor="#3b82f6"/>
+          <stop offset="40%" stopColor="#1e3a8a"/>
+          <stop offset="100%" stopColor="#090514"/>
+        </radialGradient>
+      </defs>
+      
+      {/* Matte Titanium Back Plate */}
+      <rect width="240" height="490" rx="44" fill="url(#back-body)" stroke="var(--border)" strokeWidth="2.5"/>
+
+      {/* Triple Camera Island */}
+      <rect x="14" y="14" width="94" height="94" rx="22" fill="#141417" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
+
+      {/* Lens 1 (Top Left) */}
+      <g transform="translate(38, 38)">
+        <circle r="17" fill="#1c1c21" stroke="rgba(255,255,255,0.12)" strokeWidth="1.2"/>
+        <circle r="13" fill="#09090b"/>
+        <circle r="10" fill="url(#glass-lens)"/>
+        <circle r="4" fill="#000"/>
+        <circle cx="-3" cy="-3" r="1.2" fill="rgba(255,255,255,0.4)"/>
+      </g>
+
+      {/* Lens 2 (Bottom Left) */}
+      <g transform="translate(38, 82)">
+        <circle r="17" fill="#1c1c21" stroke="rgba(255,255,255,0.12)" stroke-width="1.2"/>
+        <circle r="13" fill="#09090b"/>
+        <circle r="10" fill="url(#glass-lens)"/>
+        <circle r="4" fill="#000"/>
+        <circle cx="-3" cy="-3" r="1.2" fill="rgba(255,255,255,0.4)"/>
+      </g>
+
+      {/* Lens 3 (Right Middle) */}
+      <g transform="translate(82, 60)">
+        <circle r="14" fill="#1c1c21" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <circle r="11" fill="#09090b"/>
+        <circle r="8" fill="url(#glass-lens)"/>
+        <circle r="3" fill="#000"/>
+        <circle cx="-2" cy="-2" r="1" fill="rgba(255,255,255,0.4)"/>
+      </g>
+
+      {/* Dual Tone Flash */}
+      <circle cx="82" cy="32" r="6" fill="#3f3f46"/>
+      <circle cx="82" cy="32" r="4.5" fill="#f59e0b" opacity="0.8"/>
+
+      {/* LiDAR Sensor */}
+      <circle cx="82" cy="88" r="4" fill="#18181b" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5"/>
+
+      {/* Shield logo */}
+      <g transform="translate(120, 245)" opacity="0.1" stroke="#fff" strokeWidth="1.8" fill="none">
+        <path d="M -12,-15 H 12 L 18,0 C 18,10 8,18 0,22 C -8,18 -18,10 -18,0 Z" strokeLinejoin="round"/>
+        <path d="M -5,0 L -1,4 L 6,-3" strokeLinecap="round"/>
+      </g>
+    </svg>
+  );
+}
+
+function Chassis() {
+  return (
+    <svg viewBox="0 0 234 484" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: PW - 6, height: PH - 6, display: "block" }}>
+      <defs>
+        <radialGradient id="chassis-coil" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0%" stopColor="#ea580c"/>
+          <stop offset="50%" stopColor="#92400e"/>
+          <stop offset="100%" stopColor="#1c1917"/>
+        </radialGradient>
+      </defs>
+      {/* Aluminum Core Plate */}
+      <rect width="234" height="484" rx="38" fill="#1c1917" stroke="var(--border)" strokeWidth="1.5"/>
+
+      {/* Heatpipes */}
+      <path d="M 46,120 V 380 L 160,380 V 220" fill="none" stroke="#ca8a04" strokeWidth="2.5" opacity="0.5"/>
+
+      {/* Copper Wireless Coil */}
+      <circle cx="117" cy="242" r="54" fill="url(#chassis-coil)" opacity="0.85"/>
+      <circle cx="117" cy="242" r="48" fill="none" stroke="#ea580c" strokeWidth="1.5" opacity="0.7"/>
+      <circle cx="117" cy="242" r="40" fill="none" stroke="#d97706" strokeWidth="1.2" opacity="0.6"/>
+      <circle cx="117" cy="242" r="32" fill="none" stroke="#ca8a04" strokeWidth="0.8" opacity="0.5"/>
+
+      {/* Compartment Bays */}
+      <rect x="14" y="44" width="82" height="154" rx="6" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" strokeDasharray="4 2"/>
+      <rect x="104" y="108" width="116" height="236" rx="8" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" strokeDasharray="4 2"/>
+    </svg>
+  );
+}
+
+function Battery() {
+  return (
+    <svg viewBox="0 0 116 236" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: 116, height: 236, display: "block" }}>
+      <rect width="116" height="236" rx="8" fill="#131316" stroke="rgba(168,85,247,0.3)" strokeWidth="1"/>
+      <rect x="6" y="6" width="104" height="224" rx="5" fill="none" stroke="rgba(168,85,247,0.06)" strokeWidth="1" strokeDasharray="3 3"/>
+      
+      {/* Ribbon flex connector */}
+      <path d="M -4,52 H 4" fill="none" stroke="#c084fc" strokeWidth="1.5"/>
+
+      {/* Prints */}
+      <g transform="translate(14, 24)" fontFamily="system-ui" fill="#a855f7">
+        <text x="0" y="10" fontSize="8" fontWeight="800" letterSpacing="1">CMP POWER CELL</text>
+        <text x="0" y="24" fill="#fff" fontSize="7" fontWeight="600">Model BATT-L15P</text>
+        <text x="0" y="42" fill="rgba(255,255,255,0.4)" fontSize="6.5">Capacity: 3274 mAh</text>
+        
+        {/* Warning label */}
+        <text x="0" y="106" fill="#f43f5e" fontSize="6.5" fontWeight="800">WARNING / CAUTION</text>
+        <text x="0" y="116" fill="rgba(255,255,255,0.3)" fontSize="5.5">DO NOT CRUSH OR INCINERATE</text>
+
+        {/* Battery Health Scan Representation */}
+        <rect x="0" y="148" width="88" height="42" rx="8" fill="rgba(34,197,94,0.04)" stroke="#22c55e" strokeWidth="0.8"/>
+        <text x="8" y="162" fill="#22c55e" fontSize="8" fontWeight="800">HEALTH VALUE</text>
+        <text x="8" y="174" fill="#fff" fontSize="11" fontWeight="800">89%</text>
+        <text x="80" y="174" fill="#22c55e" fontSize="8.5" fontWeight="800" textAnchor="end">GOOD</text>
+      </g>
+    </svg>
+  );
+}
+
+function CameraModule() {
+  return (
+    <svg viewBox="0 0 94 94" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: 94, height: 94, display: "block" }}>
+      <defs>
+        <radialGradient id="cam-lens-3d" cx="0.4" cy="0.4" r="0.6">
+          <stop offset="0%" stopColor="#60a5fa"/>
+          <stop offset="40%" stopColor="#1d4ed8"/>
+          <stop offset="100%" stopColor="#0f172a"/>
+        </radialGradient>
+      </defs>
+      
+      <rect width="94" height="94" rx="22" fill="#141416" stroke="rgba(56,189,248,0.3)" strokeWidth="1"/>
+
+      {/* Lens 1 */}
+      <g transform="translate(28, 28)">
+        <circle r="14" fill="#09090b" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
+        <circle r="10" fill="url(#cam-lens-3d)"/>
+        <circle r="3" fill="#000"/>
+      </g>
+      
+      {/* Lens 2 */}
+      <g transform="translate(28, 68)">
+        <circle r="14" fill="#09090b" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
+        <circle r="10" fill="url(#cam-lens-3d)"/>
+        <circle r="3" fill="#000"/>
+      </g>
+
+      {/* Lens 3 */}
+      <g transform="translate(68, 48)">
+        <circle r="12" fill="#09090b" stroke="rgba(255,255,255,0.12)" strokeWidth="1"/>
+        <circle r="8" fill="url(#cam-lens-3d)"/>
+        <circle r="2.5" fill="#000"/>
+      </g>
+    </svg>
+  );
+}
+
+function LogicBoard() {
+  return (
+    <svg viewBox="0 0 82 154" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: 82, height: 154, display: "block" }}>
+      <defs>
+        <linearGradient id="pcb-color" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#022c22"/>
+          <stop offset="100%" stopColor="#064e3b"/>
+        </linearGradient>
+      </defs>
+
+      <rect width="82" height="154" rx="6" fill="url(#pcb-color)" stroke="rgba(34,197,94,0.3)" strokeWidth="1"/>
+
+      {/* Circuit lines */}
+      <g stroke="#ca8a04" strokeWidth="0.5" fill="none" opacity="0.6">
+        <path d="M 12,12 L 12,40 L 24,40 M 70,12 V 42 L 58,50"/>
+        <path d="M 22,96 L 22,120 H 42 L 50,132"/>
+      </g>
+
+      {/* Central Processor */}
+      <rect x="12" y="52" width="58" height="58" rx="8" fill="#18181b" stroke="rgba(34,197,94,0.5)" strokeWidth="1"/>
+      <text x="41" y="82" fill="#22c55e" fontSize="8.5" fontWeight="900" textAnchor="middle" fontFamily="system-ui">A17 PRO</text>
+      <text x="41" y="93" fill="rgba(255,255,255,0.3)" fontSize="5.5" textAnchor="middle" fontFamily="system-ui">6-CORE</text>
+    </svg>
+  );
+}
+
+function Speaker() {
+  return (
+    <svg viewBox="0 0 86 52" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: 86, height: 52, display: "block" }}>
+      <rect width="86" height="52" rx="6" fill="#1a1a1d" stroke="rgba(156,163,175,0.3)" strokeWidth="1"/>
+      <rect x="14" y="16" width="58" height="20" rx="3" fill="#09090a"/>
+      <line x1="20" y1="26" x2="66" y2="26" stroke="rgba(255,255,255,0.15)" strokeWidth="2" strokeDasharray="2 2"/>
+    </svg>
+  );
+}
+
 export default function PhoneDismantle() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -107,15 +382,6 @@ export default function PhoneDismantle() {
     useTransform(sp, [0.66, 0.74], [30, 0]),
   ];
 
-  const imgStyle = (w: number, h: number): React.CSSProperties => ({
-    width: w,
-    height: h,
-    display: "block",
-    borderRadius: 44,
-    overflow: "hidden",
-    mixBlendMode: "screen", // Key out solid black background cleanly
-  });
-
   return (
     <div ref={containerRef} style={{ height: "520vh", position: "relative" }}>
       <div style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden" }}>
@@ -196,37 +462,37 @@ export default function PhoneDismantle() {
             >
               {/* Back Glass Shell (Explodes backwards along local Z-axis) */}
               <motion.div style={{ position: "absolute", width: PW, height: PH, borderRadius: 44, transformStyle: "preserve-3d", z: backZ, opacity: backOp, zIndex: 1, filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.3))" }}>
-                <img src="/phone/phone_back.jpg" style={imgStyle(PW, PH)} alt="Smartphone Titanium Shell" draggable={false} />
+                <PhoneBack />
               </motion.div>
 
               {/* Chassis Internal Chassis Layer (Remains at center z = 0) */}
               <div style={{ position: "absolute", width: PW - 6, height: PH - 6, top: 3, left: 3, borderRadius: 38, transformStyle: "preserve-3d", zIndex: 4 }}>
-                <img src="/phone/phone_chassis.jpg" style={{ width: PW - 6, height: PH - 6, display: "block", mixBlendMode: "screen" }} alt="Smart Chassis" draggable={false} />
+                <Chassis />
               </div>
 
               {/* Exploded Component: 1. Front Glass Display Panel (Explodes forward along local Z-axis) */}
               <motion.div style={{ position: "absolute", width: PW, height: PH, z: screenZ, opacity: screenOp, transformStyle: "preserve-3d", zIndex: 9, filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.45))" }}>
-                <img src="/phone/phone_front.jpg" style={imgStyle(PW, PH)} alt="Dynamic Island Screen" draggable={false} />
+                <PhoneFront />
               </motion.div>
 
               {/* Exploded Component: 2. Smart Battery Cell */}
               <motion.div style={{ position: "absolute", top: 108, right: 14, z: battZ, opacity: battOp, transformStyle: "preserve-3d", zIndex: 6 }}>
-                <img src="/phone/phone_battery.jpg" style={{ width: 116, height: 236, display: "block", mixBlendMode: "screen" }} alt="Diagnostics Battery Cell" draggable={false} />
+                <Battery />
               </motion.div>
 
               {/* Exploded Component: 3. Camera Sensor Ring Array */}
               <motion.div style={{ position: "absolute", top: 14, left: 14, z: camZ, opacity: camOp, transformStyle: "preserve-3d", zIndex: 6 }}>
-                <img src="/phone/phone_camera.jpg" style={{ width: 94, height: 94, display: "block", mixBlendMode: "screen" }} alt="Triple Lens Camera Sensor" draggable={false} />
+                <CameraModule />
               </motion.div>
 
               {/* Exploded Component: 4. PCB Motherboard Logic Board */}
               <motion.div style={{ position: "absolute", top: 44, left: 14, z: boardZ, opacity: boardOp, transformStyle: "preserve-3d", zIndex: 6 }}>
-                <img src="/phone/phone_board.jpg" style={{ width: 82, height: 154, display: "block", mixBlendMode: "screen" }} alt="Logic Board Chip" draggable={false} />
+                <LogicBoard />
               </motion.div>
 
               {/* Exploded Component: 5. Speaker Box Driver */}
               <motion.div style={{ position: "absolute", bottom: 52, left: 14, z: spkZ, opacity: spkOp, transformStyle: "preserve-3d", zIndex: 6 }}>
-                <img src="/phone/phone_speaker.jpg" style={{ width: 86, height: 52, display: "block", mixBlendMode: "screen" }} alt="Sound Speaker Chamber" draggable={false} />
+                <Speaker />
               </motion.div>
 
               {/* Laser Scanning Laser Beam Overlay */}

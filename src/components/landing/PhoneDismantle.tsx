@@ -12,6 +12,7 @@ import {
 
 const PW = 240;
 const PH = 490;
+const PT = 14; // Phone frame thickness (Z-depth)
 
 const PARTS = [
   { label: "30+ Checkpoints", desc: "Every angle inspected under studio light" },
@@ -29,7 +30,7 @@ function PhoneFront({ sheenX }: { sheenX: any }) {
       <defs>
         <linearGradient id="front-sheen" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="rgba(255,255,255,0)"/>
-          <stop offset="50%" stopColor="rgba(255,255,255,0.22)"/>
+          <stop offset="50%" stopColor="rgba(255,255,255,0.24)"/>
           <stop offset="100%" stopColor="rgba(255,255,255,0)"/>
         </linearGradient>
         <linearGradient id="front-bg" x1="0" y1="0" x2="0" y2="1">
@@ -43,36 +44,41 @@ function PhoneFront({ sheenX }: { sheenX: any }) {
         </linearGradient>
       </defs>
       
-      {/* Outer Bezel */}
-      <rect width="240" height="490" rx="44" fill="#09090b" stroke="rgba(255,255,255,0.12)" strokeWidth="1"/>
+      {/* Outer Screen Bezel */}
+      <rect width="240" height="490" rx="44" fill="#09090b" stroke="var(--border)" strokeWidth="2"/>
       <rect x="5" y="5" width="230" height="480" rx="39" fill="url(#front-bg)"/>
 
-      {/* Grid Overlay */}
+      {/* Grid Pattern on Screen */}
       <g opacity="0.12">
         <path d="M 6,50 H 234 M 6,100 H 234 M 6,150 H 234 M 6,200 H 234 M 6,250 H 234 M 6,300 H 234 M 6,350 H 234 M 6,400 H 234 M 6,450 H 234" stroke="#8b5cf6" strokeWidth="0.5"/>
         <path d="M 50,6 V 484 M 100,6 V 484 M 150,6 V 484 M 200,6 V 484" stroke="#8b5cf6" strokeWidth="0.5"/>
       </g>
 
+      {/* Dynamic Island */}
       <rect x="76" y="16" width="88" height="28" rx="14" fill="#000" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
       <circle cx="94" cy="30" r="4.5" fill="#111"/>
       <circle cx="94" cy="30" r="2" fill="#2563eb" opacity="0.6"/>
 
+      {/* Status Bar */}
       <text x="32" y="34" fill="#fff" fontSize="9.5" fontWeight="700" fontFamily="system-ui">9:41</text>
       <g transform="translate(182, 25)" fill="#fff">
         <rect x="0" y="0" width="18" height="9" rx="2" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="0.8"/>
         <rect x="2" y="2" width="11" height="5" rx="0.5" fill="#22c55e"/>
       </g>
 
+      {/* Diagnostics Dashboard UI */}
       <text x="120" y="80" fill="#a855f7" fontSize="9" fontWeight="800" letterSpacing="3" textAnchor="middle" fontFamily="system-ui">SYSTEM REPORT</text>
       <text x="120" y="104" fill="#fff" fontSize="19" fontWeight="800" textAnchor="middle" fontFamily="system-ui" letterSpacing="-0.02em">Device Health</text>
 
       <rect x="24" y="124" width="192" height="198" rx="16" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
 
+      {/* Radial Health Gauge */}
       <circle cx="120" cy="184" r="30" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="5"/>
       <circle cx="120" cy="184" r="30" fill="none" stroke="#22c55e" strokeWidth="5" strokeDasharray="188" strokeDashoffset="15" strokeLinecap="round" transform="rotate(-90 120 184)"/>
       <text x="120" y="188" fill="#fff" fontSize="13" fontWeight="800" textAnchor="middle" fontFamily="system-ui">96%</text>
       <text x="120" y="228" fill="#22c55e" fontSize="8" fontWeight="700" textAnchor="middle" fontFamily="system-ui" letterSpacing="1">EXCELLENT</text>
 
+      {/* Test Checklist */}
       <g transform="translate(36, 252)" fontFamily="system-ui" fontSize="10">
         <text x="0" y="0" fill="rgba(255,255,255,0.5)">Display & Touch</text>
         <text x="144" y="0" fill="#22c55e" fontWeight="700" textAnchor="end">✓</text>
@@ -92,11 +98,12 @@ function PhoneFront({ sheenX }: { sheenX: any }) {
         <text x="96" y="23" fill="#fff" fontSize="11" fontWeight="800" textAnchor="middle" letterSpacing="1.5" fontFamily="system-ui">VERIFIED REPORT</text>
       </g>
 
+      {/* Interactive Sheen overlay */}
       <motion.rect
         x="-100"
-        y="6"
+        y="5"
         width="200"
-        height="478"
+        height="480"
         fill="url(#front-sheen)"
         style={{ x: sheenX, skewX: -20, mixBlendMode: "overlay" }}
         pointerEvents="none"
@@ -126,44 +133,58 @@ function PhoneBack({ sheenX }: { sheenX: any }) {
         </linearGradient>
       </defs>
       
-      <rect width="240" height="490" rx="44" fill="url(#back-body)" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
+      {/* Matte Titanium Back Plate */}
+      <rect width="240" height="490" rx="44" fill="url(#back-body)" stroke="var(--border)" strokeWidth="2"/>
 
+      {/* Triple Camera Island */}
       <rect x="14" y="14" width="94" height="94" rx="22" fill="#141417" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
 
+      {/* Lens 1 (Top Left) */}
       <g transform="translate(38, 38)">
         <circle r="17" fill="#1c1c21" stroke="rgba(255,255,255,0.12)" strokeWidth="1.2"/>
         <circle r="13" fill="#09090b"/>
         <circle r="10" fill="url(#glass-lens)"/>
         <circle r="4" fill="#000"/>
+        <circle cx="-3" cy="-3" r="1.2" fill="rgba(255,255,255,0.4)"/>
       </g>
 
+      {/* Lens 2 (Bottom Left) */}
       <g transform="translate(38, 82)">
-        <circle r="17" fill="#1c1c21" stroke="rgba(255,255,255,0.12)" strokeWidth="1.2"/>
+        <circle r="17" fill="#1c1c21" stroke="rgba(255,255,255,0.12)" stroke-width="1.2"/>
         <circle r="13" fill="#09090b"/>
         <circle r="10" fill="url(#glass-lens)"/>
         <circle r="4" fill="#000"/>
+        <circle cx="-3" cy="-3" r="1.2" fill="rgba(255,255,255,0.4)"/>
       </g>
 
+      {/* Lens 3 (Right Middle) */}
       <g transform="translate(82, 60)">
-        <circle r="14" fill="#1c1c21" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
+        <circle r="14" fill="#1c1c21" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
         <circle r="11" fill="#09090b"/>
         <circle r="8" fill="url(#glass-lens)"/>
         <circle r="3" fill="#000"/>
+        <circle cx="-2" cy="-2" r="1" fill="rgba(255,255,255,0.4)"/>
       </g>
 
+      {/* Dual Tone Flash */}
       <circle cx="82" cy="32" r="6" fill="#3f3f46"/>
       <circle cx="82" cy="32" r="4.5" fill="#f59e0b" opacity="0.8"/>
+
+      {/* LiDAR Sensor */}
       <circle cx="82" cy="88" r="4" fill="#18181b" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5"/>
 
+      {/* Shield logo */}
       <g transform="translate(120, 245)" opacity="0.1" stroke="#fff" strokeWidth="1.8" fill="none">
-        <path d="M -12,-15 H 12 L 18,0 C 18,10 8,18 0,22 C -8,18 -18,10 -18,0 Z"/>
+        <path d="M -12,-15 H 12 L 18,0 C 18,10 8,18 0,22 C -8,18 -18,10 -18,0 Z" strokeLinejoin="round"/>
+        <path d="M -5,0 L -1,4 L 6,-3" strokeLinecap="round"/>
       </g>
 
+      {/* Light sheen overlay */}
       <motion.rect
         x="-100"
-        y="6"
+        y="5"
         width="200"
-        height="478"
+        height="480"
         fill="url(#back-sheen)"
         style={{ x: sheenX, skewX: -20, mixBlendMode: "overlay" }}
         pointerEvents="none"
@@ -182,11 +203,19 @@ function Chassis() {
           <stop offset="100%" stopColor="#1c1917"/>
         </radialGradient>
       </defs>
-      <rect width="234" height="484" rx="38" fill="#1c1917"/>
+      {/* Aluminum Core Plate */}
+      <rect width="234" height="484" rx="38" fill="#151518" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
+
+      {/* Heatpipes */}
       <path d="M 46,120 V 380 L 160,380 V 220" fill="none" stroke="#ca8a04" strokeWidth="2.5" opacity="0.5"/>
+
+      {/* Copper Wireless Coil */}
       <circle cx="117" cy="242" r="54" fill="url(#chassis-coil)" opacity="0.85"/>
       <circle cx="117" cy="242" r="48" fill="none" stroke="#ea580c" strokeWidth="1.5" opacity="0.7"/>
       <circle cx="117" cy="242" r="40" fill="none" stroke="#d97706" strokeWidth="1.2" opacity="0.6"/>
+      <circle cx="117" cy="242" r="32" fill="none" stroke="#ca8a04" strokeWidth="0.8" opacity="0.5"/>
+
+      {/* Compartment Bays */}
       <rect x="14" y="44" width="82" height="154" rx="6" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" strokeDasharray="4 2"/>
       <rect x="104" y="108" width="116" height="236" rx="8" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" strokeDasharray="4 2"/>
     </svg>
@@ -196,18 +225,24 @@ function Chassis() {
 function Battery() {
   return (
     <svg viewBox="0 0 116 236" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: 116, height: 236, display: "block" }}>
-      <rect width="116" height="236" rx="8" fill="#131316" stroke="rgba(168,85,247,0.2)" strokeWidth="1"/>
+      <rect width="116" height="236" rx="8" fill="#131316" stroke="rgba(168,85,247,0.3)" strokeWidth="1"/>
       <rect x="6" y="6" width="104" height="224" rx="5" fill="none" stroke="rgba(168,85,247,0.06)" strokeWidth="1" strokeDasharray="3 3"/>
+      
       <path d="M -4,52 H 4" fill="none" stroke="#c084fc" strokeWidth="1.5"/>
+
       <g transform="translate(14, 24)" fontFamily="system-ui" fill="#a855f7">
         <text x="0" y="10" fontSize="8" fontWeight="800" letterSpacing="1">CMP POWER CELL</text>
         <text x="0" y="24" fill="#fff" fontSize="7" fontWeight="600">Model BATT-L15P</text>
         <text x="0" y="42" fill="rgba(255,255,255,0.4)" fontSize="6.5">Capacity: 3274 mAh</text>
+        
         <text x="0" y="106" fill="#f43f5e" fontSize="6.5" fontWeight="800">WARNING / CAUTION</text>
-        <text x="0" y="116" fill="rgba(255,255,255,0.3)" fontSize="5.5">DO NOT CRUSH OR BEND</text>
+        <text x="0" y="116" fill="rgba(255,255,255,0.3)" fontSize="5.5">DO NOT CRUSH OR INCINERATE</text>
+
+        {/* Battery Health Scan Representation */}
         <rect x="0" y="148" width="88" height="42" rx="8" fill="rgba(34,197,94,0.04)" stroke="#22c55e" strokeWidth="0.8"/>
         <text x="8" y="162" fill="#22c55e" fontSize="8" fontWeight="800">HEALTH VALUE</text>
         <text x="8" y="174" fill="#fff" fontSize="11" fontWeight="800">89%</text>
+        <text x="80" y="174" fill="#22c55e" fontSize="8.5" fontWeight="800" textAnchor="end">GOOD</text>
       </g>
     </svg>
   );
@@ -223,17 +258,24 @@ function CameraModule() {
           <stop offset="100%" stopColor="#0f172a"/>
         </radialGradient>
       </defs>
+      
       <rect width="94" height="94" rx="22" fill="#141416" stroke="rgba(56,189,248,0.3)" strokeWidth="1"/>
+
+      {/* Lens 1 */}
       <g transform="translate(28, 28)">
         <circle r="14" fill="#09090b" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
         <circle r="10" fill="url(#cam-lens-3d)"/>
         <circle r="3" fill="#000"/>
       </g>
+      
+      {/* Lens 2 */}
       <g transform="translate(28, 68)">
         <circle r="14" fill="#09090b" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
         <circle r="10" fill="url(#cam-lens-3d)"/>
         <circle r="3" fill="#000"/>
       </g>
+
+      {/* Lens 3 */}
       <g transform="translate(68, 48)">
         <circle r="12" fill="#09090b" stroke="rgba(255,255,255,0.12)" strokeWidth="1"/>
         <circle r="8" fill="url(#cam-lens-3d)"/>
@@ -252,11 +294,16 @@ function LogicBoard() {
           <stop offset="100%" stopColor="#064e3b"/>
         </linearGradient>
       </defs>
+
       <rect width="82" height="154" rx="6" fill="url(#pcb-color)" stroke="rgba(34,197,94,0.3)" strokeWidth="1"/>
+
+      {/* Circuit lines */}
       <g stroke="#ca8a04" strokeWidth="0.5" fill="none" opacity="0.6">
         <path d="M 12,12 L 12,40 L 24,40 M 70,12 V 42 L 58,50"/>
         <path d="M 22,96 L 22,120 H 42 L 50,132"/>
       </g>
+
+      {/* Central Processor */}
       <rect x="12" y="52" width="58" height="58" rx="8" fill="#18181b" stroke="rgba(34,197,94,0.5)" strokeWidth="1"/>
       <text x="41" y="82" fill="#22c55e" fontSize="8.5" fontWeight="900" textAnchor="middle" fontFamily="system-ui">A17 PRO</text>
       <text x="41" y="93" fill="rgba(255,255,255,0.3)" fontSize="5.5" textAnchor="middle" fontFamily="system-ui">6-CORE</text>
@@ -278,6 +325,7 @@ export default function PhoneDismantle() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
+  // Mouse Coordinates for Interactive Cursor 3D Parallax Tilt
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -288,6 +336,7 @@ export default function PhoneDismantle() {
     checkMobile();
     window.addEventListener("resize", checkMobile);
     
+    // Mouse hover listener on desktop
     const handleMouseMove = (e: MouseEvent) => {
       if (window.innerWidth < 768) return;
       const { clientX, clientY } = e;
@@ -304,6 +353,7 @@ export default function PhoneDismantle() {
     };
   }, [mouseX, mouseY]);
 
+  // Spring smooth the mouse tilt coordinates
   const smoothMouseX = useSpring(mouseX, { stiffness: 60, damping: 18 });
   const smoothMouseY = useSpring(mouseY, { stiffness: 60, damping: 18 });
 
@@ -314,61 +364,76 @@ export default function PhoneDismantle() {
 
   const sp = useSpring(scrollYProgress, { stiffness: 45, damping: 22, mass: 0.5 });
 
-  // Main Scroll Rotation Path
+  // Main Scroll Rotation Path (smooth 360-degree Y rotation)
   const containerRotX = useTransform(sp, [0, 0.3, 0.65, 0.85, 1], [15, 20, 15, 10, 0]);
   const containerRotY = useTransform(sp, [0, 0.3, 0.65, 0.85, 1], [-15, 90, 180, 270, 360]);
   const containerRotZ = useTransform(sp, [0, 0.3, 0.65, 0.85, 1], [-4, 0, 4, 0, 0]);
 
+  // Mouse Interactive Tilt added to Scroll Rotation (Tactile Parallax)
   const hoverRotX = useTransform(smoothMouseY, [-0.5, 0.5], [10, -10]);
   const hoverRotY = useTransform(smoothMouseX, [-0.5, 0.5], [-12, 12]);
 
   const finalRotX = useTransform([containerRotX, hoverRotX] as any, ([cX, hX]: number[]) => cX + (hX || 0));
   const finalRotY = useTransform([containerRotY, hoverRotY] as any, ([cY, hY]: number[]) => cY + (hY || 0));
 
-  // ── 3D EXPLODED OUTWARD TRANSLATIONS (X, Y, Z coordinates) ──
-  
-  // Screen detaches forward (Z-elevation) and pushes upward (Y)
+  // Exploded View Z-axis (Depth Elevation)
   const screenZ = useTransform(sp, [0.05, 0.35, 0.75, 0.90], [0, 220, 220, 0]);
-  const screenY = useTransform(sp, [0.05, 0.35, 0.75, 0.90], [0, -120, -120, 0]);
   const screenOp = useTransform(sp, [0.0, 0.05, 0.85, 0.90], [1, 1, 1, 1]);
 
-  // Back panel detaches backward (Z-depth) and pushes downward (Y)
   const backZ = useTransform(sp, [0.05, 0.35, 0.75, 0.90], [0, -120, -120, 0]);
-  const backY = useTransform(sp, [0.05, 0.35, 0.75, 0.90], [0, 60, 60, 0]);
   const backOp = useTransform(sp, [0.0, 0.05, 0.85, 0.90], [1, 1, 1, 1]);
 
-  // Camera Module explodes forward (Z) and floats out to the top-right (X, Y)
-  const camZ = useTransform(sp, [0.25, 0.50, 0.75, 0.90], [0, 160, 160, 0]);
-  const camX = useTransform(sp, [0.25, 0.50, 0.75, 0.90], [0, 140, 140, 0]);
-  const camY = useTransform(sp, [0.25, 0.50, 0.75, 0.90], [0, -90, -90, 0]);
+  const camZ = useTransform(sp, [0.25, 0.50, 0.75, 0.90], [0, 140, 140, 0]);
   const camOp = useTransform(sp, [0.20, 0.28, 0.85, 0.92], [0, 1, 1, 0]);
 
-  // Logic Board explodes forward (Z) and floats out to the left (X)
-  const boardZ = useTransform(sp, [0.30, 0.55, 0.75, 0.90], [0, 120, 120, 0]);
-  const boardX = useTransform(sp, [0.30, 0.55, 0.75, 0.90], [0, -140, -140, 0]);
-  const boardY = useTransform(sp, [0.30, 0.55, 0.75, 0.90], [0, 10, 10, 0]);
+  const boardZ = useTransform(sp, [0.30, 0.55, 0.75, 0.90], [0, 100, 100, 0]);
   const boardOp = useTransform(sp, [0.25, 0.33, 0.85, 0.92], [0, 1, 1, 0]);
 
-  // Battery explodes forward (Z) and floats out to the right (X, Y)
-  const battZ = useTransform(sp, [0.35, 0.60, 0.75, 0.90], [0, 90, 90, 0]);
-  const battX = useTransform(sp, [0.35, 0.60, 0.75, 0.90], [0, 150, 150, 0]);
-  const battY = useTransform(sp, [0.35, 0.60, 0.75, 0.90], [0, 50, 50, 0]);
+  const battZ = useTransform(sp, [0.35, 0.60, 0.75, 0.90], [0, 70, 70, 0]);
   const battOp = useTransform(sp, [0.30, 0.38, 0.85, 0.92], [0, 1, 1, 0]);
 
-  // Speaker explodes forward (Z) and floats down-left (X, Y)
-  const spkZ = useTransform(sp, [0.40, 0.65, 0.75, 0.90], [0, 60, 60, 0]);
-  const spkX = useTransform(sp, [0.40, 0.65, 0.75, 0.90], [0, -120, -120, 0]);
-  const spkY = useTransform(sp, [0.40, 0.65, 0.75, 0.90], [0, 130, 130, 0]);
+  const spkZ = useTransform(sp, [0.40, 0.65, 0.75, 0.90], [0, 40, 40, 0]);
   const spkOp = useTransform(sp, [0.35, 0.43, 0.85, 0.92], [0, 1, 1, 0]);
 
+  // Glass light sheen glint sweep coordinates
   const sheenX = useTransform(sp, [0, 0.4, 0.75, 1], [-250, 250, -250, 250]);
 
-  // Glowing laser sweep
+  // Glowing laser diagnostic sweep
   const scannerY = useTransform(sp, [0.45, 0.80], [-230, 230]);
   const scannerOp = useTransform(sp, [0.42, 0.48, 0.78, 0.84], [0, 1, 1, 0]);
 
   const ctaOp = useTransform(sp, [0.88, 0.96], [0, 1]);
   const ctaY = useTransform(sp, [0.88, 0.96], [30, 0]);
+
+  // HUD Side menu fade-ins
+  const lOps = [
+    useTransform(sp, [0.08, 0.16, 0.24, 0.32], [0, 1, 1, 0]),
+    useTransform(sp, [0.22, 0.30, 0.42, 0.50], [0, 1, 1, 0]),
+    useTransform(sp, [0.36, 0.44, 0.56, 0.64], [0, 1, 1, 0]),
+    useTransform(sp, [0.48, 0.56, 0.68, 0.76], [0, 1, 1, 0]),
+    useTransform(sp, [0.60, 0.68, 0.82, 0.90], [0, 1, 1, 0]),
+  ];
+  const lXs = [
+    useTransform(sp, [0.08, 0.16], [-30, 0]),
+    useTransform(sp, [0.22, 0.30], [-30, 0]),
+    useTransform(sp, [0.36, 0.44], [-30, 0]),
+    useTransform(sp, [0.48, 0.56], [-30, 0]),
+    useTransform(sp, [0.60, 0.68], [-30, 0]),
+  ];
+  const rOps = [
+    useTransform(sp, [0.12, 0.20, 0.28, 0.36], [0, 1, 1, 0]),
+    useTransform(sp, [0.28, 0.36, 0.48, 0.56], [0, 1, 1, 0]),
+    useTransform(sp, [0.42, 0.50, 0.62, 0.70], [0, 1, 1, 0]),
+    useTransform(sp, [0.54, 0.62, 0.74, 0.82], [0, 1, 1, 0]),
+    useTransform(sp, [0.66, 0.74, 0.86, 0.94], [0, 1, 1, 0]),
+  ];
+  const rXs = [
+    useTransform(sp, [0.12, 0.20], [30, 0]),
+    useTransform(sp, [0.28, 0.36], [30, 0]),
+    useTransform(sp, [0.42, 0.50], [30, 0]),
+    useTransform(sp, [0.54, 0.62], [30, 0]),
+    useTransform(sp, [0.66, 0.74], [30, 0]),
+  ];
 
   return (
     <div ref={containerRef} style={{ height: "520vh", position: "relative" }}>
@@ -378,31 +443,33 @@ export default function PhoneDismantle() {
           {/* Ambient Glow */}
           <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 650, height: 650, borderRadius: "50%", background: "radial-gradient(circle, color-mix(in srgb, var(--primary) 18%, transparent), transparent 70%)", filter: "blur(90px)", pointerEvents: "none" }} />
 
-          {/* Left HUD Information Box (Hidden when 3D holographic text is visible on desktop) */}
-          <motion.div className="hide-on-mobile" style={{ position: "absolute", left: "clamp(1rem, 4vw, 6rem)", top: "50%", transform: "translateY(-50%)", display: "flex", flexDirection: "column", gap: "2.25rem", maxWidth: 320, zIndex: 10, opacity: useTransform(sp, [0, 0.15, 0.85, 1], [1, 0.1, 0.1, 1]) }}>
+          {/* Left HUD Information Box */}
+          <div style={{ position: "absolute", left: "clamp(1rem, 4vw, 6rem)", top: "50%", transform: "translateY(-50%)", display: "flex", flexDirection: "column", gap: "2.25rem", maxWidth: 320, zIndex: 10 }}>
             {PARTS.map((part, i) => (
-              <div key={i}>
+              <motion.div key={i} style={{ opacity: lOps[i], x: lXs[i] }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", marginBottom: "0.45rem" }}>
                   <div style={{ width: 34, height: 34, borderRadius: "50%", background: "linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 70%, white))", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.8rem", fontWeight: 800, flexShrink: 0, boxShadow: "0 2px 14px color-mix(in srgb, var(--primary) 40%, transparent)" }}>{i + 1}</div>
                   <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text)", letterSpacing: "-0.02em" }}>{part.label}</div>
                 </div>
                 <div style={{ fontSize: "0.88rem", color: "var(--text2)", lineHeight: 1.5, paddingLeft: "3rem" }}>{part.desc}</div>
-              </div>
+              </motion.div>
             ))}
-          </motion.div>
+          </div>
 
-          {/* Right HUD Diagnostic Scan Readings (Hidden when 3D holographic text is active) */}
-          <motion.div className="hide-on-mobile" style={{ position: "absolute", right: "clamp(1rem, 4vw, 6rem)", top: "50%", transform: "translateY(-50%)", display: "flex", flexDirection: "column", gap: "1.5rem", maxWidth: 290, zIndex: 10, alignItems: "flex-end", opacity: useTransform(sp, [0, 0.15, 0.85, 1], [1, 0.1, 0.1, 1]) }}>
+          {/* Right HUD Diagnostic Scan Readings */}
+          <div style={{ position: "absolute", right: "clamp(1rem, 4vw, 6rem)", top: "50%", transform: "translateY(-50%)", display: "flex", flexDirection: "column", gap: "1.5rem", maxWidth: 290, zIndex: 10, alignItems: "flex-end" }}>
             {[
-              "12 checkpoints — screen & display",
-              "Lithium cell health, cycles & swelling",
-              "Aperture focus & stabilization test",
-              "Logic gate pathways & processor logic",
-              "Decibel driver, audio grille check",
-            ].map((text, i) => (
-              <div
+              { op: rOps[0], x: rXs[0], text: "12 checkpoints — screen & display" },
+              { op: rOps[1], x: rXs[1], text: "Lithium cell health, cycles & swelling" },
+              { op: rOps[2], x: rXs[2], text: "Aperture focus & stabilization test" },
+              { op: rOps[3], x: rXs[3], text: "Logic gate pathways & processor logic" },
+              { op: rOps[4], x: rXs[4], text: "Decibel driver, audio grille check" },
+            ].map((c, i) => (
+              <motion.div
                 key={i}
                 style={{
+                  opacity: c.op,
+                  x: c.x,
                   padding: "0.85rem 1.25rem",
                   borderRadius: "var(--radius)",
                   background: "color-mix(in srgb, var(--surface) 75%, transparent)",
@@ -417,10 +484,10 @@ export default function PhoneDismantle() {
                   boxShadow: "0 4px 28px rgba(0,0,0,0.08)",
                 }}
               >
-                {text}
-              </div>
+                {c.text}
+              </motion.div>
             ))}
-          </motion.div>
+          </div>
 
           {/* 3.5D Exploded Teardown Container */}
           <motion.div
@@ -446,6 +513,107 @@ export default function PhoneDismantle() {
                 willChange: "transform",
               }}
             >
+              {/* ── 3D SOLID TITANIUM SIDE FRAME PANELS ── */}
+              
+              {/* Left Side Edge (Folds back -90deg along Y-axis) */}
+              <div
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  top: 38, // Accounts for top rounded corner
+                  width: PT, // Frame thickness
+                  height: PH - 76,
+                  background: "linear-gradient(to bottom, var(--border), color-mix(in srgb, var(--border) 60%, black), var(--border))",
+                  transform: "rotateY(-90deg)",
+                  transformOrigin: "left center",
+                  borderLeft: "1px solid rgba(255,255,255,0.15)",
+                  borderRight: "1px solid rgba(0,0,0,0.4)",
+                  zIndex: 5,
+                }}
+              >
+                {/* Sleek Antenna Lines */}
+                <div style={{ position: "absolute", top: 40, left: 0, width: "100%", height: 1.5, background: "rgba(0,0,0,0.3)" }} />
+                <div style={{ position: "absolute", bottom: 40, left: 0, width: "100%", height: 1.5, background: "rgba(0,0,0,0.3)" }} />
+                
+                {/* Physical Action Button & Volume Keys */}
+                <div style={{ position: "absolute", top: 80, left: 3, width: 8, height: 18, background: "color-mix(in srgb, var(--border) 50%, black)", borderRadius: 2, border: "0.5px solid rgba(255,255,255,0.1)" }} />
+                <div style={{ position: "absolute", top: 110, left: 3, width: 8, height: 28, background: "color-mix(in srgb, var(--border) 50%, black)", borderRadius: 2, border: "0.5px solid rgba(255,255,255,0.1)" }} />
+                <div style={{ position: "absolute", top: 146, left: 3, width: 8, height: 28, background: "color-mix(in srgb, var(--border) 50%, black)", borderRadius: 2, border: "0.5px solid rgba(255,255,255,0.1)" }} />
+              </div>
+
+              {/* Right Side Edge (Folds back 90deg along Y-axis) */}
+              <div
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  top: 38,
+                  width: PT,
+                  height: PH - 76,
+                  background: "linear-gradient(to bottom, var(--border), color-mix(in srgb, var(--border) 60%, black), var(--border))",
+                  transform: "rotateY(90deg)",
+                  transformOrigin: "right center",
+                  borderRight: "1px solid rgba(255,255,255,0.15)",
+                  borderLeft: "1px solid rgba(0,0,0,0.4)",
+                  zIndex: 5,
+                }}
+              >
+                {/* Sleek Antenna Lines */}
+                <div style={{ position: "absolute", top: 40, left: 0, width: "100%", height: 1.5, background: "rgba(0,0,0,0.3)" }} />
+                <div style={{ position: "absolute", bottom: 40, left: 0, width: "100%", height: 1.5, background: "rgba(0,0,0,0.3)" }} />
+                
+                {/* Physical Power Button */}
+                <div style={{ position: "absolute", top: 130, right: 3, width: 8, height: 38, background: "color-mix(in srgb, var(--border) 50%, black)", borderRadius: 2, border: "0.5px solid rgba(255,255,255,0.1)" }} />
+              </div>
+
+              {/* Top Edge (Folds back 90deg along X-axis) */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 38,
+                  height: PT,
+                  width: PW - 76,
+                  background: "linear-gradient(to right, var(--border), color-mix(in srgb, var(--border) 80%, black), var(--border))",
+                  transform: "rotateX(90deg)",
+                  transformOrigin: "center top",
+                  borderTop: "1px solid rgba(255,255,255,0.15)",
+                  borderBottom: "1px solid rgba(0,0,0,0.4)",
+                  zIndex: 5,
+                }}
+              >
+                <div style={{ position: "absolute", left: 30, top: 0, width: 1.5, height: "100%", background: "rgba(0,0,0,0.3)" }} />
+              </div>
+
+              {/* Bottom Edge (Folds back -90deg along X-axis) */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 38,
+                  height: PT,
+                  width: PW - 76,
+                  background: "linear-gradient(to right, var(--border), color-mix(in srgb, var(--border) 80%, black), var(--border))",
+                  transform: "rotateX(-90deg)",
+                  transformOrigin: "center bottom",
+                  borderBottom: "1px solid rgba(255,255,255,0.15)",
+                  borderTop: "1px solid rgba(0,0,0,0.4)",
+                  zIndex: 5,
+                }}
+              >
+                {/* Bottom Antenna Line */}
+                <div style={{ position: "absolute", left: 30, top: 0, width: 1.5, height: "100%", background: "rgba(0,0,0,0.3)" }} />
+                
+                {/* Speaker Grille Holes */}
+                <g style={{ display: "flex", gap: "2px", position: "absolute", left: 16, top: 5 }}>
+                  <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#09090b" }} />
+                  <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#09090b" }} />
+                  <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#09090b" }} />
+                </g>
+
+                {/* USB-C Connector Port */}
+                <div style={{ position: "absolute", left: "calc(50% - 13px)", top: 4, width: 26, height: 7, borderRadius: 3, background: "#09090b", border: "0.5px solid rgba(255,255,255,0.15)" }} />
+              </div>
+
               {/* Dynamic Parallax Shadow Layer beneath floating Screen */}
               <motion.div
                 style={{
@@ -458,122 +626,45 @@ export default function PhoneDismantle() {
                   background: "#000",
                   borderRadius: 44,
                   pointerEvents: "none",
-                  opacity: useTransform(screenZ, [0, 220], [0, 0.55]),
-                  filter: useTransform(screenZ, [0, 220], ["blur(1px)", "blur(24px)"]),
-                  scale: useTransform(screenZ, [0, 220], [1, 0.85]),
+                  opacity: useTransform(screenZ, [0, 220], [0, 0.6]),
+                  filter: useTransform(screenZ, [0, 220], ["blur(1px)", "blur(20px)"]),
+                  scale: useTransform(screenZ, [0, 220], [1, 0.88]),
                 }}
               />
 
-              {/* Back Glass Shell (Extruded 3D style) */}
-              <motion.div style={{
-                position: "absolute", width: PW, height: PH, borderRadius: 44, transformStyle: "preserve-3d",
-                z: backZ, y: backY, opacity: backOp, zIndex: 1,
-                boxShadow: "0px -1px 0px #1a1a1f, 0px -2px 0px #141416, 0px -3px 0px #0c0c0e, 0px -4px 8px rgba(0,0,0,0.5)"
-              }}>
+              {/* Back Glass Shell (Explodes backwards along local Z-axis) */}
+              <motion.div style={{ position: "absolute", width: PW, height: PH, borderRadius: 44, transformStyle: "preserve-3d", z: backZ, opacity: backOp, zIndex: 1, filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.3))" }}>
                 <PhoneBack sheenX={sheenX} />
               </motion.div>
 
-              {/* Chassis Internal Chassis Layer (Thick extruded main frame) */}
-              <div style={{
-                position: "absolute", width: PW - 6, height: PH - 6, top: 3, left: 3, borderRadius: 38, transformStyle: "preserve-3d", zIndex: 4,
-                boxShadow: "0px 1px 0px #4b5563, 0px 2px 0px #374151, 0px 3px 0px #27272a, 0px 4px 0px #1f2937, 0px 5px 0px #18181b, 0px 6px 0px #111, 0px 8px 20px rgba(0,0,0,0.6)"
-              }}>
+              {/* Chassis Internal Chassis Layer (Remains at center z = 0) */}
+              <div style={{ position: "absolute", width: PW - 6, height: PH - 6, top: 3, left: 3, borderRadius: 38, transformStyle: "preserve-3d", zIndex: 4 }}>
                 <Chassis />
               </div>
 
-              {/* Exploded Component: 1. Front Glass Display Panel (Extruded 3D style) */}
-              <motion.div style={{
-                position: "absolute", width: PW, height: PH, transformStyle: "preserve-3d",
-                z: screenZ, y: screenY, opacity: screenOp, zIndex: 9,
-                boxShadow: "0px 1px 0px #111, 0px 2px 0px #111, 0px 3px 0px #09090b, 0px 4px 0px #09090b, 0px 5px 16px rgba(0,0,0,0.6)"
-              }}>
+              {/* Exploded Component: 1. Front Glass Display Panel (Explodes forward along local Z-axis) */}
+              <motion.div style={{ position: "absolute", width: PW, height: PH, z: screenZ, opacity: screenOp, transformStyle: "preserve-3d", zIndex: 9, filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.45))" }}>
                 <PhoneFront sheenX={sheenX} />
-                
-                {/* 3D Holographic Label for Screen */}
-                <motion.div style={{
-                  position: "absolute", left: -140, top: 40, opacity: useTransform(screenZ, [50, 150], [0, 1]),
-                  color: "var(--primary)", fontSize: "10px", fontWeight: "bold", borderLeft: "2px solid var(--primary)",
-                  paddingLeft: 6, transformStyle: "preserve-3d", transform: "translateZ(10px)"
-                }}>
-                  DISPLAY PANEL
-                  <div style={{ fontSize: "8px", color: "var(--text2)", fontWeight: "normal" }}>Super Retina XDR</div>
-                </motion.div>
               </motion.div>
 
-              {/* Exploded Component: 2. Smart Battery Cell (Extruded 3D style) */}
-              <motion.div style={{
-                position: "absolute", top: 108, right: 14, transformStyle: "preserve-3d",
-                z: battZ, x: battX, y: battY, opacity: battOp, zIndex: 6,
-                boxShadow: "0px 1px 0px #222, 0px 2px 0px #1a1a1a, 0px 3px 0px #111, 0px 4px 8px rgba(0,0,0,0.5)"
-              }}>
+              {/* Exploded Component: 2. Smart Battery Cell */}
+              <motion.div style={{ position: "absolute", top: 108, right: 14, z: battZ, opacity: battOp, transformStyle: "preserve-3d", zIndex: 6 }}>
                 <Battery />
-
-                {/* 3D Holographic Label for Battery */}
-                <motion.div style={{
-                  position: "absolute", right: -150, top: 160, opacity: useTransform(battZ, [30, 70], [0, 1]),
-                  color: "#a855f7", fontSize: "10px", fontWeight: "bold", borderRight: "2px solid #a855f7",
-                  paddingRight: 6, textAlign: "right", transformStyle: "preserve-3d", transform: "translateZ(10px)"
-                }}>
-                  LITHIUM CELL
-                  <div style={{ fontSize: "8px", color: "var(--text2)", fontWeight: "normal" }}>3274mAh Capacity</div>
-                </motion.div>
               </motion.div>
 
-              {/* Exploded Component: 3. Camera Sensor Ring Array (Extruded 3D style) */}
-              <motion.div style={{
-                position: "absolute", top: 14, left: 14, transformStyle: "preserve-3d",
-                z: camZ, x: camX, y: camY, opacity: camOp, zIndex: 6,
-                boxShadow: "0px 1px 0px #27272a, 0px 2px 0px #18181b, 0px 3px 6px rgba(0,0,0,0.5)"
-              }}>
+              {/* Exploded Component: 3. Camera Sensor Ring Array */}
+              <motion.div style={{ position: "absolute", top: 14, left: 14, z: camZ, opacity: camOp, transformStyle: "preserve-3d", zIndex: 6 }}>
                 <CameraModule />
-
-                {/* 3D Holographic Label for Camera */}
-                <motion.div style={{
-                  position: "absolute", right: -150, top: 20, opacity: useTransform(camZ, [50, 120], [0, 1]),
-                  color: "#38bdf8", fontSize: "10px", fontWeight: "bold", borderRight: "2px solid #38bdf8",
-                  paddingRight: 6, textAlign: "right", transformStyle: "preserve-3d", transform: "translateZ(10px)"
-                }}>
-                  CAMERA SYSTEM
-                  <div style={{ fontSize: "8px", color: "var(--text2)", fontWeight: "normal" }}>Triple Lens & LiDAR</div>
-                </motion.div>
               </motion.div>
 
-              {/* Exploded Component: 4. PCB Motherboard Logic Board (Extruded 3D style) */}
-              <motion.div style={{
-                position: "absolute", top: 44, left: 14, transformStyle: "preserve-3d",
-                z: boardZ, x: boardX, y: boardY, opacity: boardOp, zIndex: 6,
-                boxShadow: "0px 1px 0px #047857, 0px 2px 0px #022c22, 0px 3px 6px rgba(0,0,0,0.5)"
-              }}>
+              {/* Exploded Component: 4. PCB Motherboard Logic Board */}
+              <motion.div style={{ position: "absolute", top: 44, left: 14, z: boardZ, opacity: boardOp, transformStyle: "preserve-3d", zIndex: 6 }}>
                 <LogicBoard />
-
-                {/* 3D Holographic Label for Motherboard */}
-                <motion.div style={{
-                  position: "absolute", left: -140, top: 120, opacity: useTransform(boardZ, [40, 90], [0, 1]),
-                  color: "#34d399", fontSize: "10px", fontWeight: "bold", borderLeft: "2px solid #34d399",
-                  paddingLeft: 6, transformStyle: "preserve-3d", transform: "translateZ(10px)"
-                }}>
-                  A17 PRO CHIP
-                  <div style={{ fontSize: "8px", color: "var(--text2)", fontWeight: "normal" }}>6-Core Processor</div>
-                </motion.div>
               </motion.div>
 
-              {/* Exploded Component: 5. Speaker Box Driver (Extruded 3D style) */}
-              <motion.div style={{
-                position: "absolute", bottom: 52, left: 14, transformStyle: "preserve-3d",
-                z: spkZ, x: spkX, y: spkY, opacity: spkOp, zIndex: 6,
-                boxShadow: "0px 1px 0px #1c1c1f, 0px 2px 0px #0a0a0c, 0px 3px 6px rgba(0,0,0,0.5)"
-              }}>
+              {/* Exploded Component: 5. Speaker Box Driver */}
+              <motion.div style={{ position: "absolute", bottom: 52, left: 14, z: spkZ, opacity: spkOp, transformStyle: "preserve-3d", zIndex: 6 }}>
                 <Speaker />
-
-                {/* 3D Holographic Label for Speaker */}
-                <motion.div style={{
-                  position: "absolute", left: -140, bottom: 60, opacity: useTransform(spkZ, [20, 50], [0, 1]),
-                  color: "#9ca3af", fontSize: "10px", fontWeight: "bold", borderLeft: "2px solid #9ca3af",
-                  paddingLeft: 6, transformStyle: "preserve-3d", transform: "translateZ(10px)"
-                }}>
-                  SPEAKER DRIVER
-                  <div style={{ fontSize: "8px", color: "var(--text2)", fontWeight: "normal" }}>Dolby Atmos Audio</div>
-                </motion.div>
               </motion.div>
 
               {/* Laser Scanning Laser Beam Overlay */}

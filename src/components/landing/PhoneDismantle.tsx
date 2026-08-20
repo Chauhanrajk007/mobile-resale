@@ -40,9 +40,9 @@ export default function PhoneDismantle() {
 
   const velocityBoost = useTransform(velocity, [-2, 0, 2], [-15, 0, 15]);
 
-  const phoneScale = useTransform(sp, [0, 0.05, 0.85, 0.95], [0.9, 1, 1, 1]);
+  const phoneScale = useTransform(sp, [0, 0.04, 0.92, 1], [0.92, 1, 1, 0.94]);
 
-  const baseRotateY = useTransform(sp, [0.3, 0.5, 1], [0, 180, 360]);
+  const baseRotateY = useTransform(sp, [0, 0.5, 1], [0, 180, 360]);
   const phoneRotateY = useTransform(
     [baseRotateY, velocityBoost] as any,
     ([base, boost]: number[]) => base + boost
@@ -54,60 +54,60 @@ export default function PhoneDismantle() {
     [0, 4, -2, 3, -2, 2, -3, 0]
   );
 
-  const screenY = useTransform(sp, [0.12, 0.3], [0, -180]);
-  const screenRX = useTransform(sp, [0.12, 0.3], [0, -25]);
-  const screenScale = useTransform(sp, [0.12, 0.3], [1, 1.02]);
+  const screenY = useTransform(sp, [0.06, 0.25], [0, -180]);
+  const screenRX = useTransform(sp, [0.06, 0.25], [0, -28]);
+  const screenScale = useTransform(sp, [0.06, 0.25], [1, 1.03]);
 
-  const chassisOp = useTransform(sp, [0.08, 0.12, 0.88, 0.92], [0, 1, 1, 0]);
+  const chassisOp = useTransform(sp, [0.04, 0.08, 0.86, 0.92], [0, 1, 1, 0]);
 
-  const battX = useTransform(sp, [0.25, 0.45], [0, 140]);
-  const battY = useTransform(sp, [0.25, 0.45], [0, 100]);
-  const battR = useTransform(sp, [0.25, 0.45], [0, 18]);
-  const battOp = useTransform(sp, [0.23, 0.3, 0.82, 0.88], [0, 1, 1, 0]);
+  const battX = useTransform(sp, [0.2, 0.38], [0, 140]);
+  const battY = useTransform(sp, [0.2, 0.38], [0, 100]);
+  const battR = useTransform(sp, [0.2, 0.38], [0, 18]);
+  const battOp = useTransform(sp, [0.18, 0.26, 0.78, 0.86], [0, 1, 1, 0]);
 
-  const camX = useTransform(sp, [0.4, 0.58], [0, 130]);
-  const camY = useTransform(sp, [0.4, 0.58], [0, -120]);
-  const camR = useTransform(sp, [0.4, 0.58], [0, -12]);
-  const camOp = useTransform(sp, [0.38, 0.45, 0.82, 0.88], [0, 1, 1, 0]);
+  const camX = useTransform(sp, [0.34, 0.52], [0, 130]);
+  const camY = useTransform(sp, [0.34, 0.52], [0, -120]);
+  const camR = useTransform(sp, [0.34, 0.52], [0, -12]);
+  const camOp = useTransform(sp, [0.32, 0.4, 0.78, 0.86], [0, 1, 1, 0]);
 
-  const boardX = useTransform(sp, [0.52, 0.7], [0, -140]);
-  const boardY = useTransform(sp, [0.52, 0.7], [0, 60]);
-  const boardR = useTransform(sp, [0.52, 0.7], [0, -10]);
-  const boardOp = useTransform(sp, [0.5, 0.57, 0.82, 0.88], [0, 1, 1, 0]);
+  const boardX = useTransform(sp, [0.46, 0.64], [0, -140]);
+  const boardY = useTransform(sp, [0.46, 0.64], [0, 60]);
+  const boardR = useTransform(sp, [0.46, 0.64], [0, -10]);
+  const boardOp = useTransform(sp, [0.44, 0.52, 0.78, 0.86], [0, 1, 1, 0]);
 
-  const spkY = useTransform(sp, [0.65, 0.82], [0, 120]);
-  const spkR = useTransform(sp, [0.65, 0.82], [0, 15]);
-  const spkOp = useTransform(sp, [0.63, 0.7, 0.82, 0.88], [0, 1, 1, 0]);
+  const spkY = useTransform(sp, [0.58, 0.76], [0, 120]);
+  const spkR = useTransform(sp, [0.58, 0.76], [0, 15]);
+  const spkOp = useTransform(sp, [0.56, 0.64, 0.78, 0.86], [0, 1, 1, 0]);
 
-  const ctaOp = useTransform(sp, [0.88, 0.95], [0, 1]);
-  const ctaY = useTransform(sp, [0.88, 0.95], [30, 0]);
+  const ctaOp = useTransform(sp, [0.9, 0.96], [0, 1]);
+  const ctaY = useTransform(sp, [0.9, 0.96], [30, 0]);
 
-  const lOp0 = useTransform(sp, [0.1, 0.16, 0.28, 0.36], [0, 1, 1, 0]);
-  const lX0 = useTransform(sp, [0.1, 0.16], [-40, 0]);
-  const lOp1 = useTransform(sp, [0.26, 0.32, 0.46, 0.54], [0, 1, 1, 0]);
-  const lX1 = useTransform(sp, [0.26, 0.32], [-40, 0]);
-  const lOp2 = useTransform(sp, [0.42, 0.48, 0.6, 0.68], [0, 1, 1, 0]);
-  const lX2 = useTransform(sp, [0.42, 0.48], [-40, 0]);
-  const lOp3 = useTransform(sp, [0.56, 0.62, 0.74, 0.82], [0, 1, 1, 0]);
-  const lX3 = useTransform(sp, [0.56, 0.62], [-40, 0]);
-  const lOp4 = useTransform(sp, [0.7, 0.76, 0.88, 0.94], [0, 1, 1, 0]);
-  const lX4 = useTransform(sp, [0.7, 0.76], [-40, 0]);
+  const lOp0 = useTransform(sp, [0.06, 0.12, 0.2, 0.28], [0, 1, 1, 0]);
+  const lX0 = useTransform(sp, [0.06, 0.12], [-40, 0]);
+  const lOp1 = useTransform(sp, [0.2, 0.26, 0.38, 0.46], [0, 1, 1, 0]);
+  const lX1 = useTransform(sp, [0.2, 0.26], [-40, 0]);
+  const lOp2 = useTransform(sp, [0.36, 0.42, 0.52, 0.6], [0, 1, 1, 0]);
+  const lX2 = useTransform(sp, [0.36, 0.42], [-40, 0]);
+  const lOp3 = useTransform(sp, [0.48, 0.54, 0.66, 0.74], [0, 1, 1, 0]);
+  const lX3 = useTransform(sp, [0.48, 0.54], [-40, 0]);
+  const lOp4 = useTransform(sp, [0.6, 0.66, 0.8, 0.88], [0, 1, 1, 0]);
+  const lX4 = useTransform(sp, [0.6, 0.66], [-40, 0]);
 
-  const rOp0 = useTransform(sp, [0.14, 0.22, 0.34, 0.42], [0, 1, 1, 0]);
-  const rX0 = useTransform(sp, [0.14, 0.22], [40, 0]);
-  const rOp1 = useTransform(sp, [0.32, 0.4, 0.52, 0.6], [0, 1, 1, 0]);
-  const rX1 = useTransform(sp, [0.32, 0.4], [40, 0]);
-  const rOp2 = useTransform(sp, [0.48, 0.56, 0.68, 0.76], [0, 1, 1, 0]);
-  const rX2 = useTransform(sp, [0.48, 0.56], [40, 0]);
-  const rOp3 = useTransform(sp, [0.64, 0.72, 0.84, 0.92], [0, 1, 1, 0]);
-  const rX3 = useTransform(sp, [0.64, 0.72], [40, 0]);
-  const rOp4 = useTransform(sp, [0.78, 0.86, 0.94, 1], [0, 1, 1, 0]);
-  const rX4 = useTransform(sp, [0.78, 0.86], [40, 0]);
+  const rOp0 = useTransform(sp, [0.1, 0.18, 0.24, 0.32], [0, 1, 1, 0]);
+  const rX0 = useTransform(sp, [0.1, 0.18], [40, 0]);
+  const rOp1 = useTransform(sp, [0.28, 0.36, 0.42, 0.5], [0, 1, 1, 0]);
+  const rX1 = useTransform(sp, [0.28, 0.36], [40, 0]);
+  const rOp2 = useTransform(sp, [0.42, 0.5, 0.56, 0.64], [0, 1, 1, 0]);
+  const rX2 = useTransform(sp, [0.42, 0.5], [40, 0]);
+  const rOp3 = useTransform(sp, [0.54, 0.62, 0.68, 0.76], [0, 1, 1, 0]);
+  const rX3 = useTransform(sp, [0.54, 0.62], [40, 0]);
+  const rOp4 = useTransform(sp, [0.66, 0.74, 0.82, 0.9], [0, 1, 1, 0]);
+  const rX4 = useTransform(sp, [0.66, 0.74], [40, 0]);
 
-  const slotBattOp = useTransform(sp, [0.12, 0.15, 0.25, 0.28], [0, 1, 1, 0.4]);
-  const slotCamOp = useTransform(sp, [0.12, 0.15, 0.4, 0.43], [0, 1, 1, 0.4]);
-  const slotBoardOp = useTransform(sp, [0.12, 0.15, 0.52, 0.55], [0, 1, 1, 0.4]);
-  const slotSpkOp = useTransform(sp, [0.12, 0.15, 0.65, 0.68], [0, 1, 1, 0.4]);
+  const slotBattOp = useTransform(sp, [0.06, 0.1, 0.2, 0.24], [0, 1, 1, 0.4]);
+  const slotCamOp = useTransform(sp, [0.06, 0.1, 0.34, 0.38], [0, 1, 1, 0.4]);
+  const slotBoardOp = useTransform(sp, [0.06, 0.1, 0.46, 0.5], [0, 1, 1, 0.4]);
+  const slotSpkOp = useTransform(sp, [0.06, 0.1, 0.58, 0.62], [0, 1, 1, 0.4]);
 
   const metallicBase =
     "linear-gradient(180deg, rgba(160,160,180,0.45) 0%, rgba(100,100,120,0.35) 30%, rgba(80,80,100,0.3) 70%, rgba(120,120,140,0.4) 100%)";

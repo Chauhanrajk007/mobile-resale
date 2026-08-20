@@ -43,47 +43,41 @@ export default function PhoneDismantle() {
   const velocity = useSpring(rawVelocity, { stiffness: 60, damping: 12 });
   const vBoost = useTransform(velocity, [-1.5, 0, 1.5], [-6, 0, 6]);
 
-  // Stable 3D container tilt instead of spinning 360 degrees
-  const containerRotX = useTransform(sp, [0, 0.5, 1], [18, 12, 8]);
-  const containerRotY = useTransform(sp, [0, 0.5, 1], [-14, -8, 0]);
-  const containerRotZ = useTransform(sp, [0, 0.5, 1], [-2, 0, 0]);
+  // Premium Y-rotation going from -15deg, turning 90deg (sideways), to 180deg (showing back), and finishing a full 360deg spin
+  const containerRotX = useTransform(sp, [0, 0.3, 0.65, 0.85, 1], [15, 20, 15, 10, 0]);
+  const containerRotY = useTransform(sp, [0, 0.3, 0.65, 0.85, 1], [-15, 90, 180, 270, 360]);
+  const containerRotZ = useTransform(sp, [0, 0.3, 0.65, 0.85, 1], [-4, 0, 4, 0, 0]);
 
-  // Exploded View Z-axis (Depth) and Sideways separation translations
-  const screenZ = useTransform(sp, [0.08, 0.35], [5, 180]);
-  const screenY = useTransform(sp, [0.08, 0.35], [0, -120]);
-  const screenRX = useTransform(sp, [0.08, 0.35], [0, -18]);
-  const screenOp = useTransform(sp, [0.05, 0.12, 0.74, 0.86], [1, 1, 1, 0]);
+  // Exploded View: Parts translate straight out along the Z-axis (local depth)
+  // Screen detaches forward
+  const screenZ = useTransform(sp, [0.05, 0.35, 0.75, 0.90], [0, 220, 220, 0]);
+  const screenOp = useTransform(sp, [0.0, 0.05, 0.85, 0.90], [1, 1, 1, 1]);
 
-  const battX = useTransform(sp, [0.24, 0.50], [0, 130]);
-  const battZ = useTransform(sp, [0.24, 0.50], [2, 95]);
-  const battR = useTransform(sp, [0.24, 0.50], [0, 12]);
-  const battOp = useTransform(sp, [0.20, 0.28, 0.80, 0.90], [0, 1, 1, 0]);
+  // Back panel detaches backward
+  const backZ = useTransform(sp, [0.05, 0.35, 0.75, 0.90], [0, -120, -120, 0]);
+  const backOp = useTransform(sp, [0.0, 0.05, 0.85, 0.90], [1, 1, 1, 1]);
 
-  const camX = useTransform(sp, [0.34, 0.60], [0, 125]);
-  const camY = useTransform(sp, [0.34, 0.60], [0, -135]);
-  const camZ = useTransform(sp, [0.34, 0.60], [5, 120]);
-  const camR = useTransform(sp, [0.34, 0.60], [0, -15]);
-  const camOp = useTransform(sp, [0.30, 0.38, 0.80, 0.90], [0, 1, 1, 0]);
+  // Internal components lift out at different Z-depths while the phone is sideways
+  const camZ = useTransform(sp, [0.25, 0.50, 0.75, 0.90], [0, 140, 140, 0]);
+  const camOp = useTransform(sp, [0.20, 0.28, 0.85, 0.92], [0, 1, 1, 0]);
 
-  const boardX = useTransform(sp, [0.44, 0.70], [0, -130]);
-  const boardY = useTransform(sp, [0.44, 0.70], [0, 50]);
-  const boardZ = useTransform(sp, [0.44, 0.70], [2, 100]);
-  const boardR = useTransform(sp, [0.44, 0.70], [0, -8]);
-  const boardOp = useTransform(sp, [0.40, 0.48, 0.80, 0.90], [0, 1, 1, 0]);
+  const boardZ = useTransform(sp, [0.30, 0.55, 0.75, 0.90], [0, 100, 100, 0]);
+  const boardOp = useTransform(sp, [0.25, 0.33, 0.85, 0.92], [0, 1, 1, 0]);
 
-  const spkY = useTransform(sp, [0.54, 0.80], [0, 125]);
-  const spkZ = useTransform(sp, [0.54, 0.80], [2, 85]);
-  const spkR = useTransform(sp, [0.54, 0.80], [0, 14]);
-  const spkOp = useTransform(sp, [0.50, 0.58, 0.80, 0.90], [0, 1, 1, 0]);
+  const battZ = useTransform(sp, [0.35, 0.60, 0.75, 0.90], [0, 70, 70, 0]);
+  const battOp = useTransform(sp, [0.30, 0.38, 0.85, 0.92], [0, 1, 1, 0]);
+
+  const spkZ = useTransform(sp, [0.40, 0.65, 0.75, 0.90], [0, 40, 40, 0]);
+  const spkOp = useTransform(sp, [0.35, 0.43, 0.85, 0.92], [0, 1, 1, 0]);
 
   // Glowing Scanner Line Sweep
-  const scannerY = useTransform(sp, [0.50, 0.85], [-230, 230]);
-  const scannerOp = useTransform(sp, [0.48, 0.52, 0.82, 0.86], [0, 1, 1, 0]);
+  const scannerY = useTransform(sp, [0.45, 0.80], [-230, 230]);
+  const scannerOp = useTransform(sp, [0.42, 0.48, 0.78, 0.84], [0, 1, 1, 0]);
 
   const ctaOp = useTransform(sp, [0.88, 0.96], [0, 1]);
   const ctaY = useTransform(sp, [0.88, 0.96], [30, 0]);
 
-  // Floating HUD Diagnostic Information Indicators (Fades in dynamically)
+  // HUD Information Cards (fade in dynamically on left/right side)
   const lOps = [
     useTransform(sp, [0.08, 0.16, 0.24, 0.32], [0, 1, 1, 0]),
     useTransform(sp, [0.22, 0.30, 0.42, 0.50], [0, 1, 1, 0]),
@@ -200,38 +194,38 @@ export default function PhoneDismantle() {
                 willChange: "transform",
               }}
             >
-              {/* Back Glass Shell */}
-              <div style={{ position: "absolute", width: PW, height: PH, borderRadius: 44, transform: "rotateY(180deg) translateZ(8px)", backfaceVisibility: "hidden", overflow: "hidden" }}>
+              {/* Back Glass Shell (Explodes backwards along local Z-axis) */}
+              <motion.div style={{ position: "absolute", width: PW, height: PH, borderRadius: 44, transformStyle: "preserve-3d", z: backZ, opacity: backOp, zIndex: 1, filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.3))" }}>
                 <img src="/phone/phone_back.jpg" style={imgStyle(PW, PH)} alt="Smartphone Titanium Shell" draggable={false} />
-              </div>
+              </motion.div>
 
-              {/* Chassis Internal Chassis Layer */}
-              <div style={{ position: "absolute", width: PW - 6, height: PH - 6, top: 3, left: 3, borderRadius: 38, transform: "translateZ(0px)", backfaceVisibility: "hidden", overflow: "hidden" }}>
+              {/* Chassis Internal Chassis Layer (Remains at center z = 0) */}
+              <div style={{ position: "absolute", width: PW - 6, height: PH - 6, top: 3, left: 3, borderRadius: 38, transformStyle: "preserve-3d", zIndex: 4 }}>
                 <img src="/phone/phone_chassis.jpg" style={{ width: PW - 6, height: PH - 6, display: "block", mixBlendMode: "screen" }} alt="Smart Chassis" draggable={false} />
               </div>
 
-              {/* Exploded Component: 1. Front Glass Display Panel */}
-              <motion.div style={{ position: "absolute", width: PW, height: PH, translateZ: screenZ, y: screenY, rotateX: screenRX, opacity: screenOp, transformStyle: "preserve-3d", zIndex: 9, filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.45))" }}>
+              {/* Exploded Component: 1. Front Glass Display Panel (Explodes forward along local Z-axis) */}
+              <motion.div style={{ position: "absolute", width: PW, height: PH, z: screenZ, opacity: screenOp, transformStyle: "preserve-3d", zIndex: 9, filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.45))" }}>
                 <img src="/phone/phone_front.jpg" style={imgStyle(PW, PH)} alt="Dynamic Island Screen" draggable={false} />
               </motion.div>
 
               {/* Exploded Component: 2. Smart Battery Cell */}
-              <motion.div style={{ position: "absolute", top: 108, right: 14, x: battX, rotate: battR, opacity: battOp, transformStyle: "preserve-3d", zIndex: 6, translateZ: battZ }}>
+              <motion.div style={{ position: "absolute", top: 108, right: 14, z: battZ, opacity: battOp, transformStyle: "preserve-3d", zIndex: 6 }}>
                 <img src="/phone/phone_battery.jpg" style={{ width: 116, height: 236, display: "block", mixBlendMode: "screen" }} alt="Diagnostics Battery Cell" draggable={false} />
               </motion.div>
 
               {/* Exploded Component: 3. Camera Sensor Ring Array */}
-              <motion.div style={{ position: "absolute", top: 14, left: 14, x: camX, y: camY, rotate: camR, opacity: camOp, transformStyle: "preserve-3d", zIndex: 6, translateZ: camZ }}>
+              <motion.div style={{ position: "absolute", top: 14, left: 14, z: camZ, opacity: camOp, transformStyle: "preserve-3d", zIndex: 6 }}>
                 <img src="/phone/phone_camera.jpg" style={{ width: 94, height: 94, display: "block", mixBlendMode: "screen" }} alt="Triple Lens Camera Sensor" draggable={false} />
               </motion.div>
 
               {/* Exploded Component: 4. PCB Motherboard Logic Board */}
-              <motion.div style={{ position: "absolute", top: 44, left: 14, x: boardX, y: boardY, rotate: boardR, opacity: boardOp, transformStyle: "preserve-3d", zIndex: 6, translateZ: boardZ }}>
+              <motion.div style={{ position: "absolute", top: 44, left: 14, z: boardZ, opacity: boardOp, transformStyle: "preserve-3d", zIndex: 6 }}>
                 <img src="/phone/phone_board.jpg" style={{ width: 82, height: 154, display: "block", mixBlendMode: "screen" }} alt="Logic Board Chip" draggable={false} />
               </motion.div>
 
               {/* Exploded Component: 5. Speaker Box Driver */}
-              <motion.div style={{ position: "absolute", bottom: 52, left: 14, y: spkY, rotate: spkR, opacity: spkOp, transformStyle: "preserve-3d", zIndex: 6, translateZ: spkZ }}>
+              <motion.div style={{ position: "absolute", bottom: 52, left: 14, z: spkZ, opacity: spkOp, transformStyle: "preserve-3d", zIndex: 6 }}>
                 <img src="/phone/phone_speaker.jpg" style={{ width: 86, height: 52, display: "block", mixBlendMode: "screen" }} alt="Sound Speaker Chamber" draggable={false} />
               </motion.div>
 
@@ -247,7 +241,7 @@ export default function PhoneDismantle() {
                   zIndex: 8,
                   opacity: scannerOp,
                   y: scannerY,
-                  translateZ: 140,
+                  z: 110,
                   pointerEvents: "none",
                   borderRadius: "50%",
                 }}

@@ -302,3 +302,13 @@ input[type="number"]::-webkit-outer-spin-button {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
+
+.mobile-only-booking-card {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .mobile-only-booking-card {
+    display: none !important;
+  }
+}

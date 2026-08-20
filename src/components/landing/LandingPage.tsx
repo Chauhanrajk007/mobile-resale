@@ -319,7 +319,7 @@ export default function LandingPage() {
       <PhoneDismantle />
 
       {/* ── Booking Card ── */}
-      <section id="book" style={{ padding: "4rem 1.5rem", maxWidth: 520, margin: "0 auto" }}>
+      <section id="book" className="mobile-only-booking-card" style={{ padding: "4rem 1.5rem", maxWidth: 520, margin: "0 auto" }}>
         <motion.div
           initial={{ opacity: 0, y: 60, scale: 0.95, filter: "blur(12px)" }}
           whileInView={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}

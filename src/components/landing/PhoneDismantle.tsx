@@ -12,7 +12,7 @@ import {
 
 const PW = 240;
 const PH = 490;
-const PT = 14; // Phone frame thickness (Z-depth)
+const PT = 12; // Solid phone frame thickness in 3D pixels
 
 const PARTS = [
   { label: "30+ Checkpoints", desc: "Every angle inspected under studio light" },
@@ -22,16 +22,28 @@ const PARTS = [
   { label: "Verified Report", desc: "Shareable, tamper-proof certificate" },
 ];
 
-// ── HIGH-FIDELITY VECTOR COMPONENTS ──
+// ── HIGH-FIDELITY VECTOR COMPONENTS WITH DYNAMIC DUAL-SCREEN MODES ──
 
-function PhoneFront({ sheenX }: { sheenX: any }) {
+interface PhoneFrontProps {
+  sheenX: any;
+  lockScreenOp: any;
+  diagnosticsOp: any;
+}
+
+function PhoneFront({ sheenX, lockScreenOp, diagnosticsOp }: PhoneFrontProps) {
   return (
     <svg viewBox="0 0 240 490" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: PW, height: PH, display: "block" }}>
       <defs>
+        {/* Dynamic diagonal sheen gradient */}
         <linearGradient id="front-sheen" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stopColor="rgba(255,255,255,0)"/>
-          <stop offset="50%" stopColor="rgba(255,255,255,0.24)"/>
+          <stop offset="50%" stopColor="rgba(255,255,255,0.22)"/>
           <stop offset="100%" stopColor="rgba(255,255,255,0)"/>
+        </linearGradient>
+        <linearGradient id="lock-bg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#1e1b4b"/>
+          <stop offset="40%" stopColor="#311042"/>
+          <stop offset="100%" stopColor="#09090b"/>
         </linearGradient>
         <linearGradient id="front-bg" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#0d0a1b"/>
@@ -45,58 +57,73 @@ function PhoneFront({ sheenX }: { sheenX: any }) {
       </defs>
       
       {/* Outer Screen Bezel */}
-      <rect width="240" height="490" rx="44" fill="#09090b" stroke="var(--border)" strokeWidth="2"/>
-      <rect x="5" y="5" width="230" height="480" rx="39" fill="url(#front-bg)"/>
+      <rect width="240" height="490" rx="44" fill="#09090b" stroke="var(--border)" strokeWidth="2.2"/>
+      
+      {/* ── Mode 1: Sleek Lock Screen (At Start) ── */}
+      <motion.g style={{ opacity: lockScreenOp }}>
+        <rect x="5" y="5" width="230" height="480" rx="39" fill="url(#lock-bg)"/>
+        
+        {/* High-end lockscreen geometry */}
+        <circle cx="120" cy="245" r="140" stroke="rgba(255,255,255,0.03)" strokeWidth="1" strokeDasharray="6 6"/>
+        
+        {/* Date & Time */}
+        <text x="120" y="70" fill="rgba(255,255,255,0.65)" fontSize="8.5" fontWeight="600" textAnchor="middle" fontFamily="system-ui" letterSpacing="0.5">THURSDAY, AUGUST 20</text>
+        <text x="120" y="120" fill="#fff" fontSize="46" fontWeight="200" textAnchor="middle" fontFamily="system-ui" letterSpacing="-1">9:41</text>
+        
+        {/* Inspection Callout */}
+        <g transform="translate(48, 380)">
+          <rect width="144" height="28" rx="14" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.1)" strokeWidth="0.8"/>
+          <text x="72" y="17" fill="#fff" fontSize="8" fontWeight="700" textAnchor="middle" letterSpacing="1.5" fontFamily="system-ui">SCROLL TO INSPECT</text>
+        </g>
+      </motion.g>
 
-      {/* Grid Pattern on Screen */}
-      <g opacity="0.12">
-        <path d="M 6,50 H 234 M 6,100 H 234 M 6,150 H 234 M 6,200 H 234 M 6,250 H 234 M 6,300 H 234 M 6,350 H 234 M 6,400 H 234 M 6,450 H 234" stroke="#8b5cf6" strokeWidth="0.5"/>
-        <path d="M 50,6 V 484 M 100,6 V 484 M 150,6 V 484 M 200,6 V 484" stroke="#8b5cf6" strokeWidth="0.5"/>
-      </g>
+      {/* ── Mode 2: System Diagnostics (On Scroll) ── */}
+      <motion.g style={{ opacity: diagnosticsOp }}>
+        <rect x="5" y="5" width="230" height="480" rx="39" fill="url(#front-bg)"/>
 
-      {/* Dynamic Island */}
+        {/* Grid Pattern */}
+        <g opacity="0.12">
+          <path d="M 6,50 H 234 M 6,100 H 234 M 6,150 H 234 M 6,200 H 234 M 6,250 H 234 M 6,300 H 234 M 6,350 H 234 M 6,400 H 234 M 6,450 H 234" stroke="#8b5cf6" strokeWidth="0.5"/>
+          <path d="M 50,6 V 484 M 100,6 V 484 M 150,6 V 484 M 200,6 V 484" stroke="#8b5cf6" strokeWidth="0.5"/>
+        </g>
+
+        {/* Diagnostics Header */}
+        <text x="120" y="80" fill="#a855f7" fontSize="9" fontWeight="800" letterSpacing="3" textAnchor="middle" fontFamily="system-ui">SYSTEM REPORT</text>
+        <text x="120" y="104" fill="#fff" fontSize="19" fontWeight="800" textAnchor="middle" fontFamily="system-ui" letterSpacing="-0.02em">Device Health</text>
+
+        <rect x="24" y="124" width="192" height="198" rx="16" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
+
+        {/* Radial Health Gauge */}
+        <circle cx="120" cy="184" r="30" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="5"/>
+        <circle cx="120" cy="184" r="30" fill="none" stroke="#22c55e" strokeWidth="5" strokeDasharray="188" strokeDashoffset="15" strokeLinecap="round" transform="rotate(-90 120 184)"/>
+        <text x="120" y="188" fill="#fff" fontSize="13" fontWeight="800" textAnchor="middle" fontFamily="system-ui">96%</text>
+        <text x="120" y="228" fill="#22c55e" fontSize="8" fontWeight="700" textAnchor="middle" fontFamily="system-ui" letterSpacing="1">EXCELLENT</text>
+
+        {/* Test Checklist */}
+        <g transform="translate(36, 252)" fontFamily="system-ui" fontSize="10">
+          <text x="0" y="0" fill="rgba(255,255,255,0.5)">Display & Touch</text>
+          <text x="144" y="0" fill="#22c55e" fontWeight="700" textAnchor="end">✓</text>
+          <line x1="0" y1="4" x2="148" y2="4" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
+          
+          <text x="0" y="18" fill="rgba(255,255,255,0.5)">Power Cell Health</text>
+          <text x="144" y="18" fill="#22c55e" fontWeight="700" textAnchor="end">✓</text>
+          <line x1="0" y1="22" x2="148" y2="22" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
+          
+          <text x="0" y="36" fill="rgba(255,255,255,0.5)">Camera Aperture</text>
+          <text x="144" y="36" fill="#22c55e" fontWeight="700" textAnchor="end">✓</text>
+          <line x1="0" y1="40" x2="148" y2="40" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
+        </g>
+
+        <g transform="translate(24, 342)">
+          <rect width="192" height="38" rx="12" fill="url(#glow-btn)"/>
+          <text x="96" y="23" fill="#fff" fontSize="11" fontWeight="800" textAnchor="middle" letterSpacing="1.5" fontFamily="system-ui">VERIFIED REPORT</text>
+        </g>
+      </motion.g>
+
+      {/* Dynamic Island (Rendered on top of both screens) */}
       <rect x="76" y="16" width="88" height="28" rx="14" fill="#000" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
       <circle cx="94" cy="30" r="4.5" fill="#111"/>
       <circle cx="94" cy="30" r="2" fill="#2563eb" opacity="0.6"/>
-
-      {/* Status Bar */}
-      <text x="32" y="34" fill="#fff" fontSize="9.5" fontWeight="700" fontFamily="system-ui">9:41</text>
-      <g transform="translate(182, 25)" fill="#fff">
-        <rect x="0" y="0" width="18" height="9" rx="2" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="0.8"/>
-        <rect x="2" y="2" width="11" height="5" rx="0.5" fill="#22c55e"/>
-      </g>
-
-      {/* Diagnostics Dashboard UI */}
-      <text x="120" y="80" fill="#a855f7" fontSize="9" fontWeight="800" letterSpacing="3" textAnchor="middle" fontFamily="system-ui">SYSTEM REPORT</text>
-      <text x="120" y="104" fill="#fff" fontSize="19" fontWeight="800" textAnchor="middle" fontFamily="system-ui" letterSpacing="-0.02em">Device Health</text>
-
-      <rect x="24" y="124" width="192" height="198" rx="16" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-
-      {/* Radial Health Gauge */}
-      <circle cx="120" cy="184" r="30" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="5"/>
-      <circle cx="120" cy="184" r="30" fill="none" stroke="#22c55e" strokeWidth="5" strokeDasharray="188" strokeDashoffset="15" strokeLinecap="round" transform="rotate(-90 120 184)"/>
-      <text x="120" y="188" fill="#fff" fontSize="13" fontWeight="800" textAnchor="middle" fontFamily="system-ui">96%</text>
-      <text x="120" y="228" fill="#22c55e" fontSize="8" fontWeight="700" textAnchor="middle" fontFamily="system-ui" letterSpacing="1">EXCELLENT</text>
-
-      {/* Test Checklist */}
-      <g transform="translate(36, 252)" fontFamily="system-ui" fontSize="10">
-        <text x="0" y="0" fill="rgba(255,255,255,0.5)">Display & Touch</text>
-        <text x="144" y="0" fill="#22c55e" fontWeight="700" textAnchor="end">✓</text>
-        <line x1="0" y1="4" x2="148" y2="4" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
-        
-        <text x="0" y="18" fill="rgba(255,255,255,0.5)">Power Cell Health</text>
-        <text x="144" y="18" fill="#22c55e" fontWeight="700" textAnchor="end">✓</text>
-        <line x1="0" y1="22" x2="148" y2="22" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
-        
-        <text x="0" y="36" fill="rgba(255,255,255,0.5)">Camera Aperture</text>
-        <text x="144" y="36" fill="#22c55e" fontWeight="700" textAnchor="end">✓</text>
-        <line x1="0" y1="40" x2="148" y2="40" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
-      </g>
-
-      <g transform="translate(24, 342)">
-        <rect width="192" height="38" rx="12" fill="url(#glow-btn)"/>
-        <text x="96" y="23" fill="#fff" fontSize="11" fontWeight="800" textAnchor="middle" letterSpacing="1.5" fontFamily="system-ui">VERIFIED REPORT</text>
-      </g>
 
       {/* Interactive Sheen overlay */}
       <motion.rect
@@ -133,13 +160,12 @@ function PhoneBack({ sheenX }: { sheenX: any }) {
         </linearGradient>
       </defs>
       
-      {/* Matte Titanium Back Plate */}
       <rect width="240" height="490" rx="44" fill="url(#back-body)" stroke="var(--border)" strokeWidth="2"/>
 
       {/* Triple Camera Island */}
       <rect x="14" y="14" width="94" height="94" rx="22" fill="#141417" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
 
-      {/* Lens 1 (Top Left) */}
+      {/* Lens 1 */}
       <g transform="translate(38, 38)">
         <circle r="17" fill="#1c1c21" stroke="rgba(255,255,255,0.12)" strokeWidth="1.2"/>
         <circle r="13" fill="#09090b"/>
@@ -148,7 +174,7 @@ function PhoneBack({ sheenX }: { sheenX: any }) {
         <circle cx="-3" cy="-3" r="1.2" fill="rgba(255,255,255,0.4)"/>
       </g>
 
-      {/* Lens 2 (Bottom Left) */}
+      {/* Lens 2 */}
       <g transform="translate(38, 82)">
         <circle r="17" fill="#1c1c21" stroke="rgba(255,255,255,0.12)" stroke-width="1.2"/>
         <circle r="13" fill="#09090b"/>
@@ -157,20 +183,20 @@ function PhoneBack({ sheenX }: { sheenX: any }) {
         <circle cx="-3" cy="-3" r="1.2" fill="rgba(255,255,255,0.4)"/>
       </g>
 
-      {/* Lens 3 (Right Middle) */}
+      {/* Lens 3 */}
       <g transform="translate(82, 60)">
-        <circle r="14" fill="#1c1c21" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <circle r="14" fill="#1c1c21" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
         <circle r="11" fill="#09090b"/>
         <circle r="8" fill="url(#glass-lens)"/>
         <circle r="3" fill="#000"/>
         <circle cx="-2" cy="-2" r="1" fill="rgba(255,255,255,0.4)"/>
       </g>
 
-      {/* Dual Tone Flash */}
+      {/* Flash */}
       <circle cx="82" cy="32" r="6" fill="#3f3f46"/>
       <circle cx="82" cy="32" r="4.5" fill="#f59e0b" opacity="0.8"/>
 
-      {/* LiDAR Sensor */}
+      {/* LiDAR */}
       <circle cx="82" cy="88" r="4" fill="#18181b" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5"/>
 
       {/* Shield logo */}
@@ -179,7 +205,6 @@ function PhoneBack({ sheenX }: { sheenX: any }) {
         <path d="M -5,0 L -1,4 L 6,-3" strokeLinecap="round"/>
       </g>
 
-      {/* Light sheen overlay */}
       <motion.rect
         x="-100"
         y="5"
@@ -203,7 +228,7 @@ function Chassis() {
           <stop offset="100%" stopColor="#1c1917"/>
         </radialGradient>
       </defs>
-      {/* Aluminum Core Plate */}
+      
       <rect width="234" height="484" rx="38" fill="#151518" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
 
       {/* Heatpipes */}
@@ -215,7 +240,7 @@ function Chassis() {
       <circle cx="117" cy="242" r="40" fill="none" stroke="#d97706" strokeWidth="1.2" opacity="0.6"/>
       <circle cx="117" cy="242" r="32" fill="none" stroke="#ca8a04" strokeWidth="0.8" opacity="0.5"/>
 
-      {/* Compartment Bays */}
+      {/* Component Bays */}
       <rect x="14" y="44" width="82" height="154" rx="6" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" strokeDasharray="4 2"/>
       <rect x="104" y="108" width="116" height="236" rx="8" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" strokeDasharray="4 2"/>
     </svg>
@@ -261,21 +286,18 @@ function CameraModule() {
       
       <rect width="94" height="94" rx="22" fill="#141416" stroke="rgba(56,189,248,0.3)" strokeWidth="1"/>
 
-      {/* Lens 1 */}
       <g transform="translate(28, 28)">
         <circle r="14" fill="#09090b" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
         <circle r="10" fill="url(#cam-lens-3d)"/>
         <circle r="3" fill="#000"/>
       </g>
       
-      {/* Lens 2 */}
       <g transform="translate(28, 68)">
         <circle r="14" fill="#09090b" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
         <circle r="10" fill="url(#cam-lens-3d)"/>
         <circle r="3" fill="#000"/>
       </g>
 
-      {/* Lens 3 */}
       <g transform="translate(68, 48)">
         <circle r="12" fill="#09090b" stroke="rgba(255,255,255,0.12)" strokeWidth="1"/>
         <circle r="8" fill="url(#cam-lens-3d)"/>
@@ -297,13 +319,11 @@ function LogicBoard() {
 
       <rect width="82" height="154" rx="6" fill="url(#pcb-color)" stroke="rgba(34,197,94,0.3)" strokeWidth="1"/>
 
-      {/* Circuit lines */}
       <g stroke="#ca8a04" strokeWidth="0.5" fill="none" opacity="0.6">
         <path d="M 12,12 L 12,40 L 24,40 M 70,12 V 42 L 58,50"/>
         <path d="M 22,96 L 22,120 H 42 L 50,132"/>
       </g>
 
-      {/* Central Processor */}
       <rect x="12" y="52" width="58" height="58" rx="8" fill="#18181b" stroke="rgba(34,197,94,0.5)" strokeWidth="1"/>
       <text x="41" y="82" fill="#22c55e" fontSize="8.5" fontWeight="900" textAnchor="middle" fontFamily="system-ui">A17 PRO</text>
       <text x="41" y="93" fill="rgba(255,255,255,0.3)" fontSize="5.5" textAnchor="middle" fontFamily="system-ui">6-CORE</text>
@@ -325,7 +345,7 @@ export default function PhoneDismantle() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  // Mouse Coordinates for Interactive Cursor 3D Parallax Tilt
+  // Mouse Coordinates for 3D Cursor Parallax
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -336,7 +356,6 @@ export default function PhoneDismantle() {
     checkMobile();
     window.addEventListener("resize", checkMobile);
     
-    // Mouse hover listener on desktop
     const handleMouseMove = (e: MouseEvent) => {
       if (window.innerWidth < 768) return;
       const { clientX, clientY } = e;
@@ -353,7 +372,6 @@ export default function PhoneDismantle() {
     };
   }, [mouseX, mouseY]);
 
-  // Spring smooth the mouse tilt coordinates
   const smoothMouseX = useSpring(mouseX, { stiffness: 60, damping: 18 });
   const smoothMouseY = useSpring(mouseY, { stiffness: 60, damping: 18 });
 
@@ -364,12 +382,15 @@ export default function PhoneDismantle() {
 
   const sp = useSpring(scrollYProgress, { stiffness: 45, damping: 22, mass: 0.5 });
 
-  // Main Scroll Rotation Path (smooth 360-degree Y rotation)
+  // Main Y-rotation path (continuous Y-axis spin to show sides and back)
   const containerRotX = useTransform(sp, [0, 0.3, 0.65, 0.85, 1], [15, 20, 15, 10, 0]);
   const containerRotY = useTransform(sp, [0, 0.3, 0.65, 0.85, 1], [-15, 90, 180, 270, 360]);
   const containerRotZ = useTransform(sp, [0, 0.3, 0.65, 0.85, 1], [-4, 0, 4, 0, 0]);
 
-  // Mouse Interactive Tilt added to Scroll Rotation (Tactile Parallax)
+  // Dynamic Opacities for Phone Display Modes
+  const lockScreenOp = useTransform(sp, [0, 0.18], [1, 0]);
+  const diagnosticsOp = useTransform(sp, [0.12, 0.28], [0, 1]);
+
   const hoverRotX = useTransform(smoothMouseY, [-0.5, 0.5], [10, -10]);
   const hoverRotY = useTransform(smoothMouseX, [-0.5, 0.5], [-12, 12]);
 
@@ -377,35 +398,39 @@ export default function PhoneDismantle() {
   const finalRotY = useTransform([containerRotY, hoverRotY] as any, ([cY, hY]: number[]) => cY + (hY || 0));
 
   // Exploded View Z-axis (Depth Elevation)
-  const screenZ = useTransform(sp, [0.05, 0.35, 0.75, 0.90], [0, 220, 220, 0]);
+  // Screen detaches forward (Z: +6px closed to +220px exploded)
+  const screenZ = useTransform(sp, [0.05, 0.35, 0.75, 0.90], [6, 220, 220, 6]);
   const screenOp = useTransform(sp, [0.0, 0.05, 0.85, 0.90], [1, 1, 1, 1]);
 
-  const backZ = useTransform(sp, [0.05, 0.35, 0.75, 0.90], [0, -120, -120, 0]);
+  // Back cover detaches backward (Z: -6px closed to -120px exploded)
+  const backZ = useTransform(sp, [0.05, 0.35, 0.75, 0.90], [-6, -120, -120, -6]);
   const backOp = useTransform(sp, [0.0, 0.05, 0.85, 0.90], [1, 1, 1, 1]);
 
-  const camZ = useTransform(sp, [0.25, 0.50, 0.75, 0.90], [0, 140, 140, 0]);
-  const camOp = useTransform(sp, [0.20, 0.28, 0.85, 0.92], [0, 1, 1, 0]);
+  // Internal parts sit inside (Z: ~1-2px closed) and float out as screen separates
+  // Setting their opacity to 1 immediately as the screen lifts so they sit inside the chassis naturally
+  const camZ = useTransform(sp, [0.25, 0.50, 0.75, 0.90], [2, 140, 140, 2]);
+  const camOp = useTransform(sp, [0.05, 0.10, 0.88, 0.94], [0, 1, 1, 0]);
 
-  const boardZ = useTransform(sp, [0.30, 0.55, 0.75, 0.90], [0, 100, 100, 0]);
-  const boardOp = useTransform(sp, [0.25, 0.33, 0.85, 0.92], [0, 1, 1, 0]);
+  const boardZ = useTransform(sp, [0.30, 0.55, 0.75, 0.90], [1, 100, 100, 1]);
+  const boardOp = useTransform(sp, [0.05, 0.10, 0.88, 0.94], [0, 1, 1, 0]);
 
-  const battZ = useTransform(sp, [0.35, 0.60, 0.75, 0.90], [0, 70, 70, 0]);
-  const battOp = useTransform(sp, [0.30, 0.38, 0.85, 0.92], [0, 1, 1, 0]);
+  const battZ = useTransform(sp, [0.35, 0.60, 0.75, 0.90], [1, 70, 70, 1]);
+  const battOp = useTransform(sp, [0.05, 0.10, 0.88, 0.94], [0, 1, 1, 0]);
 
-  const spkZ = useTransform(sp, [0.40, 0.65, 0.75, 0.90], [0, 40, 40, 0]);
-  const spkOp = useTransform(sp, [0.35, 0.43, 0.85, 0.92], [0, 1, 1, 0]);
+  const spkZ = useTransform(sp, [0.40, 0.65, 0.75, 0.90], [1, 40, 40, 1]);
+  const spkOp = useTransform(sp, [0.05, 0.10, 0.88, 0.94], [0, 1, 1, 0]);
 
-  // Glass light sheen glint sweep coordinates
+  // Light Sheen Coordinates
   const sheenX = useTransform(sp, [0, 0.4, 0.75, 1], [-250, 250, -250, 250]);
 
-  // Glowing laser diagnostic sweep
+  // Diagnostic laser sweep
   const scannerY = useTransform(sp, [0.45, 0.80], [-230, 230]);
   const scannerOp = useTransform(sp, [0.42, 0.48, 0.78, 0.84], [0, 1, 1, 0]);
 
   const ctaOp = useTransform(sp, [0.88, 0.96], [0, 1]);
   const ctaY = useTransform(sp, [0.88, 0.96], [30, 0]);
 
-  // HUD Side menu fade-ins
+  // HUD Pointers
   const lOps = [
     useTransform(sp, [0.08, 0.16, 0.24, 0.32], [0, 1, 1, 0]),
     useTransform(sp, [0.22, 0.30, 0.42, 0.50], [0, 1, 1, 0]),
@@ -513,106 +538,59 @@ export default function PhoneDismantle() {
                 willChange: "transform",
               }}
             >
-              {/* ── 3D SOLID TITANIUM SIDE FRAME PANELS ── */}
-              
-              {/* Left Side Edge (Folds back -90deg along Y-axis) */}
+              {/* ── 3D SOLID STACKED ROUNDED SIDE RIM (VOXEL STYLE) ── */}
+              {/* Stacking 12 layers slightly offset in Z to create a solid rounded 3D metal chassis block */}
+              {Array.from({ length: 12 }).map((_, idx) => {
+                const zVal = -6 + (idx * 1); // Spaced from z = -6px to z = 5px
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      position: "absolute",
+                      width: PW,
+                      height: PH,
+                      borderRadius: 44,
+                      border: "2px solid var(--border)",
+                      transform: `translateZ(${zVal}px)`,
+                      pointerEvents: "none",
+                      opacity: 0.85,
+                      zIndex: 3,
+                    }}
+                  />
+                );
+              })}
+
+              {/* Physical side button overlays layered in Z-space */}
+              {/* Left Action & Volume buttons */}
               <div
                 style={{
                   position: "absolute",
-                  left: 0,
-                  top: 38, // Accounts for top rounded corner
-                  width: PT, // Frame thickness
-                  height: PH - 76,
-                  background: "linear-gradient(to bottom, var(--border), color-mix(in srgb, var(--border) 60%, black), var(--border))",
-                  transform: "rotateY(-90deg)",
-                  transformOrigin: "left center",
-                  borderLeft: "1px solid rgba(255,255,255,0.15)",
-                  borderRight: "1px solid rgba(0,0,0,0.4)",
+                  left: -3,
+                  top: 110,
+                  width: 5,
+                  height: 60,
+                  background: "var(--border)",
+                  borderRadius: "2px 0 0 2px",
+                  transform: "translateZ(0px)",
                   zIndex: 5,
+                  boxShadow: "-2px 0 6px rgba(0,0,0,0.3)",
                 }}
-              >
-                {/* Sleek Antenna Lines */}
-                <div style={{ position: "absolute", top: 40, left: 0, width: "100%", height: 1.5, background: "rgba(0,0,0,0.3)" }} />
-                <div style={{ position: "absolute", bottom: 40, left: 0, width: "100%", height: 1.5, background: "rgba(0,0,0,0.3)" }} />
-                
-                {/* Physical Action Button & Volume Keys */}
-                <div style={{ position: "absolute", top: 80, left: 3, width: 8, height: 18, background: "color-mix(in srgb, var(--border) 50%, black)", borderRadius: 2, border: "0.5px solid rgba(255,255,255,0.1)" }} />
-                <div style={{ position: "absolute", top: 110, left: 3, width: 8, height: 28, background: "color-mix(in srgb, var(--border) 50%, black)", borderRadius: 2, border: "0.5px solid rgba(255,255,255,0.1)" }} />
-                <div style={{ position: "absolute", top: 146, left: 3, width: 8, height: 28, background: "color-mix(in srgb, var(--border) 50%, black)", borderRadius: 2, border: "0.5px solid rgba(255,255,255,0.1)" }} />
-              </div>
-
-              {/* Right Side Edge (Folds back 90deg along Y-axis) */}
+              />
+              {/* Right Power button */}
               <div
                 style={{
                   position: "absolute",
-                  right: 0,
-                  top: 38,
-                  width: PT,
-                  height: PH - 76,
-                  background: "linear-gradient(to bottom, var(--border), color-mix(in srgb, var(--border) 60%, black), var(--border))",
-                  transform: "rotateY(90deg)",
-                  transformOrigin: "right center",
-                  borderRight: "1px solid rgba(255,255,255,0.15)",
-                  borderLeft: "1px solid rgba(0,0,0,0.4)",
+                  right: -3,
+                  top: 150,
+                  width: 5,
+                  height: 38,
+                  background: "var(--border)",
+                  borderRadius: "0 2px 2px 0",
+                  transform: "translateZ(0px)",
                   zIndex: 5,
+                  boxShadow: "2px 0 6px rgba(0,0,0,0.3)",
                 }}
-              >
-                {/* Sleek Antenna Lines */}
-                <div style={{ position: "absolute", top: 40, left: 0, width: "100%", height: 1.5, background: "rgba(0,0,0,0.3)" }} />
-                <div style={{ position: "absolute", bottom: 40, left: 0, width: "100%", height: 1.5, background: "rgba(0,0,0,0.3)" }} />
-                
-                {/* Physical Power Button */}
-                <div style={{ position: "absolute", top: 130, right: 3, width: 8, height: 38, background: "color-mix(in srgb, var(--border) 50%, black)", borderRadius: 2, border: "0.5px solid rgba(255,255,255,0.1)" }} />
-              </div>
-
-              {/* Top Edge (Folds back 90deg along X-axis) */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 38,
-                  height: PT,
-                  width: PW - 76,
-                  background: "linear-gradient(to right, var(--border), color-mix(in srgb, var(--border) 80%, black), var(--border))",
-                  transform: "rotateX(90deg)",
-                  transformOrigin: "center top",
-                  borderTop: "1px solid rgba(255,255,255,0.15)",
-                  borderBottom: "1px solid rgba(0,0,0,0.4)",
-                  zIndex: 5,
-                }}
-              >
-                <div style={{ position: "absolute", left: 30, top: 0, width: 1.5, height: "100%", background: "rgba(0,0,0,0.3)" }} />
-              </div>
-
-              {/* Bottom Edge (Folds back -90deg along X-axis) */}
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 38,
-                  height: PT,
-                  width: PW - 76,
-                  background: "linear-gradient(to right, var(--border), color-mix(in srgb, var(--border) 80%, black), var(--border))",
-                  transform: "rotateX(-90deg)",
-                  transformOrigin: "center bottom",
-                  borderBottom: "1px solid rgba(255,255,255,0.15)",
-                  borderTop: "1px solid rgba(0,0,0,0.4)",
-                  zIndex: 5,
-                }}
-              >
-                {/* Bottom Antenna Line */}
-                <div style={{ position: "absolute", left: 30, top: 0, width: 1.5, height: "100%", background: "rgba(0,0,0,0.3)" }} />
-                
-                {/* Speaker Grille Holes */}
-                <g style={{ display: "flex", gap: "2px", position: "absolute", left: 16, top: 5 }}>
-                  <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#09090b" }} />
-                  <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#09090b" }} />
-                  <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#09090b" }} />
-                </g>
-
-                {/* USB-C Connector Port */}
-                <div style={{ position: "absolute", left: "calc(50% - 13px)", top: 4, width: 26, height: 7, borderRadius: 3, background: "#09090b", border: "0.5px solid rgba(255,255,255,0.15)" }} />
-              </div>
+              />
 
               {/* Dynamic Parallax Shadow Layer beneath floating Screen */}
               <motion.div
@@ -626,14 +604,14 @@ export default function PhoneDismantle() {
                   background: "#000",
                   borderRadius: 44,
                   pointerEvents: "none",
-                  opacity: useTransform(screenZ, [0, 220], [0, 0.6]),
-                  filter: useTransform(screenZ, [0, 220], ["blur(1px)", "blur(20px)"]),
-                  scale: useTransform(screenZ, [0, 220], [1, 0.88]),
+                  opacity: useTransform(screenZ, [6, 220], [0, 0.6]),
+                  filter: useTransform(screenZ, [6, 220], ["blur(1px)", "blur(20px)"]),
+                  scale: useTransform(screenZ, [6, 220], [1, 0.88]),
                 }}
               />
 
-              {/* Back Glass Shell (Explodes backwards along local Z-axis) */}
-              <motion.div style={{ position: "absolute", width: PW, height: PH, borderRadius: 44, transformStyle: "preserve-3d", z: backZ, opacity: backOp, zIndex: 1, filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.3))" }}>
+              {/* Back Glass Shell (Explodes backwards along Z-axis: from -6px to -120px) */}
+              <motion.div style={{ position: "absolute", width: PW, height: PH, borderRadius: 44, transformStyle: "preserve-3d", z: backZ, opacity: backOp, zIndex: 1, filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.35))" }}>
                 <PhoneBack sheenX={sheenX} />
               </motion.div>
 
@@ -642,9 +620,9 @@ export default function PhoneDismantle() {
                 <Chassis />
               </div>
 
-              {/* Exploded Component: 1. Front Glass Display Panel (Explodes forward along local Z-axis) */}
+              {/* Exploded Component: 1. Front Glass Display Panel (Explodes forward along Z-axis: from +6px to +220px) */}
               <motion.div style={{ position: "absolute", width: PW, height: PH, z: screenZ, opacity: screenOp, transformStyle: "preserve-3d", zIndex: 9, filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.45))" }}>
-                <PhoneFront sheenX={sheenX} />
+                <PhoneFront sheenX={sheenX} lockScreenOp={lockScreenOp} diagnosticsOp={diagnosticsOp} />
               </motion.div>
 
               {/* Exploded Component: 2. Smart Battery Cell */}

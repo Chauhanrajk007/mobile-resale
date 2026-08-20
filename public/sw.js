@@ -1,4 +1,4 @@
-const CACHE = "cmp-v1";
+const CACHE = "cmp-v2";
 const STATIC = ["/", "/manifest.json", "/icon-192.png", "/icon-512.png"];
 
 self.addEventListener("install", (e) => {

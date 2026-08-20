@@ -150,7 +150,7 @@ function PhoneBack({ sheenX }: { sheenX: any }) {
 
       {/* Lens 2 (Bottom Left) */}
       <g transform="translate(38, 82)">
-        <circle r="17" fill="#1c1c21" stroke="rgba(255,255,255,0.12)" stroke-width="1.2"/>
+        <circle r="17" fill="#1c1c21" stroke="rgba(255,255,255,0.12)" strokeWidth="1.2"/>
         <circle r="13" fill="#09090b"/>
         <circle r="10" fill="url(#glass-lens)"/>
         <circle r="4" fill="#000"/>
@@ -159,7 +159,7 @@ function PhoneBack({ sheenX }: { sheenX: any }) {
 
       {/* Lens 3 (Right Middle) */}
       <g transform="translate(82, 60)">
-        <circle r="14" fill="#1c1c21" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <circle r="14" fill="#1c1c21" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
         <circle r="11" fill="#09090b"/>
         <circle r="8" fill="url(#glass-lens)"/>
         <circle r="3" fill="#000"/>
@@ -324,6 +324,9 @@ function Speaker() {
 export default function PhoneDismantle() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   // Mouse Coordinates for Interactive Cursor 3D Parallax Tilt
   const mouseX = useMotionValue(0);
@@ -436,7 +439,7 @@ export default function PhoneDismantle() {
   ];
 
   return (
-    <div ref={containerRef} style={{ height: "520vh", position: "relative" }}>
+    <div ref={containerRef} style={{ height: mounted ? "520vh" : "100vh", position: "relative" }}>
       <div style={{ position: "sticky", top: 0, height: "100vh", overflow: "hidden" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", padding: "0 2rem", position: "relative" }}>
 

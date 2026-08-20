@@ -315,6 +315,32 @@ export default function LandingPage() {
         </div>
       </header>
 
+      {/* ── Teardown Video ── */}
+      <section style={{ padding: "2rem 1.5rem", maxWidth: 640, margin: "0 auto" }}>
+        <motion.div
+          initial={{ opacity: 0, y: 40, filter: "blur(10px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ type: "spring", stiffness: 60, damping: 20 }}
+          style={{ position: "relative", borderRadius: "var(--radius-lg)", overflow: "hidden", border: "1px solid var(--border)" }}
+        >
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            style={{ width: "100%", display: "block", borderRadius: "var(--radius-lg)" }}
+          >
+            <source src="/teardown-video.mp4" type="video/mp4" />
+          </video>
+          <div style={{
+            position: "absolute", bottom: 0, left: 0, right: 0, height: 80,
+            background: "linear-gradient(transparent, var(--bg))",
+            pointerEvents: "none",
+          }} />
+        </motion.div>
+      </section>
+
       {/* ── Hero: 3D Dismantle ── */}
       <PhoneDismantle />
 

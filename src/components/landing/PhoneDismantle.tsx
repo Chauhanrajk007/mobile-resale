@@ -17,9 +17,9 @@ const PARTS = [
   { label: "Verified Report", desc: "Shareable, tamper-proof certificate" },
 ];
 
-const PHONE_W = 240;
-const PHONE_H = 490;
-const PHONE_D = 16;
+const PHONE_W = 230;
+const PHONE_H = 475;
+const PHONE_D = 14;
 
 export default function PhoneDismantle() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,9 +38,11 @@ export default function PhoneDismantle() {
   const rawVelocity = useVelocity(scrollYProgress);
   const velocity = useSpring(rawVelocity, { stiffness: 80, damping: 15 });
 
-  const velocityBoost = useTransform(velocity, [-2, 0, 2], [-12, 0, 12]);
+  const velocityBoost = useTransform(velocity, [-2, 0, 2], [-15, 0, 15]);
 
-  const baseRotateY = useTransform(sp, [0, 0.5, 1], [0, 180, 360]);
+  const phoneScale = useTransform(sp, [0, 0.05, 0.85, 0.95], [0.9, 1, 1, 1]);
+
+  const baseRotateY = useTransform(sp, [0.3, 0.5, 1], [0, 180, 360]);
   const phoneRotateY = useTransform(
     [baseRotateY, velocityBoost] as any,
     ([base, boost]: number[]) => base + boost
@@ -48,49 +50,64 @@ export default function PhoneDismantle() {
 
   const phoneRotateX = useTransform(
     sp,
-    [0, 0.15, 0.35, 0.5, 0.65, 0.85, 1],
-    [0, 5, -3, 0, 3, -5, 0]
+    [0, 0.08, 0.2, 0.35, 0.5, 0.65, 0.8, 1],
+    [0, 4, -2, 3, -2, 2, -3, 0]
   );
 
-  const screenY = useTransform(sp, [0.1, 0.3], [0, -170]);
-  const screenRX = useTransform(sp, [0.1, 0.3], [0, -20]);
-  const screenOp = useTransform(sp, [0.08, 0.18, 0.62, 0.76], [1, 1, 1, 0]);
+  const screenY = useTransform(sp, [0.12, 0.3], [0, -180]);
+  const screenRX = useTransform(sp, [0.12, 0.3], [0, -25]);
+  const screenScale = useTransform(sp, [0.12, 0.3], [1, 1.02]);
 
-  const battX = useTransform(sp, [0.25, 0.45], [0, 135]);
-  const battY = useTransform(sp, [0.25, 0.45], [0, 115]);
+  const chassisOp = useTransform(sp, [0.08, 0.12, 0.88, 0.92], [0, 1, 1, 0]);
+
+  const battX = useTransform(sp, [0.25, 0.45], [0, 140]);
+  const battY = useTransform(sp, [0.25, 0.45], [0, 100]);
   const battR = useTransform(sp, [0.25, 0.45], [0, 18]);
-  const battOp = useTransform(sp, [0.23, 0.33, 0.6, 0.74], [0, 1, 1, 0]);
+  const battOp = useTransform(sp, [0.23, 0.3, 0.82, 0.88], [0, 1, 1, 0]);
 
-  const camX = useTransform(sp, [0.42, 0.6], [0, 145]);
-  const camY = useTransform(sp, [0.42, 0.6], [0, -135]);
-  const camR = useTransform(sp, [0.42, 0.6], [0, -12]);
-  const camOp = useTransform(sp, [0.4, 0.5, 0.6, 0.74], [0, 1, 1, 0]);
+  const camX = useTransform(sp, [0.4, 0.58], [0, 130]);
+  const camY = useTransform(sp, [0.4, 0.58], [0, -120]);
+  const camR = useTransform(sp, [0.4, 0.58], [0, -12]);
+  const camOp = useTransform(sp, [0.38, 0.45, 0.82, 0.88], [0, 1, 1, 0]);
 
-  const boardX = useTransform(sp, [0.56, 0.74], [0, -150]);
-  const boardY = useTransform(sp, [0.56, 0.74], [0, 85]);
-  const boardR = useTransform(sp, [0.56, 0.74], [0, -10]);
-  const boardOp = useTransform(sp, [0.54, 0.64, 0.68, 0.8], [0, 1, 1, 0]);
+  const boardX = useTransform(sp, [0.52, 0.7], [0, -140]);
+  const boardY = useTransform(sp, [0.52, 0.7], [0, 60]);
+  const boardR = useTransform(sp, [0.52, 0.7], [0, -10]);
+  const boardOp = useTransform(sp, [0.5, 0.57, 0.82, 0.88], [0, 1, 1, 0]);
 
-  const spkY = useTransform(sp, [0.68, 0.86], [0, 165]);
-  const spkR = useTransform(sp, [0.68, 0.86], [0, 15]);
-  const spkOp = useTransform(sp, [0.66, 0.76, 0.82, 0.92], [0, 1, 1, 0]);
-
-  const reasScale = useTransform(sp, [0.84, 0.96], [0.9, 1]);
+  const spkY = useTransform(sp, [0.65, 0.82], [0, 120]);
+  const spkR = useTransform(sp, [0.65, 0.82], [0, 15]);
+  const spkOp = useTransform(sp, [0.63, 0.7, 0.82, 0.88], [0, 1, 1, 0]);
 
   const ctaOp = useTransform(sp, [0.88, 0.95], [0, 1]);
   const ctaY = useTransform(sp, [0.88, 0.95], [30, 0]);
 
-  const lOp = (f: number, pk: number, t: number) =>
-    useTransform(sp, [f, f + 0.06, pk, t], [0, 1, 1, 0]);
-  const lX = (f: number) => useTransform(sp, [f, f + 0.06], [-40, 0]);
-  const rOp = (f: number, pk: number, t: number) =>
-    useTransform(sp, [f, f + 0.08, pk, t], [0, 1, 1, 0]);
-  const rX = (f: number) => useTransform(sp, [f, f + 0.08], [40, 0]);
+  const lOp0 = useTransform(sp, [0.1, 0.16, 0.28, 0.36], [0, 1, 1, 0]);
+  const lX0 = useTransform(sp, [0.1, 0.16], [-40, 0]);
+  const lOp1 = useTransform(sp, [0.26, 0.32, 0.46, 0.54], [0, 1, 1, 0]);
+  const lX1 = useTransform(sp, [0.26, 0.32], [-40, 0]);
+  const lOp2 = useTransform(sp, [0.42, 0.48, 0.6, 0.68], [0, 1, 1, 0]);
+  const lX2 = useTransform(sp, [0.42, 0.48], [-40, 0]);
+  const lOp3 = useTransform(sp, [0.56, 0.62, 0.74, 0.82], [0, 1, 1, 0]);
+  const lX3 = useTransform(sp, [0.56, 0.62], [-40, 0]);
+  const lOp4 = useTransform(sp, [0.7, 0.76, 0.88, 0.94], [0, 1, 1, 0]);
+  const lX4 = useTransform(sp, [0.7, 0.76], [-40, 0]);
 
-  const lOps = [lOp(0.1, 0.16, 0.28), lOp(0.26, 0.32, 0.46), lOp(0.42, 0.48, 0.6), lOp(0.56, 0.62, 0.74), lOp(0.7, 0.76, 0.9)];
-  const lXs = [lX(0.1), lX(0.26), lX(0.42), lX(0.56), lX(0.7)];
-  const rOps = [rOp(0.12, 0.2, 0.32), rOp(0.28, 0.36, 0.5), rOp(0.44, 0.52, 0.64), rOp(0.58, 0.66, 0.78), rOp(0.72, 0.8, 0.92)];
-  const rXs = [rX(0.12), rX(0.28), rX(0.44), rX(0.58), rX(0.72)];
+  const rOp0 = useTransform(sp, [0.14, 0.22, 0.34, 0.42], [0, 1, 1, 0]);
+  const rX0 = useTransform(sp, [0.14, 0.22], [40, 0]);
+  const rOp1 = useTransform(sp, [0.32, 0.4, 0.52, 0.6], [0, 1, 1, 0]);
+  const rX1 = useTransform(sp, [0.32, 0.4], [40, 0]);
+  const rOp2 = useTransform(sp, [0.48, 0.56, 0.68, 0.76], [0, 1, 1, 0]);
+  const rX2 = useTransform(sp, [0.48, 0.56], [40, 0]);
+  const rOp3 = useTransform(sp, [0.64, 0.72, 0.84, 0.92], [0, 1, 1, 0]);
+  const rX3 = useTransform(sp, [0.64, 0.72], [40, 0]);
+  const rOp4 = useTransform(sp, [0.78, 0.86, 0.94, 1], [0, 1, 1, 0]);
+  const rX4 = useTransform(sp, [0.78, 0.86], [40, 0]);
+
+  const slotBattOp = useTransform(sp, [0.12, 0.15, 0.25, 0.28], [0, 1, 1, 0.4]);
+  const slotCamOp = useTransform(sp, [0.12, 0.15, 0.4, 0.43], [0, 1, 1, 0.4]);
+  const slotBoardOp = useTransform(sp, [0.12, 0.15, 0.52, 0.55], [0, 1, 1, 0.4]);
+  const slotSpkOp = useTransform(sp, [0.12, 0.15, 0.65, 0.68], [0, 1, 1, 0.4]);
 
   const metallicBase =
     "linear-gradient(180deg, rgba(160,160,180,0.45) 0%, rgba(100,100,120,0.35) 30%, rgba(80,80,100,0.3) 70%, rgba(120,120,140,0.4) 100%)";
@@ -141,59 +158,63 @@ export default function PhoneDismantle() {
               zIndex: 2,
             }}
           >
-            {PARTS.map((part, i) => (
-              <motion.div key={i} style={{ opacity: lOps[i], x: lXs[i] }}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.75rem",
-                    marginBottom: "0.35rem",
-                  }}
-                >
+            {PARTS.map((part, i) => {
+              const ops = [lOp0, lOp1, lOp2, lOp3, lOp4];
+              const xs = [lX0, lX1, lX2, lX3, lX4];
+              return (
+                <motion.div key={i} style={{ opacity: ops[i], x: xs[i] }}>
                   <div
                     style={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: "50%",
-                      background:
-                        "linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 70%, white))",
-                      color: "#fff",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "0.75rem",
-                      fontWeight: 800,
-                      flexShrink: 0,
-                      boxShadow:
-                        "0 2px 12px color-mix(in srgb, var(--primary) 40%, transparent)",
+                      gap: "0.75rem",
+                      marginBottom: "0.35rem",
                     }}
                   >
-                    {i + 1}
+                    <div
+                      style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: "50%",
+                        background:
+                          "linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 70%, white))",
+                        color: "#fff",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "0.75rem",
+                        fontWeight: 800,
+                        flexShrink: 0,
+                        boxShadow:
+                          "0 2px 12px color-mix(in srgb, var(--primary) 40%, transparent)",
+                      }}
+                    >
+                      {i + 1}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "1.15rem",
+                        fontWeight: 800,
+                        color: "var(--text)",
+                        letterSpacing: "-0.02em",
+                      }}
+                    >
+                      {part.label}
+                    </div>
                   </div>
                   <div
                     style={{
-                      fontSize: "1.15rem",
-                      fontWeight: 800,
-                      color: "var(--text)",
-                      letterSpacing: "-0.02em",
+                      fontSize: "0.85rem",
+                      color: "var(--text2)",
+                      lineHeight: 1.5,
+                      paddingLeft: "2.75rem",
                     }}
                   >
-                    {part.label}
+                    {part.desc}
                   </div>
-                </div>
-                <div
-                  style={{
-                    fontSize: "0.85rem",
-                    color: "var(--text2)",
-                    lineHeight: 1.5,
-                    paddingLeft: "2.75rem",
-                  }}
-                >
-                  {part.desc}
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </div>
 
           <div
@@ -211,11 +232,11 @@ export default function PhoneDismantle() {
             }}
           >
             {[
-              { op: rOps[0], x: rXs[0], text: "12 checkpoints — screen & display" },
-              { op: rOps[1], x: rXs[1], text: "Health, cycles & swelling check" },
-              { op: rOps[2], x: rXs[2], text: "Lens, focus & stabilization test" },
-              { op: rOps[3], x: rXs[3], text: "Processor, memory & port integrity" },
-              { op: rOps[4], x: rXs[4], text: "Grille cleared, driver verified" },
+              { op: rOp0, x: rX0, text: "12 checkpoints — screen & display" },
+              { op: rOp1, x: rX1, text: "Health, cycles & swelling check" },
+              { op: rOp2, x: rX2, text: "Lens, focus & stabilization test" },
+              { op: rOp3, x: rX3, text: "Processor, memory & port integrity" },
+              { op: rOp4, x: rX4, text: "Grille cleared, driver verified" },
             ].map((c, i) => (
               <motion.div
                 key={i}
@@ -248,7 +269,7 @@ export default function PhoneDismantle() {
               justifyContent: "center",
               alignItems: "center",
               position: "relative",
-              scale: reasScale,
+              scale: phoneScale,
               zIndex: 5,
             }}
           >
@@ -263,114 +284,32 @@ export default function PhoneDismantle() {
                 willChange: "transform",
               }}
             >
-              {/* FRONT FACE */}
               <div
                 style={{
                   position: "absolute",
                   width: PHONE_W,
                   height: PHONE_H,
-                  borderRadius: 44,
-                  background: "linear-gradient(160deg, #2a2a3e 0%, #1a1a2e 40%, #12121f 100%)",
-                  boxShadow: `
-                    inset 0 1px 0 rgba(255,255,255,0.08),
-                    inset 0 -1px 0 rgba(0,0,0,0.3),
-                    0 40px 100px rgba(0,0,0,0.6),
-                    0 0 120px color-mix(in srgb, var(--primary) 18%, transparent)
-                  `,
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  transform: `translateZ(${PHONE_D / 2}px)`,
-                  overflow: "hidden",
+                  borderRadius: 40,
+                  background: "linear-gradient(160deg, #1e1e32 0%, #141428 40%, #0c0c1c 100%)",
+                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 0 rgba(0,0,0,0.4)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  transform: `rotateY(180deg) translateZ(${PHONE_D / 2}px)`,
                   backfaceVisibility: "hidden",
+                  overflow: "hidden",
                 }}
               >
-                <div
-                  style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: "50%",
-                    background: "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%)",
-                    borderRadius: "44px 44px 0 0",
-                    pointerEvents: "none",
-                  }}
-                />
-
-                <div style={{ position: "absolute", top: 18, left: "50%", transform: "translateX(-50%)", width: 90, height: 25, borderRadius: 12.5, background: "#000", zIndex: 20, boxShadow: "inset 0 1px 2px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05)" }}>
-                  <div style={{ position: "absolute", top: "50%", right: 10, transform: "translateY(-50%)", width: 8, height: 8, borderRadius: "50%", background: "radial-gradient(circle, #1a1a3e, #0a0a1a)", border: "1px solid rgba(255,255,255,0.08)" }} />
-                </div>
-
-                <motion.div
-                  style={{
-                    position: "absolute",
-                    top: 10,
-                    left: 10,
-                    right: 10,
-                    bottom: 10,
-                    borderRadius: 36,
-                    overflow: "hidden",
-                    background: "linear-gradient(180deg, #0c0c1d 0%, #06060f 100%)",
-                    border: "1px solid rgba(255,255,255,0.06)",
-                    y: screenY,
-                    rotateX: screenRX,
-                    opacity: screenOp,
-                    transformStyle: "preserve-3d",
-                    boxShadow: "0 25px 50px rgba(0,0,0,0.4)",
-                    zIndex: 5,
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 14px 4px", fontSize: "0.48rem", fontWeight: 600, color: "rgba(255,255,255,0.6)" }}>
-                    <span>9:41</span>
-                    <div style={{ display: "flex", gap: 3, alignItems: "center" }}>
-                      <svg width="10" height="8" viewBox="0 0 16 12" fill="none">
-                        <rect x="0" y="8" width="3" height="4" rx="0.5" fill="rgba(255,255,255,0.5)" />
-                        <rect x="4" y="5" width="3" height="7" rx="0.5" fill="rgba(255,255,255,0.6)" />
-                        <rect x="8" y="2" width="3" height="10" rx="0.5" fill="rgba(255,255,255,0.8)" />
-                        <rect x="12" y="0" width="3" height="12" rx="0.5" fill="#fff" />
-                      </svg>
-                      <svg width="14" height="8" viewBox="0 0 24 12" fill="none">
-                        <rect x="0.5" y="0.5" width="20" height="11" rx="2.5" stroke="rgba(255,255,255,0.4)" />
-                        <rect x="2" y="2" width="15" height="8" rx="1" fill="#fff" />
-                        <rect x="22" y="3.5" width="2" height="5" rx="1" fill="rgba(255,255,255,0.4)" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div style={{ padding: "4px 14px 0", fontSize: "0.55rem", fontWeight: 700, color: "var(--primary)", letterSpacing: "0.08em" }}>
-                    CHECKMYPHONE
-                  </div>
-                  <div style={{ padding: "0 14px", fontSize: "0.88rem", fontWeight: 800, color: "#fff", letterSpacing: "-0.01em" }}>
-                    Inspection Report
-                  </div>
-                  <div style={{ margin: "8px 12px 0", padding: "10px", borderRadius: 14, background: "linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))", border: "1px solid rgba(255,255,255,0.06)" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <div style={{ fontSize: "0.72rem", fontWeight: 700, color: "#fff" }}>iPhone 15 Pro</div>
-                      <div style={{ fontSize: "0.46rem", color: "rgba(255,255,255,0.35)", padding: "2px 6px", borderRadius: 6, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.06)" }}>256 GB</div>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8 }}>
-                      <div style={{ flex: 1, height: 5, borderRadius: 99, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
-                        <div style={{ width: "96%", height: "100%", borderRadius: 99, background: "linear-gradient(90deg, var(--success), color-mix(in srgb, var(--success) 70%, white))" }} />
-                      </div>
-                      <span style={{ fontSize: "0.72rem", fontWeight: 800, color: "var(--success)" }}>96%</span>
-                    </div>
-                    {["Display", "Battery", "Camera", "Speaker", "Face ID"].map((t) => (
-                      <div key={t} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "3px 0", borderTop: "1px solid rgba(255,255,255,0.04)", fontSize: "0.52rem" }}>
-                        <span style={{ color: "rgba(255,255,255,0.4)" }}>{t}</span>
-                        <span style={{ color: "var(--success)", fontWeight: 700 }}>PASS</span>
-                      </div>
+                <div style={{ position: "absolute", top: 20, left: "50%", transform: "translateX(-50%)", width: 60, height: 60, borderRadius: 16, background: "linear-gradient(135deg, #1a2332, #0d1520)", border: "1px solid rgba(14,165,233,0.2)", boxShadow: "0 4px 16px rgba(14,165,233,0.15)" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4, padding: 10 }}>
+                    {[0, 1, 2, 3].map((i) => (
+                      <div key={i} style={{ width: 16, height: 16, borderRadius: "50%", background: "radial-gradient(circle, rgba(14,165,233,0.4), rgba(14,165,233,0.1))", border: "1px solid rgba(14,165,233,0.3)" }} />
                     ))}
                   </div>
-                  <div style={{ flex: 1 }} />
-                  <div style={{ margin: "0 12px 10px", padding: "8px", borderRadius: 10, background: "linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 80%, white))", textAlign: "center", fontSize: "0.62rem", fontWeight: 700, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" /></svg>
-                    Share Report
-                  </div>
-                  <div style={{ height: 6 }} />
-                </motion.div>
+                </div>
+                <div style={{ position: "absolute", top: 90, left: "50%", transform: "translateX(-50%)", fontSize: "0.45rem", color: "rgba(255,255,255,0.15)", fontWeight: 700, letterSpacing: "0.1em" }}>DESIGNED BY APPLE IN CALIFORNIA</div>
+                <div style={{ position: "absolute", top: 105, left: "50%", transform: "translateX(-50%)", fontSize: "0.38rem", color: "rgba(255,255,255,0.1)", fontWeight: 600 }}>iPhone 15 Pro · 256GB</div>
+                <div style={{ position: "absolute", bottom: 20, left: "50%", transform: "translateX(-50%)", width: 40, height: 3, borderRadius: 2, background: "rgba(255,255,255,0.08)" }} />
               </div>
 
-              {/* RIGHT SIDE */}
               <div
                 style={{
                   position: "absolute",
@@ -392,7 +331,6 @@ export default function PhoneDismantle() {
                 <div style={{ position: "absolute", top: "48%", left: 2, width: 12, height: 32, borderRadius: "3px 2px 2px 3px", background: "linear-gradient(90deg, rgba(200,200,220,0.5), rgba(140,140,160,0.35))", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.15), 0 1px 3px rgba(0,0,0,0.25)" }} />
               </div>
 
-              {/* LEFT SIDE */}
               <div
                 style={{
                   position: "absolute",
@@ -416,7 +354,6 @@ export default function PhoneDismantle() {
                 <div style={{ position: "absolute", top: "52%", right: 2, width: 10, height: 70, borderRadius: "2px 3px 3px 2px", background: "linear-gradient(270deg, rgba(160,160,180,0.4), rgba(100,100,120,0.25))", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 1px 2px rgba(0,0,0,0.2)" }} />
               </div>
 
-              {/* TOP SIDE */}
               <div
                 style={{
                   position: "absolute",
@@ -437,7 +374,6 @@ export default function PhoneDismantle() {
                 <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 14, height: 14, borderRadius: "50%", background: "radial-gradient(circle, rgba(80,80,100,0.6), rgba(50,50,70,0.3))", border: "1px solid rgba(255,255,255,0.08)" }} />
               </div>
 
-              {/* BOTTOM SIDE */}
               <div
                 style={{
                   position: "absolute",
@@ -462,41 +398,376 @@ export default function PhoneDismantle() {
                 </div>
               </div>
 
-              {/* BACK FACE */}
               <div
                 style={{
                   position: "absolute",
-                  width: PHONE_W,
-                  height: PHONE_H,
-                  borderRadius: 44,
-                  background: "linear-gradient(160deg, #1e1e32 0%, #141428 40%, #0c0c1c 100%)",
-                  boxShadow: "inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 0 rgba(0,0,0,0.4)",
-                  border: "1px solid rgba(255,255,255,0.06)",
-                  transform: `rotateY(180deg) translateZ(${PHONE_D / 2}px)`,
+                  width: PHONE_W - 6,
+                  height: PHONE_H - 6,
+                  top: 3,
+                  left: 3,
+                  borderRadius: 36,
+                  transform: `translateZ(0px)`,
                   backfaceVisibility: "hidden",
                   overflow: "hidden",
                 }}
               >
-                <div style={{ position: "absolute", top: 20, left: "50%", transform: "translateX(-50%)", width: 60, height: 60, borderRadius: 16, background: "linear-gradient(135deg, #1a2332, #0d1520)", border: "1px solid rgba(14,165,233,0.2)", boxShadow: "0 4px 16px rgba(14,165,233,0.15)" }}>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4, padding: 10 }}>
-                    {[0, 1, 2, 3].map((i) => (
-                      <div key={i} style={{ width: 16, height: 16, borderRadius: "50%", background: "radial-gradient(circle, rgba(14,165,233,0.4), rgba(14,165,233,0.1))", border: "1px solid rgba(14,165,233,0.3)" }} />
+                <motion.div
+                  style={{
+                    position: "absolute",
+                    width: "100%",
+                    height: "100%",
+                    opacity: chassisOp,
+                    transformStyle: "preserve-3d",
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background: "linear-gradient(180deg, #2a2a35 0%, #222230 40%, #1e1e2c 100%)",
+                      borderRadius: 36,
+                      boxShadow: "inset 0 2px 8px rgba(0,0,0,0.4), inset 0 -2px 8px rgba(0,0,0,0.3)",
+                    }}
+                  >
+                    {[...Array(8)].map((_, i) => (
+                      <div
+                        key={`screw-${i}`}
+                        style={{
+                          position: "absolute",
+                          top: 40 + i * 52,
+                          left: i % 2 === 0 ? 12 : PHONE_W - 22,
+                          width: 4,
+                          height: 4,
+                          borderRadius: "50%",
+                          background: "radial-gradient(circle, rgba(180,180,200,0.3), rgba(120,120,140,0.15))",
+                          boxShadow: "inset 0 0.5px 1px rgba(0,0,0,0.5), 0 0.5px 0.5px rgba(255,255,255,0.08)",
+                        }}
+                      />
                     ))}
+
+                    <div style={{ position: "absolute", top: 15, left: "50%", transform: "translateX(-50%)", width: 30, height: 2, borderRadius: 1, background: "rgba(150,150,170,0.08)" }} />
+                    <div style={{ position: "absolute", top: 12, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 4 }}>
+                      {[0, 1, 2].map((i) => (
+                        <div key={`c-${i}`} style={{ width: 6, height: 1, borderRadius: 0.5, background: "rgba(150,150,170,0.06)" }} />
+                      ))}
+                    </div>
+
+                    <div style={{ position: "absolute", top: 280, left: 20, width: 40, height: 1, background: "rgba(150,150,170,0.05)" }} />
+                    <div style={{ position: "absolute", top: 295, left: 30, width: 30, height: 1, background: "rgba(150,150,170,0.04)" }} />
+
+                    <motion.div
+                      style={{
+                        position: "absolute",
+                        bottom: 50,
+                        left: 25,
+                        width: 82,
+                        height: 54,
+                        borderRadius: 8,
+                        background: "linear-gradient(180deg, rgba(40,40,55,0.8), rgba(35,35,48,0.9))",
+                        boxShadow: "inset 0 2px 6px rgba(0,0,0,0.5), inset 0 -1px 4px rgba(0,0,0,0.3)",
+                        border: "1px solid rgba(100,100,120,0.15)",
+                        opacity: slotBattOp,
+                      }}
+                    >
+                      <div style={{ position: "absolute", top: 3, left: 3, right: 3, height: 1, background: "rgba(150,150,170,0.06)" }} />
+                      <div style={{ position: "absolute", bottom: 3, left: 3, right: 3, height: 1, background: "rgba(150,150,170,0.06)" }} />
+                    </motion.div>
+
+                    <motion.div
+                      style={{
+                        position: "absolute",
+                        top: 45,
+                        right: 20,
+                        width: 56,
+                        height: 56,
+                        borderRadius: 14,
+                        background: "linear-gradient(180deg, rgba(40,40,55,0.8), rgba(35,35,48,0.9))",
+                        boxShadow: "inset 0 2px 6px rgba(0,0,0,0.5), inset 0 -1px 4px rgba(0,0,0,0.3)",
+                        border: "1px solid rgba(100,100,120,0.15)",
+                        opacity: slotCamOp,
+                      }}
+                    >
+                      <div style={{ position: "absolute", top: 8, left: 8, width: 14, height: 14, borderRadius: "50%", background: "radial-gradient(circle, rgba(30,30,40,0.8), rgba(25,25,35,0.9))", border: "1px solid rgba(80,80,100,0.15)" }} />
+                      <div style={{ position: "absolute", top: 8, right: 8, width: 14, height: 14, borderRadius: "50%", background: "radial-gradient(circle, rgba(30,30,40,0.8), rgba(25,25,35,0.9))", border: "1px solid rgba(80,80,100,0.15)" }} />
+                      <div style={{ position: "absolute", bottom: 8, left: 8, width: 14, height: 14, borderRadius: "50%", background: "radial-gradient(circle, rgba(30,30,40,0.8), rgba(25,25,35,0.9))", border: "1px solid rgba(80,80,100,0.15)" }} />
+                      <div style={{ position: "absolute", bottom: 8, right: 8, width: 8, height: 8, borderRadius: "50%", background: "radial-gradient(circle, rgba(60,60,80,0.5), rgba(40,40,55,0.6))", border: "1px solid rgba(80,80,100,0.15)" }} />
+                    </motion.div>
+
+                    <motion.div
+                      style={{
+                        position: "absolute",
+                        top: 120,
+                        left: 15,
+                        width: 72,
+                        height: 130,
+                        borderRadius: 8,
+                        background: "linear-gradient(180deg, rgba(40,55,40,0.7), rgba(35,48,35,0.8))",
+                        boxShadow: "inset 0 2px 6px rgba(0,0,0,0.5), inset 0 -1px 4px rgba(0,0,0,0.3)",
+                        border: "1px solid rgba(80,100,80,0.15)",
+                        opacity: slotBoardOp,
+                      }}
+                    >
+                      <div style={{ position: "absolute", top: 40, left: 12, width: 36, height: 36, borderRadius: 4, background: "rgba(50,65,50,0.5)", border: "1px solid rgba(100,120,100,0.15)" }} />
+                      {[...Array(6)].map((_, i) => (
+                        <div key={`cb-${i}`} style={{ position: "absolute", top: 10 + (i % 3) * 8, left: 8 + Math.floor(i / 3) * 52, width: 4, height: 4, borderRadius: 1, background: "rgba(80,100,80,0.2)" }} />
+                      ))}
+                    </motion.div>
+
+                    <motion.div
+                      style={{
+                        position: "absolute",
+                        bottom: 15,
+                        left: 50,
+                        width: 50,
+                        height: 16,
+                        borderRadius: 6,
+                        background: "linear-gradient(180deg, rgba(40,40,50,0.8), rgba(35,35,45,0.9))",
+                        boxShadow: "inset 0 2px 4px rgba(0,0,0,0.5)",
+                        border: "1px solid rgba(100,100,115,0.15)",
+                        opacity: slotSpkOp,
+                      }}
+                    >
+                      {[...Array(5)].map((_, i) => (
+                        <div key={`sh-${i}`} style={{ position: "absolute", top: 4, left: 6 + i * 8, width: 4, height: 8, borderRadius: 2, background: "rgba(30,30,40,0.6)" }} />
+                      ))}
+                    </motion.div>
                   </div>
-                </div>
-                <div style={{ position: "absolute", top: 90, left: "50%", transform: "translateX(-50%)", fontSize: "0.45rem", color: "rgba(255,255,255,0.15)", fontWeight: 700, letterSpacing: "0.1em" }}>DESIGNED BY APPLE IN CALIFORNIA</div>
-                <div style={{ position: "absolute", top: 105, left: "50%", transform: "translateX(-50%)", fontSize: "0.38rem", color: "rgba(255,255,255,0.1)", fontWeight: 600 }}>iPhone 15 Pro · 256GB</div>
-                <div style={{ position: "absolute", bottom: 20, left: "50%", transform: "translateX(-50%)", width: 40, height: 3, borderRadius: 2, background: "rgba(255,255,255,0.08)" }} />
+                </motion.div>
               </div>
 
-              {/* BATTERY */}
               <motion.div
                 style={{
                   position: "absolute",
-                  bottom: 56,
-                  left: 28,
-                  width: 82,
-                  height: 54,
+                  width: PHONE_W - 4,
+                  height: PHONE_H - 4,
+                  top: 2,
+                  left: 2,
+                  borderRadius: 38,
+                  transform: `translateZ(${PHONE_D / 2}px)`,
+                  transformStyle: "preserve-3d",
+                  zIndex: 5,
+                  display: "flex",
+                  flexDirection: "column",
+                  y: screenY,
+                  rotateX: screenRX,
+                  scale: screenScale,
+                  boxShadow: "0 25px 60px rgba(0,0,0,0.5)",
+                }}
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    borderRadius: 38,
+                    background: "linear-gradient(160deg, #2a2a3e 0%, #1a1a2e 40%, #12121f 100%)",
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    boxShadow: "inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.3)",
+                    overflow: "hidden",
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: "50%",
+                      background: "linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%)",
+                      borderRadius: "38px 38px 0 0",
+                      pointerEvents: "none",
+                    }}
+                  />
+
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: 80,
+                      background: "linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%)",
+                      pointerEvents: "none",
+                    }}
+                  />
+
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 16,
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      width: 80,
+                      height: 22,
+                      borderRadius: 11,
+                      background: "#000",
+                      boxShadow: "inset 0 1px 2px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: 7,
+                        height: 7,
+                        borderRadius: "50%",
+                        background: "radial-gradient(circle, #1a1a3e, #0a0a1a)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                      }}
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      padding: "6px 12px 4px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      fontSize: "0.44rem",
+                      fontWeight: 600,
+                      color: "rgba(255,255,255,0.6)",
+                    }}
+                  >
+                    <span>9:41</span>
+                    <div style={{ display: "flex", gap: 3, alignItems: "center" }}>
+                      <svg width="10" height="8" viewBox="0 0 16 12" fill="none">
+                        <rect x="0" y="8" width="3" height="4" rx="0.5" fill="rgba(255,255,255,0.5)" />
+                        <rect x="4" y="5" width="3" height="7" rx="0.5" fill="rgba(255,255,255,0.6)" />
+                        <rect x="8" y="2" width="3" height="10" rx="0.5" fill="rgba(255,255,255,0.8)" />
+                        <rect x="12" y="0" width="3" height="12" rx="0.5" fill="#fff" />
+                      </svg>
+                      <svg width="14" height="8" viewBox="0 0 24 12" fill="none">
+                        <rect x="0.5" y="0.5" width="20" height="11" rx="2.5" stroke="rgba(255,255,255,0.4)" />
+                        <rect x="2" y="2" width="15" height="8" rx="1" fill="#fff" />
+                        <rect x="22" y="3.5" width="2" height="5" rx="1" fill="rgba(255,255,255,0.4)" />
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      padding: "4px 12px 0",
+                      fontSize: "0.52rem",
+                      fontWeight: 700,
+                      color: "var(--primary)",
+                      letterSpacing: "0.08em",
+                    }}
+                  >
+                    CHECKMYPHONE
+                  </div>
+                  <div
+                    style={{
+                      padding: "0 12px",
+                      fontSize: "0.82rem",
+                      fontWeight: 800,
+                      color: "#fff",
+                      letterSpacing: "-0.01em",
+                    }}
+                  >
+                    Inspection Report
+                  </div>
+
+                  <div
+                    style={{
+                      margin: "8px 10px 0",
+                      padding: "10px",
+                      borderRadius: 14,
+                      background: "linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))",
+                      border: "1px solid rgba(255,255,255,0.06)",
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div style={{ fontSize: "0.68rem", fontWeight: 700, color: "#fff" }}>iPhone 15 Pro</div>
+                      <div
+                        style={{
+                          fontSize: "0.42rem",
+                          color: "rgba(255,255,255,0.35)",
+                          padding: "2px 6px",
+                          borderRadius: 6,
+                          background: "rgba(255,255,255,0.05)",
+                          border: "1px solid rgba(255,255,255,0.06)",
+                        }}
+                      >
+                        256 GB
+                      </div>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 8 }}>
+                      <div
+                        style={{
+                          flex: 1,
+                          height: 5,
+                          borderRadius: 99,
+                          background: "rgba(255,255,255,0.08)",
+                          overflow: "hidden",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: "96%",
+                            height: "100%",
+                            borderRadius: 99,
+                            background: "linear-gradient(90deg, var(--success), color-mix(in srgb, var(--success) 70%, white))",
+                          }}
+                        />
+                      </div>
+                      <span style={{ fontSize: "0.68rem", fontWeight: 800, color: "var(--success)" }}>96%</span>
+                    </div>
+                    {["Display", "Battery", "Camera", "Speaker", "Face ID"].map((t) => (
+                      <div
+                        key={t}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          padding: "3px 0",
+                          borderTop: "1px solid rgba(255,255,255,0.04)",
+                          fontSize: "0.48rem",
+                        }}
+                      >
+                        <span style={{ color: "rgba(255,255,255,0.4)" }}>{t}</span>
+                        <span style={{ color: "var(--success)", fontWeight: 700 }}>PASS</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div style={{ flex: 1 }} />
+
+                  <div
+                    style={{
+                      margin: "0 10px 10px",
+                      padding: "8px",
+                      borderRadius: 10,
+                      background: "linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 80%, white))",
+                      textAlign: "center",
+                      fontSize: "0.58rem",
+                      fontWeight: 700,
+                      color: "#fff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 5,
+                    }}
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="18" cy="5" r="3" />
+                      <circle cx="6" cy="12" r="3" />
+                      <circle cx="18" cy="19" r="3" />
+                      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                    </svg>
+                    Share Report
+                  </div>
+                  <div style={{ height: 6 }} />
+                </div>
+              </motion.div>
+
+              <motion.div
+                style={{
+                  position: "absolute",
+                  bottom: 50,
+                  left: 22,
+                  width: 86,
+                  height: 58,
                   borderRadius: 10,
                   background: "linear-gradient(135deg, #2d1b69, #1a1145)",
                   border: "1px solid rgba(139,92,246,0.3)",
@@ -515,20 +786,34 @@ export default function PhoneDismantle() {
                   translateZ: 20,
                 }}
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="6" width="18" height="12" rx="2" /><line x1="23" y1="13" x2="23" y2="11" /></svg>
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 4,
+                    left: 4,
+                    right: 4,
+                    bottom: 4,
+                    borderRadius: 6,
+                    background: "linear-gradient(135deg, rgba(60,30,100,0.4), rgba(40,20,70,0.3))",
+                    border: "1px solid rgba(139,92,246,0.1)",
+                  }}
+                />
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,0.8)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="1" y="6" width="18" height="12" rx="2" />
+                  <line x1="23" y1="13" x2="23" y2="11" />
+                </svg>
                 <div style={{ fontSize: "0.42rem", color: "rgba(139,92,246,0.8)", fontWeight: 700, letterSpacing: "0.06em" }}>BATTERY</div>
-                <div style={{ fontSize: "0.36rem", color: "rgba(139,92,246,0.4)" }}>3274 mAh · 89%</div>
+                <div style={{ fontSize: "0.36rem", color: "rgba(139,92,246,0.4)" }}>3274 mAh</div>
               </motion.div>
 
-              {/* CAMERA */}
               <motion.div
                 style={{
                   position: "absolute",
-                  top: 50,
-                  right: 8,
-                  width: 72,
-                  height: 72,
-                  borderRadius: 20,
+                  top: 40,
+                  right: 15,
+                  width: 66,
+                  height: 66,
+                  borderRadius: 18,
                   background: "linear-gradient(135deg, #1a2332, #0d1520)",
                   border: "1px solid rgba(14,165,233,0.3)",
                   boxShadow: "0 6px 24px rgba(14,165,233,0.2), inset 0 1px 0 rgba(255,255,255,0.05)",
@@ -546,33 +831,36 @@ export default function PhoneDismantle() {
                   translateZ: 20,
                 }}
               >
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 5 }}>
                   {[0, 1, 2, 3].map((i) => (
                     <div
                       key={i}
                       style={{
-                        width: 22,
-                        height: 22,
+                        width: i === 3 ? 16 : 20,
+                        height: i === 3 ? 16 : 20,
                         borderRadius: "50%",
-                        background: "radial-gradient(circle, rgba(14,165,233,0.5) 20%, rgba(14,165,233,0.15) 70%, transparent 100%)",
-                        border: "1.5px solid rgba(14,165,233,0.45)",
-                        boxShadow: "0 0 8px rgba(14,165,233,0.3), inset 0 0 4px rgba(14,165,233,0.2)",
+                        background: i === 3
+                          ? "radial-gradient(circle, rgba(255,200,100,0.4) 20%, rgba(255,200,100,0.1) 70%, transparent 100%)"
+                          : "radial-gradient(circle, rgba(14,165,233,0.5) 20%, rgba(14,165,233,0.15) 70%, transparent 100%)",
+                        border: i === 3 ? "1px solid rgba(255,200,100,0.4)" : "1.5px solid rgba(14,165,233,0.45)",
+                        boxShadow: i === 3
+                          ? "0 0 6px rgba(255,200,100,0.2), inset 0 0 3px rgba(255,200,100,0.15)"
+                          : "0 0 8px rgba(14,165,233,0.3), inset 0 0 4px rgba(14,165,233,0.2)",
                       }}
                     />
                   ))}
                 </div>
-                <div style={{ fontSize: "0.4rem", color: "rgba(14,165,233,0.75)", fontWeight: 700, letterSpacing: "0.06em" }}>CAMERA</div>
+                <div style={{ fontSize: "0.38rem", color: "rgba(14,165,233,0.75)", fontWeight: 700, letterSpacing: "0.06em" }}>CAMERA</div>
               </motion.div>
 
-              {/* LOGIC BOARD */}
               <motion.div
                 style={{
                   position: "absolute",
-                  top: 140,
-                  left: 18,
-                  width: 92,
-                  height: 124,
-                  borderRadius: 12,
+                  top: 130,
+                  left: 15,
+                  width: 76,
+                  height: 128,
+                  borderRadius: 10,
                   background: "linear-gradient(135deg, #0d2818, #0a1f14)",
                   border: "1px solid rgba(34,197,94,0.25)",
                   boxShadow: "0 6px 24px rgba(34,197,94,0.12), inset 0 1px 0 rgba(255,255,255,0.03)",
@@ -596,29 +884,52 @@ export default function PhoneDismantle() {
                     <div
                       key={i}
                       style={{
-                        width: 6,
-                        height: 6,
+                        width: 5,
+                        height: 5,
                         borderRadius: 1,
                         background: i % 3 === 0 ? "rgba(34,197,94,0.5)" : "rgba(34,197,94,0.15)",
                       }}
                     />
                   ))}
                 </div>
-                <div style={{ width: 42, height: 42, borderRadius: 6, background: "rgba(34,197,94,0.15)", border: "1px solid rgba(34,197,94,0.35)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <div style={{ fontSize: "0.4rem", color: "rgba(34,197,94,0.7)", fontWeight: 800 }}>A17</div>
+                <div
+                  style={{
+                    width: 38,
+                    height: 38,
+                    borderRadius: 5,
+                    background: "rgba(34,197,94,0.15)",
+                    border: "1px solid rgba(34,197,94,0.35)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div style={{ fontSize: "0.38rem", color: "rgba(34,197,94,0.7)", fontWeight: 800 }}>A17 Pro</div>
                 </div>
-                <div style={{ fontSize: "0.4rem", color: "rgba(34,197,94,0.6)", fontWeight: 700, letterSpacing: "0.06em" }}>LOGIC BOARD</div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 2 }}>
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        width: 8,
+                        height: 3,
+                        borderRadius: 1,
+                        background: "rgba(34,197,94,0.2)",
+                      }}
+                    />
+                  ))}
+                </div>
+                <div style={{ fontSize: "0.38rem", color: "rgba(34,197,94,0.6)", fontWeight: 700, letterSpacing: "0.06em" }}>LOGIC BOARD</div>
               </motion.div>
 
-              {/* SPEAKER */}
               <motion.div
                 style={{
                   position: "absolute",
-                  bottom: 18,
-                  left: 30,
-                  width: 60,
-                  height: 20,
-                  borderRadius: 10,
+                  bottom: 12,
+                  left: 25,
+                  width: 55,
+                  height: 18,
+                  borderRadius: 8,
                   background: "linear-gradient(135deg, #2a2a30, #1a1a22)",
                   border: "1px solid rgba(156,163,175,0.25)",
                   boxShadow: "0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04)",
@@ -630,13 +941,13 @@ export default function PhoneDismantle() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: 2,
+                  gap: 1,
                   overflow: "hidden",
                   translateZ: 20,
                 }}
               >
-                {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} style={{ width: 3, height: 3, borderRadius: "50%", background: "rgba(156,163,175,0.35)" }} />
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} style={{ width: 2, height: 2, borderRadius: "50%", background: "rgba(156,163,175,0.35)" }} />
                 ))}
               </motion.div>
 
@@ -691,7 +1002,10 @@ export default function PhoneDismantle() {
               }}
             >
               Book an Inspection — ₹349
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
             </a>
             <span style={{ fontSize: "0.75rem", color: "var(--text2)" }}>
               Scroll to explore the inspection

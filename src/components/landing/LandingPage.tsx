@@ -1,14 +1,14 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/useAuth";
 import { BRANDS, PHONE_CONDITIONS, DEFAULT_MODELS } from "@/lib/constants";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Reveal, WordReveal } from "@/components/motion/Reveal";
-import Phone3D from "@/components/landing/Phone3D";
+import PhoneDismantle from "@/components/landing/PhoneDismantle";
 
 const steps = [
   {
@@ -102,11 +102,6 @@ export default function LandingPage() {
   const router = useRouter();
   const { user, loading: authLoading, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 0.8], [1, 0.97]);
 
   const [brands, setBrands] = useState<string[]>([]);
   const [brandsLoading, setBrandsLoading] = useState(true);
@@ -320,184 +315,18 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* ── Hero ── */}
-      <section ref={heroRef} className="hero-wrap" style={{
-        position: "relative", overflow: "hidden",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        flexWrap: "wrap", gap: "3rem",
-        minHeight: "100vh", padding: "7rem 1.5rem 5rem",
-        maxWidth: 1240, margin: "0 auto",
-      }}>
-        {/* Ambient glows */}
-        <div style={{
-          position: "absolute", top: "-15%", right: "-10%", width: 480, height: 480,
-          borderRadius: "50%", pointerEvents: "none",
-          background: "radial-gradient(circle, color-mix(in srgb, var(--primary) 16%, transparent), transparent 65%)",
-        }} />
-        <div style={{
-          position: "absolute", bottom: "-20%", left: "-12%", width: 420, height: 420,
-          borderRadius: "50%", pointerEvents: "none",
-          background: "radial-gradient(circle, color-mix(in srgb, var(--accent) 10%, transparent), transparent 65%)",
-        }} />
-        <div style={{
-          position: "absolute", inset: 0, pointerEvents: "none", opacity: 0.45,
-          backgroundImage: "radial-gradient(var(--border) 1px, transparent 1px)",
-          backgroundSize: "30px 30px",
-        }} />
+      {/* ── Hero: 3D Dismantle ── */}
+      <PhoneDismantle />
 
-        {/* Parallax hero content */}
+      {/* ── Booking Card ── */}
+      <section id="book" style={{ padding: "4rem 1.5rem", maxWidth: 520, margin: "0 auto" }}>
         <motion.div
-          style={{
-            display: "contents",
-            opacity: heroOpacity,
-          }}
-        >
-        <motion.div style={{ flex: "1 1 460px", position: "relative", scale: heroScale }}>
-        {/* Left */}
-          <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95, filter: "blur(8px)" }}
-            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-            transition={{ type: "spring", stiffness: 120, damping: 20, delay: 0.1 }}
-            style={{
-              display: "inline-flex", alignItems: "center", gap: "0.5rem",
-              padding: "0.4rem 0.9rem", borderRadius: 999, marginBottom: "1.5rem",
-              background: "color-mix(in srgb, var(--primary) 10%, transparent)",
-              border: "1px solid color-mix(in srgb, var(--primary) 25%, transparent)",
-              color: "var(--primary)", fontSize: "0.8rem", fontWeight: 700, letterSpacing: "0.02em",
-            }}
-          >
-            <span style={{ width: 7, height: 7, borderRadius: "50%", background: "var(--success)", boxShadow: "0 0 0 3px color-mix(in srgb, var(--success) 25%, transparent)" }} />
-            Doorstep inspections · Across your city
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 40, scale: 0.96, filter: "blur(12px)" }}
-            animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-            transition={{ type: "spring", stiffness: 100, damping: 20, delay: 0.2 }}
-            style={{
-              fontSize: "clamp(2.4rem, 5.5vw, 4.1rem)", fontWeight: 800, lineHeight: 1.06,
-              letterSpacing: "-0.045em", marginBottom: "1.5rem",
-            }}
-          >
-            Know exactly what{" "}
-            <span className="gradient-text">your phone is worth</span> before you buy or sell
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            transition={{ type: "spring", stiffness: 110, damping: 22, delay: 0.35 }}
-            style={{ color: "var(--text2)", fontSize: "1.15rem", lineHeight: 1.65, maxWidth: 520, marginBottom: "2rem" }}
-          >
-            A certified technician inspects 30+ checkpoints at your doorstep and generates a verified,
-            shareable report — so every used-phone deal is fair and transparent.
-          </motion.p>
-
-          {/* CTA row */}
-          <motion.div
-            initial={{ opacity: 0, y: 30, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ type: "spring", stiffness: 70, damping: 20, delay: 0.7 }}
-            style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", marginBottom: "2.5rem" }}
-          >
-            <a href="#book" style={{
-              display: "inline-flex", alignItems: "center", gap: "0.5rem",
-              padding: "0.9rem 1.6rem", borderRadius: "var(--radius)",
-              background: "linear-gradient(135deg, var(--primary), var(--primary-hover))",
-              color: "#fff", textDecoration: "none", fontWeight: 700, fontSize: "0.95rem",
-              boxShadow: "var(--glow)",
-            }}>
-              Book an Inspection
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
-            </a>
-            <a href="#how" style={{
-              display: "inline-flex", alignItems: "center", gap: "0.5rem",
-              padding: "0.9rem 1.6rem", borderRadius: "var(--radius)",
-              background: "var(--surface)", border: "1px solid var(--border)",
-              color: "var(--text)", textDecoration: "none", fontWeight: 600, fontSize: "0.95rem",
-              transition: "border-color 0.2s, background 0.2s",
-            }}>How it works</a>
-          </motion.div>
-
-                    {/* Trust stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 70, damping: 20, delay: 0.85 }}
-            style={{
-              display: "flex", gap: "2.25rem", flexWrap: "wrap",
-              paddingTop: "1.75rem", borderTop: "1px solid var(--border)",
-            }}
-          >
-            {[
-              { value: "₹349", label: "Flat fee" },
-              { value: "30+", label: "Checkpoints" },
-              { value: "60 min", label: "Avg. visit" },
-              { value: "100%", label: "Verified report" },
-            ].map((s) => (
-              <div key={s.label}>
-                <div style={{ fontSize: "1.5rem", fontWeight: 800, letterSpacing: "-0.02em", color: "var(--text)" }}>{s.value}</div>
-                <div style={{ fontSize: "0.82rem", color: "var(--text2)", fontWeight: 500, marginTop: "0.15rem" }}>{s.label}</div>
-              </div>
-            ))}
-          </motion.div>
-        </motion.div>
-
-        {/* Phone mockup + floating cards (decorative) */}
-        <motion.div
-          className="mockup-wrap"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          style={{ flex: "1 1 240px", display: "flex", justifyContent: "center", position: "relative" }}
-        >
-          <Phone3D />
-
-          {/* Floating chip: technician en route */}
-          <div className="chip-float" style={{
-            position: "absolute", top: "12%", right: "-1.5rem",
-            display: "flex", alignItems: "center", gap: "0.5rem",
-            padding: "0.55rem 0.9rem", borderRadius: "var(--radius)",
-            background: "color-mix(in srgb, var(--surface) 90%, transparent)",
-            border: "1px solid var(--border)", boxShadow: "var(--shadow-lg)",
-            backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
-          }}>
-            <span style={{ width: 9, height: 9, borderRadius: "50%", background: "var(--success)", boxShadow: "0 0 0 3px color-mix(in srgb, var(--success) 25%, transparent)" }} />
-            <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--text)" }}>Technician en route</span>
-          </div>
-
-          {/* Floating chip: report ready */}
-          <div className="chip-float" style={{
-            position: "absolute", bottom: "10%", left: "-2rem",
-            display: "flex", alignItems: "center", gap: "0.5rem",
-            padding: "0.55rem 0.9rem", borderRadius: "var(--radius)",
-            background: "color-mix(in srgb, var(--surface) 90%, transparent)",
-            border: "1px solid var(--border)", boxShadow: "var(--shadow-lg)",
-            backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)",
-          }}>
-            <span style={{ width: 30, height: 30, borderRadius: "var(--radius-sm)", background: "color-mix(in srgb, var(--primary) 14%, transparent)", color: "var(--primary)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-            </span>
-            <div>
-              <div style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--text)" }}>Report ready</div>
-              <div style={{ fontSize: "0.68rem", color: "var(--text2)" }}>Shareable & verified</div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Right: Booking card */}
-        <motion.div
-          id="book"
-          className="booking-card"
           initial={{ opacity: 0, y: 60, scale: 0.95, filter: "blur(12px)" }}
           whileInView={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
           viewport={{ once: true, amount: 0.1 }}
           transition={{ type: "spring", stiffness: 50, damping: 18 }}
           style={{
-            flex: "1 1 400px", maxWidth: 500, width: "100%",
+            width: "100%",
             background: "color-mix(in srgb, var(--surface) 92%, transparent)",
             backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)",
             border: "1px solid var(--border)", borderRadius: "var(--radius-lg)",
@@ -703,7 +532,6 @@ export default function LandingPage() {
               Free cancellation · Pay after inspection
             </p>
           </div>
-        </motion.div>
         </motion.div>
       </section>
 

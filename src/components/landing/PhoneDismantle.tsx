@@ -561,7 +561,7 @@ export default function PhoneDismantle() {
               {/* Ground shadow beneath lifting screen */}
               <motion.div style={{
                 position: "absolute", width: PW - 16, height: PH - 16, top: 8, left: 8, z: 1,
-                background: "#000", borderRadius: 40,
+                background: "var(--ground-shadow)", borderRadius: 40,
                 opacity: shadowOp,
                 filter: useTransform(shadowBlur, v => `blur(${v}px)`),
                 scale: shadowScale,
@@ -579,29 +579,29 @@ export default function PhoneDismantle() {
               </div>
 
               {/* LAYER 3: FRONT SCREEN — lifts off the front */}
-              <motion.div style={{ position: "absolute", width: PW, height: PH, z: screenZ, opacity: screenOp, transformStyle: "preserve-3d", zIndex: 9, filter: "drop-shadow(0 18px 38px rgba(0,0,0,0.5))" }}>
+              <motion.div style={{ position: "absolute", width: PW, height: PH, z: screenZ, opacity: screenOp, transformStyle: "preserve-3d", zIndex: 9, filter: "drop-shadow(0 18px 38px rgba(0,0,0,0.4)) drop-shadow(0 0 60px color-mix(in srgb, var(--primary) 10%, transparent))" }}>
                 <ScreenFront sheenX={sheenX} />
               </motion.div>
 
               {/* ── FLOATING COMPONENT LAYERS (fan out from chassis) ── */}
 
               {/* Camera Module */}
-              <motion.div style={{ position: "absolute", top: 22, left: 112, z: camZ, x: camX, y: camY, opacity: camOp, zIndex: 7, filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.5))", transformStyle: "preserve-3d" }}>
+              <motion.div style={{ position: "absolute", top: 22, left: 112, z: camZ, x: camX, y: camY, opacity: camOp, zIndex: 7, filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.4)) drop-shadow(0 0 40px color-mix(in srgb, var(--primary) 8%, transparent))", transformStyle: "preserve-3d" }}>
                 <CameraLayer />
               </motion.div>
 
               {/* Logic Board */}
-              <motion.div style={{ position: "absolute", top: 52, left: 16, z: boardZ, x: boardX, opacity: boardOp, zIndex: 7, filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.5))", transformStyle: "preserve-3d" }}>
+              <motion.div style={{ position: "absolute", top: 52, left: 16, z: boardZ, x: boardX, opacity: boardOp, zIndex: 7, filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.4)) drop-shadow(0 0 40px color-mix(in srgb, var(--primary) 8%, transparent))", transformStyle: "preserve-3d" }}>
                 <BoardLayer />
               </motion.div>
 
               {/* Battery */}
-              <motion.div style={{ position: "absolute", top: 110, right: 14, z: battZ, x: battX, opacity: battOp, zIndex: 6, filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.5))", transformStyle: "preserve-3d" }}>
+              <motion.div style={{ position: "absolute", top: 110, right: 14, z: battZ, x: battX, opacity: battOp, zIndex: 6, filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.4)) drop-shadow(0 0 40px color-mix(in srgb, var(--primary) 8%, transparent))", transformStyle: "preserve-3d" }}>
                 <BatteryLayer />
               </motion.div>
 
               {/* Speaker */}
-              <motion.div style={{ position: "absolute", bottom: 50, left: 16, z: spkZ, y: spkY, opacity: spkOp, zIndex: 6, filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.5))", transformStyle: "preserve-3d" }}>
+              <motion.div style={{ position: "absolute", bottom: 50, left: 16, z: spkZ, y: spkY, opacity: spkOp, zIndex: 6, filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.4)) drop-shadow(0 0 40px color-mix(in srgb, var(--primary) 8%, transparent))", transformStyle: "preserve-3d" }}>
                 <SpeakerLayer />
               </motion.div>
 

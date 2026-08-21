@@ -21,6 +21,9 @@
   --shadow-lg: 0 16px 40px rgba(0,0,0,0.10);
   --shadow-xl: 0 24px 60px rgba(0,0,0,0.14);
   --glow: 0 8px 24px color-mix(in srgb, var(--primary) 30%, transparent);
+  --phone-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 24px 60px rgba(0,0,0,0.08);
+  --phone-glow: 0 0 80px color-mix(in srgb, var(--primary) 12%, transparent);
+  --ground-shadow: #000;
   --font: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
@@ -42,6 +45,9 @@
   --shadow-lg: 0 16px 40px rgba(0,0,0,0.45);
   --shadow-xl: 0 24px 60px rgba(0,0,0,0.55);
   --glow: 0 8px 24px color-mix(in srgb, var(--primary) 25%, transparent);
+  --phone-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 32px 80px rgba(0,0,0,0.35), 0 0 100px color-mix(in srgb, var(--primary) 10%, transparent);
+  --phone-glow: 0 0 120px color-mix(in srgb, var(--primary) 8%, transparent);
+  --ground-shadow: rgba(0,0,0,0.8);
 }
 
 * {
